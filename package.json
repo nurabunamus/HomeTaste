@@ -1,5 +1,5 @@
 {
-  "name": "backend-capstone",
+  "name": "home-taste",
   "version": "1.0.0",
   "main": "src/app.js",
   "repository": "git@github.com:ReCoded-Org/backend-capstone-template.git",
@@ -15,8 +15,26 @@
     "postinstall": "husky install && husky add .husky/pre-commit \"yarn validate-staged\" && husky add .husky/pre-push \"yarn test\""
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^14.2.0",
+    "error-handler": "^1.0.0",
     "express": "^4.17.2",
+    "express-jwt": "^8.4.1",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.6.0",
+    "mongoose": "^7.3.1",
+    "nodemailer": "^6.9.3",
+    "passport": "^0.6.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "swagger": "^0.7.5",
+    "swagger-editor": "^4.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
+    "typescript": "^5.1.6",
     "yarn-upgrade-all": "^0.6.1"
   },
   "devDependencies": {
