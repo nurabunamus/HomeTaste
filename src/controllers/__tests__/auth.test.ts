@@ -1,6 +1,5 @@
-import { describe, it } from 'jest';
-describe('My Test Suite', () => {
-    it('should pass this test', () => {
-        // Add your test assertions or logic here
+describe('Test Suite', () => {
+    test('Always passing test', () => {
+        expect(true).toBe(true);
     });
 });
