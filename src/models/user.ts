@@ -41,8 +41,8 @@ const AddressSchema = new Schema({
 // });
 
 const UserSchema = new Schema({
-  first_name: { type: String, required: true },
-  last_name: { type: String, required: true },
+  first_name: { type: String, required: true, minlength: 3, maxlength: 15 },
+  last_name: { type: String, required: true, minlength: 3, maxlength: 15 },
   email: {
     type: String,
     required: true,
@@ -55,7 +55,7 @@ const UserSchema = new Schema({
     }
   },
   password: { type:String, required:true, minlength:8 },
-  phone: { type:String, required:true },
+  phone: { type:String, required:true, minlength: 5, maxlength: 15 },
   address: { type:AddressSchema, required:true },
   profile_image: { type:String, required:true },
   role: { type:String, required:true },
