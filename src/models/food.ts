@@ -1,11 +1,46 @@
 import { Document, Types, Schema, model } from 'mongoose';
 
 enum Categories {
-  // add your categories here
+  "Pizza",
+  "Doner",
+  "Çiğ Köfte",
+  "Dessert",
+  "Tantuni",
+  "Kokorec",
+  "Chicken",
+  "Waffle",
+  "Burger",
+  "Rice",
+  "Ice Cream",
+  "Kumpir",
+  "Meatballs",
+  "Pasta",
+  "Home-Made Cuisine",
+  "Salad",
+  "Coffee",
+  "Far East",
+  "Steak",
+  "Çiğ Börek"
 }
 
 enum Allergies {
-  // add your allergies here
+  "Milk",
+  "Eggs",
+  "Fish",
+  "Tree nuts",
+  "Peanuts",
+  "Wheat",
+  "Soy",
+  "Sesame",
+  "Corn",
+  "Beef",
+  "Chicken",
+  "Potatoes",
+  "Rice",
+  "Oats",
+  "Barley",
+  "Rye",
+  "Sorghum"
 }
 
 interface IFood extends Document {
@@ -19,11 +54,12 @@ interface IFood extends Document {
 }
 
 const foodSchema = new Schema<IFood>({
-  user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+  user_id: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   name: { type: String, required: true, minlength: 3, maxlength: 50 },
   description: { type: String, maxlength: 256},
   price: {
     type: Number,
+    required: true,
     validate: {
       validator: function (value: number) {
         return value > 0;
@@ -31,10 +67,10 @@ const foodSchema = new Schema<IFood>({
       message: 'Price must be a positive number',
     },
   },
-  image: String,
+  image: { type: String, required: true },
   categories: { type: String, enum: Object.values(Categories) },
   allergies: { type: String, enum: Object.values(Allergies) },
-});
+}, { timestamps: true });
 
 
 const Food = model<IFood>('Food', foodSchema);
