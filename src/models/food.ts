@@ -38,3 +38,4 @@ const foodSchema = new Schema<IFood>({
 
 
 const Food = model<IFood>('Food', foodSchema);
+export default Food;
