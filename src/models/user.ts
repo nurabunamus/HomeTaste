@@ -86,7 +86,7 @@ const UserSchema = new Schema({
   },
   payment_method: { type:[PaymentMethodSchema] },
   chief_status: { type: String },
-  provider_id: { type: String },
+  provider_id: { type: String, unique: true },
   payment_method_status: Boolean
 }, { timestamps: true });
 
