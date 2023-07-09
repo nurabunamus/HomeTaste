@@ -1,12 +1,13 @@
 import { Schema, Types, model, Model } from 'mongoose';
 import { IUser, UserSchema } from './user';
 
+// wrting On_The_Way as "On The Way" gives an eslint error, which is why its written like this here
 enum OrderStatus {
-  Pending,
-  Approved,
-  Preparing,
-  'On The Way',
-  Delivered,
+  Pending = 'Pending',
+  Approved = 'Approved',
+  Preparing = 'Preparing',
+  On_The_Way = 'On The Way',
+  Delivered = 'Delivered',
 }
 
 type OrderDetails = { quantity: number; dishId: Types.ObjectId };
@@ -17,12 +18,12 @@ type OrdersDocumentOverrides = {
 
 interface IOrders {
   orderDetails: OrderDetails[];
-  orderStatus: String;
+  orderStatus: string;
   user: IUser;
 }
 
-//check the mongoose typescript documentation for more info
-//https://mongoosejs.com/docs/typescript/subdocuments.html
+/* check the mongoose typescript documentation for more info
+ https://mongoosejs.com/docs/typescript/subdocuments.html */
 type OrdersModelType = Model<IOrders, {}, OrdersDocumentOverrides>;
 
 export const orderSchema = new Schema<IOrders, OrdersModelType>({
@@ -43,4 +44,6 @@ export const orderSchema = new Schema<IOrders, OrdersModelType>({
   user: UserSchema,
 });
 
-export const Order = model<IOrders>('Orders', orderSchema);
+const Order = model<IOrders>('Orders', orderSchema);
+
+export default Order;
