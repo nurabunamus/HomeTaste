@@ -16,7 +16,7 @@ type OrdersDocumentOverrides = {
   user: Types.Subdocument<Types.ObjectId> & IUser;
 };
 
-interface IOrders {
+export interface IOrders {
   orderDetails: OrderDetails[];
   orderStatus: string;
   user: IUser;
@@ -44,6 +44,6 @@ export const orderSchema = new Schema<IOrders, OrdersModelType>({
   user: UserSchema,
 });
 
-const Order = model<IOrders>('Orders', orderSchema);
+const Order = model<IOrders>('Order', orderSchema);
 
 export default Order;
