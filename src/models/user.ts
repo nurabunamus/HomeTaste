@@ -56,6 +56,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       enum: ['admin', 'cooker', 'customer'],
+      default: 'customer',
     },
     payment_method: { type: [PaymentMethodSchema] },
     chief_status: { type: String },
