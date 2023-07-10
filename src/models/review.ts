@@ -20,8 +20,8 @@ type ReviewModelType = Model<IReview, {}, ReviewDocumentOverrides>;
 export const ReviewSchema = new Schema<IReview, ReviewModelType>({
   rating: Number,
   comment: String,
-  userId: { type: Schema.Types.ObjectId, required: true },
-  dishId: { type: Schema.Types.ObjectId, required: true },
+  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  dishId: { type: Schema.Types.ObjectId, required: true, ref: 'Food' },
   order: { type: orderSchema, required: true },
 });
 
