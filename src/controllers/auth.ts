@@ -3,6 +3,23 @@ import User from '../models/user';
 
 import bcrypt from 'bcrypt';
 import jwt, { Secret } from 'jsonwebtoken';
+import { IUser } from '../types/interfaces';
+
+interface RegisterRequest extends Request {
+  body: {
+    email: string;
+    password: string;
+    fullName: string;
+    role: string;
+  };
+}
+
+interface Register2Request extends Request {
+  body: {
+    address: object;
+    phone: string;
+  };
+}
 
 const setTokenCookie = (
   userId: string,
@@ -31,7 +48,7 @@ const setTokenCookie = (
 };
 
 // Register1 contains => (fullName, email, password, role)
-const register1 = async (req: Request, res: Response) => {
+const register1 = async (req: RegisterRequest, res: Response) => {
   try {
     const { email, password, fullName, role } = req.body;
 
@@ -59,10 +76,12 @@ const register1 = async (req: Request, res: Response) => {
     });
 
     // Save the new user to the database
-    await newUser.save();
+    const savedUser: IUser = await newUser.save();
+
+    const userIdString: string = savedUser._id.toString();
 
     // Set the token as a cookie in the response
-    setTokenCookie(newUser._id, newUser.role, newUser.fullName, res);
+    setTokenCookie(userIdString, newUser.role, newUser.fullName, res);
 
     // Return the response
     res.status(201).json({
@@ -80,7 +99,7 @@ const register1 = async (req: Request, res: Response) => {
 };
 
 // Register2 contains => (address,phone)
-const register2 = async (req: Request, res: Response) => {
+const register2 = async (req: Register2Request, res: Response) => {
   try {
     const { address, phone } = req.body;
     const authToken = req.signedCookies['auth_token'];

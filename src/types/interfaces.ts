@@ -18,6 +18,7 @@ interface IPaymentMethod {
 }
 
 interface IUser {
+  _id: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -30,6 +31,8 @@ interface IUser {
   cooker_status: string;
   provider_id: string;
   payment_method_status: boolean;
+  //virtual field
+  fullName: string;
 }
 
 interface IFood {
