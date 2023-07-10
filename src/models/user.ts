@@ -34,10 +34,9 @@ const UserSchema = new Schema(
           `${props.value} is not a valid email address!`,
       },
     },
-    password: { type: String, required: true, minlength: 8 },
+    password: { type: String, minlength: 8 },
     phone: {
       type: String,
-      required: true,
       minlength: 5,
       maxlength: 15,
       validate: {
@@ -48,9 +47,11 @@ const UserSchema = new Schema(
         message: (props: { value: string }) =>
           `${props.value} is not a valid Turkish phone number!`,
       },
+      unique: true,
+      sparse: true,
     },
-    address: { type: AddressSchema, required: true },
-    profile_image: { type: String, required: true },
+    address: { type: AddressSchema },
+    profile_image: { type: String },
     role: {
       type: String,
       required: true,
@@ -58,15 +59,24 @@ const UserSchema = new Schema(
     },
     payment_method: { type: [PaymentMethodSchema] },
     chief_status: { type: String },
-    provider_id: { type: String, unique: true },
-    payment_method_status: Boolean,
+    provider_id: { type: String, unique: true, sparse: true },
+    payment_method_status: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-UserSchema.virtual('fullName').get(function (this: IUser) {
-  return `${this.first_name} ${this.last_name}`;
-});
+UserSchema.virtual('fullName')
+  .get(function (this: IUser) {
+    return `${this.first_name} ${this.last_name}`;
+  })
+  .set(function (fullName: string) {
+    const [firstName, lastName] = fullName.split(' ');
+    this.set('first_name', firstName);
+    this.set('last_name', lastName);
+  });
 
 const User = model<IUser>('User', UserSchema);
 export default User;
