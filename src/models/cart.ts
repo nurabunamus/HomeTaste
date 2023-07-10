@@ -1,6 +1,6 @@
 import { Schema, Types, model } from 'mongoose';
 
-type Items = { quantity: Number; dishId: Types.ObjectId };
+type Items = { quantity: number; dishId: Types.ObjectId };
 
 interface ICart {
   items: Items[];
@@ -14,6 +14,8 @@ const cartSchema = new Schema<ICart>({
       {
         quantity: { type: Number, min: [1, 'Quantity Must Atleast Be 1'] },
         dishId: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Food',
       },
     ],
     required: true,
@@ -22,12 +24,17 @@ const cartSchema = new Schema<ICart>({
     type: Number,
     required: true,
   },
-  user: { type: Schema.Types.ObjectId, required: true, unique: true },
+  user: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    unique: true,
+    ref: 'User',
+  },
 });
 
 /* The following code is a Document Middleware to check if the total price is less than 0, 
 Document Middlewares have a "this" object which points to the document itself
-the "this" object must have the same type as the interface of the schema, in this case, the interface here is ICart*/
+the "this" object must have the same type as the interface of the schema, in this case, the interface here is ICart */
 cartSchema.pre('save', function (this: ICart): any {
   return this.totalPrice >= 0
     ? this.totalPrice
