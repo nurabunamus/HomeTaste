@@ -28,7 +28,7 @@ export const UserSchema = new Schema<IUser>(
       unique: true,
       validate: {
         validator: (value: string) => {
-          return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
+          /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
         },
         message: (props: { value: string }) =>
           `${props.value} is not a valid email address!`,
