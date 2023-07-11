@@ -1,12 +1,5 @@
 import { Schema, Types, model } from 'mongoose';
-
-type Items = { quantity: number; dishId: Types.ObjectId };
-
-interface ICart {
-  items: Items[];
-  totalPrice: number;
-  user: Types.ObjectId;
-}
+import { ICart } from '../types/interfaces';
 
 const cartSchema = new Schema<ICart>({
   items: {

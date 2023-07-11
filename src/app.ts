@@ -1,7 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
+
 dotenv.config();
-import connectToMongo from '../src/db/connection';
+import connectToMongo from './db/connection';
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));

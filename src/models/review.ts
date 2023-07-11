@@ -1,13 +1,6 @@
 import { Schema, Model, model, Types } from 'mongoose';
-import { orderSchema, IOrder } from './order';
-
-export interface IReview {
-  rating: number;
-  comment: string;
-  userId: Types.ObjectId;
-  dishId: Types.ObjectId;
-  order: IOrder;
-}
+import { IReview, IOrder } from '../types/interfaces';
+import { orderSchema } from './order';
 
 /* check the mongoose typescript documentation for more info
  https://mongoosejs.com/docs/typescript/subdocuments.html */

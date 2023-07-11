@@ -1,7 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
-import { IUser } from '../types/interfaces';
+import { IUser, IAddress, IPaymentMethod } from '../types/interfaces';
 
-const AddressSchema = new Schema({
+const AddressSchema = new Schema<IAddress>({
   street_name: { type: String, required: true, maxlength: 150 },
   street_number: { type: Number, required: true, maxlength: 150 },
   flat_number: { type: Number, required: true, maxlength: 150 },
@@ -11,14 +11,14 @@ const AddressSchema = new Schema({
   zip: { type: Number, required: true, maxlength: 150 },
 });
 
-const PaymentMethodSchema = new Schema({
+const PaymentMethodSchema = new Schema<IPaymentMethod>({
   card_number: String,
   card_type: String,
   card_cvv: Number,
   expiration_date: String,
 });
 
-const UserSchema = new Schema(
+export const UserSchema = new Schema<IUser>(
   {
     first_name: { type: String, required: true, minlength: 3, maxlength: 15 },
     last_name: { type: String, required: true, minlength: 3, maxlength: 15 },
@@ -57,8 +57,8 @@ const UserSchema = new Schema(
       required: true,
       enum: ['admin', 'cooker', 'customer'],
     },
-    payment_method: { type: [PaymentMethodSchema] },
-    chief_status: { type: String },
+    payment_method: [PaymentMethodSchema],
+    cook_status: { type: String },
     provider_id: { type: String, unique: true, sparse: true },
     payment_method_status: {
       type: Boolean,
