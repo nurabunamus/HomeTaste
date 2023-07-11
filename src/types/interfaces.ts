@@ -21,15 +21,15 @@ interface IUser {
   first_name: string;
   last_name: string;
   email: string;
-  password: string;
-  phone: string;
-  address: IAddress;
-  profile_image: string;
+  password?: string;
+  phone?: string;
+  address?: IAddress;
+  profile_image?: string;
   role: string;
-  payment_method: Array<IPaymentMethod>;
-  cooker_status: string;
-  provider_id: string;
-  payment_method_status: boolean;
+  payment_method?: Array<IPaymentMethod>;
+  cook_status?: string;
+  provider_id?: string;
+  payment_method_status?: boolean;
 }
 
 interface IFood {
@@ -42,4 +42,24 @@ interface IFood {
   allergies: string;
 }
 
-export { IAddress, IPaymentMethod, IUser, IFood };
+interface ICart {
+  items: { quantity: number; dishId: Types.ObjectId }[];
+  totalPrice: number;
+  user: Types.ObjectId;
+}
+
+interface IOrder {
+  orderDetails: { quantity: number; dishId: Types.ObjectId }[];
+  orderStatus: string;
+  user: IUser;
+}
+
+interface IReview {
+  rating: number;
+  comment: string;
+  userId: Types.ObjectId;
+  dishId: Types.ObjectId;
+  order: IOrder;
+}
+
+export { IAddress, IPaymentMethod, IUser, IFood, ICart, IOrder, IReview };

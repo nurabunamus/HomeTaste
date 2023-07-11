@@ -1,15 +1,16 @@
 {
   "name": "home-taste",
   "version": "1.0.0",
-  "main": "src/app.js",
+  "main": "src/app.ts",
   "repository": "git@github.com:ReCoded-Org/backend-capstone-template.git",
   "author": "Ammar-64",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "start": "nodemon src/app.ts",
     "test": "yarn validate && jest --passWithNoTests",
-    "lint": "eslint --ignore-path .gitignore",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json)\"",
+    "lint": "eslint --ignore-path .gitignore .",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts)\"",
     "validate": "yarn format && yarn lint",
     "validate-staged": "lint-staged",
     "postinstall": "husky install && husky add .husky/pre-commit \"yarn validate-staged\" && husky add .husky/pre-push \"yarn test\""
@@ -41,6 +42,9 @@
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/mocha": "^10.0.1",
+    "@types/node": "^20.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
     "eslint": "^8.7.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-node": "^4.1.0",
@@ -56,6 +60,7 @@
     "jest": "^27.5.1",
     "lint-staged": "^12.3.1",
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "ts-node": "^10.9.1"
   }
 }
