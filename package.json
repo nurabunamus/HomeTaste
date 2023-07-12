@@ -9,7 +9,7 @@
   "scripts": {
     "start": "nodemon src/app.ts",
     "test": "yarn validate && jest --passWithNoTests",
-    "lint": "eslint --ignore-path .gitignore .",
+    "lint": "eslint --ignore-path .gitignore ",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts)\"",
     "validate": "yarn format && yarn lint",
     "validate-staged": "lint-staged",
