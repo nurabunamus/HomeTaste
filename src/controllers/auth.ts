@@ -3,7 +3,7 @@ import User from '../models/user';
 
 import bcrypt from 'bcrypt';
 import jwt, { Secret } from 'jsonwebtoken';
-import { IUser } from '../types/interfaces';
+import { IAddress, IUser } from '../types/interfaces';
 
 interface RegisterRequest extends Request {
   body: {
@@ -16,7 +16,7 @@ interface RegisterRequest extends Request {
 
 interface Register2Request extends Request {
   body: {
-    address: object;
+    address: IAddress;
     phone: string;
   };
 }
@@ -47,7 +47,7 @@ const setTokenCookie = (
   });
 };
 
-// Register1 contains => (fullName, email, password, role)
+// Register1 contains => (fullName, email, password)
 const register1 = async (req: RegisterRequest, res: Response) => {
   try {
     const { email, password, fullName, role } = req.body;
@@ -98,8 +98,8 @@ const register1 = async (req: RegisterRequest, res: Response) => {
   }
 };
 
-// Register2 contains => (address,phone)
-const register2 = async (req: Register2Request, res: Response) => {
+// Register2 contains => (address,phone,role)
+const completedRegister = async (req: Register2Request, res: Response) => {
   try {
     const { address, phone } = req.body;
     const authToken = req.signedCookies['auth_token'];
@@ -154,5 +154,5 @@ const register2 = async (req: Register2Request, res: Response) => {
 
 module.exports = {
   register1,
-  register2,
+  completedRegister,
 };
