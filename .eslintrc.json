@@ -31,7 +31,7 @@
     ],
     "import/first": "warn",
     "@typescript-eslint/ban-types": "warn",
-    "prettier/prettier": "error",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "arrow-body-style": "warn",
     "object-shorthand": "warn",
     "no-useless-escape": "warn",
