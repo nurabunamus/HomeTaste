@@ -5,7 +5,7 @@
   "repository": "git@github.com:ReCoded-Org/backend-capstone-template.git",
   "author": "Ammar-64",
   "license": "MIT",
-  "module": "types",
+  "type": "module",
   "scripts": {
     "start": "nodemon src/app.ts",
     "test": "yarn validate && jest --passWithNoTests",
