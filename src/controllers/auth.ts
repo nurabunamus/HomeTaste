@@ -3,6 +3,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable node/no-unsupported-features/es-syntax */
+// eslint-disable-next-line import/no-default-export
+
 import express, { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
@@ -11,37 +13,22 @@ import { IAddress, IUser } from '../types/interfaces';
 import { setTokenCookie } from '../utils/auth';
 import User from '../models/user';
 
-interface RegisterRequest extends Request {
-  user: IUser;
-  body: {
-    email: string;
-    password: string;
-    fullName: string;
-  };
+interface RegisterRequest {
+  email: string;
+  password: string;
+  fullName: string;
 }
 
-interface Register2Request extends Request {
-  user: IUser;
-  body: {
-    address: IAddress;
-    phone: string;
-    role: string;
-  };
-}
-
-interface RequestWithUser extends Request {
-  user: {
-    id: string;
-    fullName: string;
-    email: string;
-    role: string;
-  };
+interface Register2Request {
+  address: IAddress;
+  phone: string;
+  role: string;
 }
 
 // Register1 contains => (fullName, email, password)
-const register1 = async (req: RegisterRequest, res: Response) => {
+const register1 = async (req: Request, res: Response) => {
   try {
-    const { email, password, fullName } = req.body;
+    const { email, password, fullName } = req.body as RegisterRequest;
 
     // Perform validation checks on the request data
     if (!fullName || !email || !password) {
@@ -90,9 +77,9 @@ const register1 = async (req: RegisterRequest, res: Response) => {
 };
 
 // completedRegister contains => (address,phone,role)
-const completedRegister = async (req: Register2Request, res: Response) => {
+const completedRegister = async (req: Request, res: Response) => {
   try {
-    const { address, phone, role } = req.body;
+    const { address, phone, role } = req.body as Register2Request;
     // eslint-disable-next-line dot-notation
     const authToken = req.signedCookies['auth_token'];
 
@@ -151,7 +138,7 @@ const completedRegister = async (req: Register2Request, res: Response) => {
   }
 };
 
-const login = async (req: RequestWithUser, res: Response) => {
+const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -209,7 +196,7 @@ const logout = (req: Request, res: Response) => {
   }
 };
 
-module.exports = {
+export default {
   register1,
   completedRegister,
   login,
