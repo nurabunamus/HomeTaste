@@ -54,9 +54,7 @@ const UserSchema = new Schema(
     profile_image: { type: String },
     role: {
       type: String,
-      required: true,
       enum: ['admin', 'cooker', 'customer'],
-      default: 'customer',
     },
     payment_method: { type: [PaymentMethodSchema] },
     chief_status: { type: String },
