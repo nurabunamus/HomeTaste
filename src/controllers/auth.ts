@@ -1,10 +1,15 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable import/no-import-module-exports */
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable node/no-unsupported-features/es-syntax */
 import express, { Request, Response } from 'express';
-import User from '../models/user';
 
 import bcrypt from 'bcrypt';
 import jwt, { Secret } from 'jsonwebtoken';
 import { IAddress, IUser } from '../types/interfaces';
-import {setTokenCookie} from '../utils/auth';
+import { setTokenCookie } from '../utils/auth';
+import User from '../models/user';
 
 interface RegisterRequest extends Request {
   user: IUser;
@@ -47,7 +52,7 @@ const register1 = async (req: RegisterRequest, res: Response) => {
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      res.status(400).json({ message: 'User already exists' });
     }
 
     // Generate a hashed password using bcrypt
@@ -88,6 +93,7 @@ const register1 = async (req: RegisterRequest, res: Response) => {
 const completedRegister = async (req: Register2Request, res: Response) => {
   try {
     const { address, phone, role } = req.body;
+    // eslint-disable-next-line dot-notation
     const authToken = req.signedCookies['auth_token'];
 
     if (!phone || !address || !role) {
@@ -180,7 +186,6 @@ const login = async (req: RequestWithUser, res: Response) => {
       email: user.email,
       role: user.role,
     };
-    console.log(user);
 
     // Return the response
     res.status(200).json({
@@ -188,7 +193,6 @@ const login = async (req: RequestWithUser, res: Response) => {
       user: req.user,
     });
   } catch (error) {
-    console.log('error', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

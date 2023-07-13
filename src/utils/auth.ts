@@ -1,3 +1,6 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable node/no-unsupported-features/es-syntax */
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import jwt, { Secret } from 'jsonwebtoken';
 import { Response } from 'express';
 
@@ -6,7 +9,7 @@ const setTokenCookie = (
   role: string,
   fullName: string,
   res: Response,
-  clearExisting: boolean = false
+  clearExisting = false
 ): void => {
   if (clearExisting) {
     res.clearCookie('auth_token');
@@ -14,7 +17,9 @@ const setTokenCookie = (
 
   const payload = {
     _id: userId,
+    // eslint-disable-next-line object-shorthand
     fullName: fullName,
+    // eslint-disable-next-line object-shorthand
     role: role,
   };
 

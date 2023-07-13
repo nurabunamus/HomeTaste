@@ -1,3 +1,5 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
+/* eslint-disable node/no-unpublished-import */
 import request from 'supertest';
 import app from '../../app';
 import User from '../../models/user';

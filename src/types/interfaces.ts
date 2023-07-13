@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Types } from 'mongoose';
 
 interface IAddress {
@@ -31,7 +32,6 @@ interface IUser {
   cooker_status: string;
   provider_id: string;
   payment_method_status: boolean;
-  //virtual field
   fullName: string;
 }
 
@@ -45,4 +45,24 @@ interface IFood {
   allergies: string;
 }
 
-export { IAddress, IPaymentMethod, IUser, IFood };
+interface ICart {
+  items: { quantity: number; dishId: Types.ObjectId }[];
+  totalPrice: number;
+  user: Types.ObjectId;
+}
+
+interface IOrder {
+  orderDetails: { quantity: number; dishId: Types.ObjectId }[];
+  orderStatus: string;
+  user: IUser;
+}
+
+interface IReview {
+  rating: number;
+  comment: string;
+  userId: Types.ObjectId;
+  dishId: Types.ObjectId;
+  order: IOrder;
+}
+
+export { IAddress, IPaymentMethod, IUser, IFood, ICart, IOrder, IReview };
