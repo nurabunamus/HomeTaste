@@ -5,6 +5,12 @@ import jwt, { Secret } from 'jsonwebtoken';
 import User from '../models/user';
 import { IUser } from '../types/interfaces';
 
+/**
+ * Saves user data received from Google authentication.
+ * If the user does not exist, a new user is created and saved in the database.
+ * Generates a JSON Web Token (JWT) for the user and sets it as a cookie in the response.
+ */
+
 type JsonType = {
   family_name: string;
   given_name: string;
