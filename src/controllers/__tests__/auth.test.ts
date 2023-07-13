@@ -2,8 +2,6 @@ import request from 'supertest';
 import app from '../../app';
 import User from '../../models/user';
 
-jest.setTimeout(5000);
-
 afterEach(async () => {
   await User.deleteMany({});
 });
