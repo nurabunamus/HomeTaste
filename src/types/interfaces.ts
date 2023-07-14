@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Types } from 'mongoose';
 
 interface IAddress {
@@ -18,18 +19,20 @@ interface IPaymentMethod {
 }
 
 interface IUser {
+  _id: string;
   first_name: string;
   last_name: string;
   email: string;
-  password?: string;
-  phone?: string;
-  address?: IAddress;
-  profile_image?: string;
+  password: string;
+  phone: string;
+  address: IAddress;
+  profile_image: string;
   role: string;
-  payment_method?: Array<IPaymentMethod>;
-  cook_status?: string;
-  provider_id?: string;
-  payment_method_status?: boolean;
+  payment_method: Array<IPaymentMethod>;
+  cooker_status: string;
+  provider_id: string;
+  payment_method_status: boolean;
+  fullName: string;
 }
 
 interface IFood {

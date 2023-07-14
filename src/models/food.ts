@@ -1,4 +1,6 @@
-import { Document, Types, Schema, model } from 'mongoose';
+/* eslint-disable node/no-unsupported-features/es-syntax */
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
+import { Schema, model } from 'mongoose';
 import { IFood } from '../types/interfaces';
 
 // dont use strings as keys or eslint will cause an error, just assign a key to a string instead
@@ -50,7 +52,7 @@ const foodSchema = new Schema<IFood>(
       type: Number,
       required: true,
       validate: {
-        validator: function (value: number) {
+        validator(value: number) {
           return value > 0;
         },
         message: 'Price must be a positive number',

@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Schema, Model, model, Types } from 'mongoose';
 import { IReview, IOrder } from '../types/interfaces';
 import { orderSchema } from './order';

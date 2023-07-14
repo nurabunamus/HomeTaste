@@ -1,4 +1,6 @@
-import { Document, Schema, model } from 'mongoose';
+/* eslint-disable node/no-unsupported-features/es-syntax */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Schema, model } from 'mongoose';
 import { IUser, IAddress, IPaymentMethod } from '../types/interfaces';
 
 const AddressSchema = new Schema<IAddress>({
@@ -54,11 +56,10 @@ export const UserSchema = new Schema<IUser>(
     profile_image: { type: String },
     role: {
       type: String,
-      required: true,
       enum: ['admin', 'cooker', 'customer'],
     },
     payment_method: [PaymentMethodSchema],
-    cook_status: { type: String },
+    cooker_status: { type: String },
     provider_id: { type: String, unique: true, sparse: true },
     payment_method_status: {
       type: Boolean,

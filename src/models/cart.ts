@@ -1,4 +1,5 @@
-import { Schema, Types, model } from 'mongoose';
+/* eslint-disable node/no-unsupported-features/es-syntax */
+import { Schema, model } from 'mongoose';
 import { ICart } from '../types/interfaces';
 
 const cartSchema = new Schema<ICart>({

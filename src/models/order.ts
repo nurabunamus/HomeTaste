@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Schema, Types, model, Model } from 'mongoose';
 import { IUser, IOrder } from '../types/interfaces';
 import { UserSchema } from './user';

@@ -11,7 +11,8 @@
     "prettier",
     "plugin:node/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["prettier", "@typescript-eslint"],
