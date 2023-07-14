@@ -31,7 +31,6 @@ async function saveGoogle(req: Request, res: Response) {
         email: userReq._json.email,
         provider_id: googleId,
       });
-      await newUser.save();
       setTokenCookie(newUser._id, newUser.role, newUser.fullName, res);
 
       res.status(200).json({
