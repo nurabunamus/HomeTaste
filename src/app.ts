@@ -11,7 +11,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 // eslint-disable-next-line import/first
-import connectToMongo from './db/connection';
+import { connectToMongo } from './db/connection';
 import SwaggerOptions from './utils/variables';
 import './config/passport';
 import routes from './routes';
@@ -33,10 +33,9 @@ app.use('/api', routes);
 
 const port = process.env.NODE_LOCAL_PORT || 4000;
 
-app.listen(port, async () => {
-  // eslint-disable-next-line no-console
+const server = app.listen(port, async () => {
   console.log(`Server listening on port ${port}`);
   await connectToMongo();
 });
 
-export default app;
+export default server;

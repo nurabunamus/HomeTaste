@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon src/app.ts",
-    "test": "yarn validate && jest --passWithNoTests",
+    "test": "yarn validate && jest --passWithNoTests --detectOpenHandles",
     "lint": "eslint --ignore-path .gitignore",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts)\"",
     "validate": "yarn format && yarn lint",

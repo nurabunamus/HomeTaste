@@ -32,14 +32,15 @@ const register1 = async (req: Request, res: Response) => {
 
     // Perform validation checks on the request data
     if (!fullName || !email || !password) {
-      res.status(400).json({ error: 'Missing required fields' });
+      res.status(400).send({ error: 'Missing required fields' });
       return;
     }
 
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(400).json({ message: 'User already exists' });
+      res.status(400).send({ error: 'User already exists' });
+      return;
     }
 
     // Generate a hashed password using bcrypt
@@ -68,7 +69,6 @@ const register1 = async (req: Request, res: Response) => {
         id: newUser._id,
         fullName: newUser.fullName,
         email: newUser.email,
-        role: newUser.role,
       },
     });
   } catch (error) {
@@ -134,7 +134,7 @@ const completedRegister = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).send(error);
   }
 };
 
