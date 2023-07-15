@@ -3,35 +3,47 @@ paths:
     get:
       tags:
         - OAuth2
-      summary: Authenticate a user using google 3rd party authentication service
+      summary: Authenticate a user using Google 3rd party authentication service
       responses:
         200:
-          description: User successfully signed in
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User successfully signed in
-                  User:
-                    $ref: '#/components/schemas/Google'
+          description: Redirects the user to the Google authentication page
+        500:
+          description: Internal server error
+
   /api/auth/google/callback:
     get:
       tags:
         - OAuth2
-      summary: Retrive user information from google
+      summary: Google authentication callback
       responses:
         200:
-          description: User successfully signed in
+          description: User successfully signed in or logged in
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User successfully signed in
-                  User:
-                    $ref: '#/components/schemas/Google'
+                $ref: '#/components/schemas/Google'
+        400:
+          description: Invalid request
+        500:
+          description: Internal server error
+
+components:
+  schemas:
+    Google:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64b2af3ea060d606a4409682
+        fullName:
+          type: string
+          example: Fatima Ali
+        email:
+          type: string
+          example: fatima@gmail.com
+        role:
+          type: string
+          example: Customer
+        provider_id:
+          type: string
+          example: google-64b2af3ea060d606a4409682
