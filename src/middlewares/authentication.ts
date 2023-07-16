@@ -16,7 +16,7 @@ const {
   BASE_URL,
   CLIENT_ID_FB,
   CLIENT_SECRET_FB,
-  JWT_SECRET_KEY,
+  SECRET_KEY,
 } = process.env;
 
 dotenv.config();
@@ -62,11 +62,7 @@ passport.use(
         });
 
         if (existingEmailUser) {
-          return done(
-            null,
-            false,
-            'There is already another user with this email address, please use another email'
-          );
+          return done(null, false);
         }
         const createdUser: HydratedDocument<IUser> = await User.create({
           email: profile._json.email,
@@ -85,7 +81,6 @@ passport.use(
 
         const token = createJWTToken(
           createdUser._id,
-          createdUser.role,
           createdUser.fullName,
           createdUser.email
         );
