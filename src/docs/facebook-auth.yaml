@@ -1,0 +1,49 @@
+paths:
+  /api/auth/facebook:
+    get:
+      tags:
+        - OAuth2
+      summary: Authenticate a user using Facebook 3rd party authentication service
+      responses:
+        200:
+          description: Redirects the user to the Facebook authentication page
+        500:
+          description: Internal server error
+
+  /api/auth/facebook/callback:
+    get:
+      tags:
+        - OAuth2
+      summary: Facebook authentication callback
+      responses:
+        200:
+          description: User successfully signed in or logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Facebook'
+        400:
+          description: Invalid request
+        500:
+          description: Internal server error
+
+components:
+  schemas:
+    Facebook:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64b2af3ea060d606a4409682
+        fullName:
+          type: string
+          example: Fatima Ali
+        email:
+          type: string
+          example: fatima@gmail.com
+        role:
+          type: string
+          example: Customer
+        provider_id:
+          type: string
+          example: 116659968154798
