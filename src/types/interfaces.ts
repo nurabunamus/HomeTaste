@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Types } from 'mongoose';
 
 interface IAddress {
