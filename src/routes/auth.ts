@@ -1,19 +1,16 @@
-/* eslint-disable import/first */
-/* eslint-disable import/default */
-/* eslint-disable node/no-unsupported-features/es-syntax */
-
 import express from 'express';
-import passport from '../config/passport';
-
-const router = express.Router();
-
+import passport from '../middlewares/authentication';
 import authController from '../controllers/auth';
 import saveGoogle from '../controllers/google';
+import FacebookAuthController from '../controllers/facebook';
+import JWTAuthController from '../controllers/jwt';
+
+const router = express.Router();
 
 router.post('/register1', authController.register1);
 router.post('/register2', authController.completedRegister);
 router.post('/login', authController.login);
-router.get('/logout', authController.logout);
+router.get('/logout', JWTAuthController.jwtAuthenticate, authController.logout);
 
 /**
  * Initiates the Google authentication process.
@@ -39,6 +36,24 @@ router.get(
     session: false,
   }),
   saveGoogle
+);
+
+router.get('/facebook', FacebookAuthController.fBAuthenticate);
+
+router.get(
+  '/facebook/callback',
+  FacebookAuthController.fbCallBackAuthenticate,
+  FacebookAuthController.afterFbCallback
+);
+
+router.get('/facebook/failure', FacebookAuthController.fBAuthFailure);
+
+router.get('/facebook/success', FacebookAuthController.fbAuthSuccess);
+
+router.get(
+  '/me',
+  JWTAuthController.jwtAuthenticate,
+  JWTAuthController.viewProfile
 );
 
 export default router;
