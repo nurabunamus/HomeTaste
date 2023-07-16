@@ -7,6 +7,7 @@ import passport from 'passport';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import * as dotenv from 'dotenv';
+import errorHandler from './middlewares/error-handling';
 
 dotenv.config();
 
@@ -30,6 +31,8 @@ app.use(
 );
 
 app.use('/api', routes);
+
+app.use('*', errorHandler)
 
 const port = process.env.NODE_LOCAL_PORT || 4000;
 
