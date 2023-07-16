@@ -1,11 +1,7 @@
-/* eslint-disable no-else-return */
-/* eslint-disable no-lonely-if */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Request, Response } from 'express';
 import User from '../models/user';
 import { IUser } from '../types/interfaces';
-import { setTokenCookie } from '../utils/auth';
+import createJWTToken from '../utils/auth';
 
 /**
  * Saves user data received from Google authentication.
@@ -41,7 +37,18 @@ async function saveGoogle(req: Request, res: Response) {
           provider_id: googleId,
         });
 
-        setTokenCookie(newUser._id, newUser.role, newUser.fullName, res);
+        const token = createJWTToken(
+          newUser._id,
+          newUser.fullName,
+          newUser,
+          newUser.email
+        );
+        res.cookie('auth_token', token, {
+          httpOnly: true,
+          signed: true,
+          expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          secure: false,
+        });
 
         res.status(200).json({
           message: 'User successfully signed in',
@@ -51,33 +58,35 @@ async function saveGoogle(req: Request, res: Response) {
             email: newUser.email,
           },
         });
+      } else if (existingUserWithEmail.provider_id) {
+        res.status(400).send({
+          error:
+            'User already exists with Facebook. Please sign in with your Facebook account.',
+        });
       } else {
-        if (existingUserWithEmail.provider_id) {
-          res.status(400).send({
-            error:
-              'User already exists with Facebook. Please sign in with your Facebook account.',
-          });
-          return;
-        } else {
-          res.status(400).send({
-            error:
-              'User already exists with Email and Password. Please sign in with your registered email and password.',
-          });
-          return;
-        }
+        res.status(400).send({
+          error:
+            'User already exists with Email and Password. Please sign in with your registered email and password.',
+        });
       }
     } else {
       // User exists with Google authentication
       // Generate a new token for the authenticated user
       const userIdString: string = user._id.toString();
-      setTokenCookie(userIdString, user.role, user.fullName, res);
+      const token = createJWTToken(userIdString, user.fullName, user.email);
+      res.cookie('auth_token', token, {
+        httpOnly: true,
+        signed: true,
+        expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        secure: false,
+      });
 
       // Store the user information in req.user
       req.user = {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
-        role: user.role,
+        // role: user.role,
       };
 
       // Return the response
