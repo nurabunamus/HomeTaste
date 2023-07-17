@@ -33,6 +33,7 @@ interface IUser {
   provider_id: string;
   payment_method_status: boolean;
   fullName: string;
+  isConfirmed: boolean;
 }
 
 interface IFood {
