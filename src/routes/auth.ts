@@ -1,5 +1,9 @@
 import express from 'express';
-import passport from '../middlewares/authentication';
+import passport from '../config/passport';
+import { preventMultiLogin } from '../middlewares/authentication';
+
+const router = express.Router();
+
 import authController from '../controllers/auth';
 import saveGoogle from '../controllers/google';
 import FacebookAuthController from '../controllers/facebook';
@@ -18,6 +22,7 @@ router.get('/logout', authController.logout);
  */
 router.get(
   '/google',
+  preventMultiLogin,
   passport.authenticate('google', {
     scope: ['openid', 'email', 'profile'],
   })
@@ -31,6 +36,7 @@ router.get(
  */
 router.get(
   '/google/callback',
+  preventMultiLogin,
   passport.authenticate('google', {
     failureRedirect: '/api/auth/google',
     session: false,

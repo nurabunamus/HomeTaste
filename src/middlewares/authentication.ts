@@ -16,28 +16,29 @@ declare global {
 const authenticate = (req: Request, res: Response, next: NextFunction) => {
   try {
     // eslint-disable-next-line camelcase
-    const { auth_token } = req.cookies;
+    const { auth_token_complete } = req.cookies;
     // eslint-disable-next-line camelcase
-    if (!auth_token) {
-      return res.status(401).json({ errorMessage: 'Unauthorized' });
+    if (!auth_token_complete) {
+      return res.redirect(301, '/');
     }
-    const verified = jwt.verify(auth_token, 'your_secret_key');
+    const verified = jwt.verify(auth_token_complete, 'your_secret_key');
     if (typeof verified === 'object' && 'role' in verified) {
       req.user_cookie = { role: verified?.role };
     }
     next();
   } catch (err) {
-    res.status(401).json({ errorMessage: 'Unauthorized' });
+    res.redirect(301, '/');
   }
 };
 
-const preventMultiLogin = (req: Request, res: Response) => {
+const preventMultiLogin = (req: Request, res: Response, next: NextFunction) => {
   // eslint-disable-next-line camelcase
-  const { auth_token } = req.cookies;
+  const { auth_token_complete } = req.cookies;
   // eslint-disable-next-line camelcase
-  if (auth_token) {
+  if (auth_token_complete) {
     res.redirect(301, '/');
   }
+  next();
 };
 
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
