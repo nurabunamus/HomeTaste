@@ -15,7 +15,7 @@ const checkRole = (role: string) => {
   // eslint-disable-next-line consistent-return
   return (req: Request, res: Response, next: NextFunction) => {
     if (req?.user_cookie?.role !== role) {
-      return res.status(403).json({ errorMessage: 'Forbidden' });
+      return res.redirect(301, '/');
     }
     next();
   };

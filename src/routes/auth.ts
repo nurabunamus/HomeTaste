@@ -4,6 +4,7 @@
 
 import express from 'express';
 import passport from '../config/passport';
+import { preventMultiLogin } from '../middlewares/authentication';
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.get('/logout', authController.logout);
  */
 router.get(
   '/google',
+  preventMultiLogin,
   passport.authenticate('google', {
     scope: ['openid', 'email', 'profile'],
   })
@@ -34,6 +36,7 @@ router.get(
  */
 router.get(
   '/google/callback',
+  preventMultiLogin,
   passport.authenticate('google', {
     failureRedirect: '/api/auth/google',
     session: false,
