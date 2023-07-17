@@ -21,7 +21,10 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
     if (!auth_token_complete) {
       return res.redirect(301, '/');
     }
-    const verified = jwt.verify(auth_token_complete, 'your_secret_key');
+    const verified = jwt.verify(
+      auth_token_complete,
+      String(process.env.SECRET_KEY)
+    );
     if (typeof verified === 'object' && 'role' in verified) {
       req.user_cookie = { role: verified?.role };
     }
