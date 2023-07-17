@@ -111,7 +111,7 @@ describe('Auth Routes', () => {
       };
 
       const expectedResponse = {
-        error: 'User not found',
+        error: 'User not found, please register',
       };
 
       const res = await request(server).post('/api/auth/login').send(mReq);
