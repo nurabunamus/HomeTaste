@@ -16,13 +16,13 @@ declare global {
 const authenticate = (req: Request, res: Response, next: NextFunction) => {
   try {
     // eslint-disable-next-line camelcase
-    const { auth_token_complete } = req.cookies;
+    const { auth_token_completed } = req.cookies;
     // eslint-disable-next-line camelcase
-    if (!auth_token_complete) {
+    if (!auth_token_completed) {
       return res.redirect(301, '/');
     }
     const verified = jwt.verify(
-      auth_token_complete,
+      auth_token_completed,
       String(process.env.SECRET_KEY)
     );
     if (typeof verified === 'object' && 'role' in verified) {
@@ -36,9 +36,9 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
 
 const preventMultiLogin = (req: Request, res: Response, next: NextFunction) => {
   // eslint-disable-next-line camelcase
-  const { auth_token_complete } = req.cookies;
+  const { auth_token_completed } = req.cookies;
   // eslint-disable-next-line camelcase
-  if (auth_token_complete) {
+  if (auth_token_completed) {
     res.redirect(301, '/');
   }
   next();
