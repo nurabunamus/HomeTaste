@@ -63,6 +63,7 @@ export const UserSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    isConfirmed: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
