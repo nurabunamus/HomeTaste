@@ -32,7 +32,7 @@ app.use(
 
 app.use('/api', routes);
 
-app.use('*', errorHandler)
+app.use('*', errorHandler);
 
 const port = process.env.NODE_LOCAL_PORT || 4000;
 

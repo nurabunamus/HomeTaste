@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-import-module-exports */
 /* eslint-disable no-unused-vars */
@@ -10,7 +11,7 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt, { Secret } from 'jsonwebtoken';
 import { IAddress, IUser } from '../types/interfaces';
-import { setTokenCookie } from '../utils/auth';
+import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 import User from '../models/user';
 
 interface RegisterRequest {
@@ -59,7 +60,7 @@ const register1 = async (req: Request, res: Response) => {
     const userIdString: string = savedUser._id.toString();
 
     // Set the token as a cookie in the response
-    setTokenCookie(userIdString, newUser.role, newUser.fullName, res);
+    setTokenCookie(userIdString, newUser.fullName, res);
 
     req.user = savedUser;
     // Return the response
@@ -111,15 +112,17 @@ const completedRegister = async (req: Request, res: Response) => {
     user.address = address;
     user.phone = phone;
     user.role = role;
+    user.isConfirmed = true;
 
     // Save the updated user to the database
     await user.save();
 
-    // Clear the existing cookie
-    setTokenCookie(userId, user.role, user.fullName, res, true);
+    // // Clear the existing cookie
+    res.clearCookie('auth_token');
 
     // Set the new token as a cookie in the response
-    setTokenCookie(userId, user.role, user.fullName, res);
+    setCompletedTokenCookie(userId, user.role, user.fullName, res);
+
     req.user = user;
     // Return the response
     res.status(201).json({
@@ -131,6 +134,7 @@ const completedRegister = async (req: Request, res: Response) => {
         role: user.role,
         address: user.address,
         phone: user.phone,
+        isConfirmed: user.isConfirmed,
       },
     });
   } catch (error) {
@@ -151,7 +155,15 @@ const login = async (req: Request, res: Response) => {
     // Find the user based on the email
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ error: 'User not found, please register' });
+      return;
+    }
+
+    const isSignedWithGoogle = user.provider_id;
+    if (isSignedWithGoogle) {
+      res.status(404).json({
+        error: 'Use the appropriate method for login, Google or Facebook',
+      });
       return;
     }
 
@@ -164,7 +176,7 @@ const login = async (req: Request, res: Response) => {
 
     // Generate a new token for the authenticated user
     const userIdString: string = user._id.toString();
-    setTokenCookie(userIdString, user.role, user.fullName, res);
+    setCompletedTokenCookie(userIdString, user.role, user.fullName, res);
 
     // Store the user information in req.user
     req.user = {
@@ -188,6 +200,7 @@ const logout = (req: Request, res: Response) => {
   try {
     // Clear the auth_token cookie to log out the user
     res.clearCookie('auth_token');
+    res.clearCookie('auth_token_completed');
 
     // Return the response
     res.status(200).json({ message: 'User successfully logged out' });
