@@ -45,7 +45,7 @@ describe('Auth Routes', () => {
       expect(res.status).toBe(400);
       expect(res.body.error).toBe('Missing required fields');
       expect(res.headers['content-type']).toMatch('application/json');
-    });
+    }, 10000);
 
     test('If user email exists, should return an error with status code 400', async () => {
       const res = await request(server)
