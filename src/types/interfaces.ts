@@ -34,6 +34,7 @@ interface IUser {
   payment_method_status: boolean;
   fullName: string;
   isConfirmed: boolean;
+  isRegistrationComplete: boolean;
 }
 
 interface IFood {

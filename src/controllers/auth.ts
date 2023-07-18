@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable import/namespace */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-import-module-exports */
@@ -9,10 +10,13 @@
 import express, { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
+
 import jwt, { Secret } from 'jsonwebtoken';
 import { IAddress, IUser } from '../types/interfaces';
 import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 import User from '../models/user';
+import createTransporter from '../config/email';
+import { encrypt, decrypt } from '../utils/confirmation';
 
 interface RegisterRequest {
   email: string;
@@ -25,6 +29,34 @@ interface Register2Request {
   phone: string;
   role: string;
 }
+
+const sendEmail = async (
+  email: string,
+  fullName: string,
+  res: Response
+): Promise<void> => {
+  try {
+    // Create a unique confirmation token
+    const confirmationToken = encrypt(email);
+    const apiUrl = process.env.API_URL;
+
+    // Initialize the Nodemailer with your Gmail credentials
+    const Transport = await createTransporter();
+
+    // Configure the email options
+    const mailOptions = {
+      from: 'HomeTaste',
+      to: email,
+      subject: 'Email Confirmation',
+      html: `Press the following link to verify your email: <a href=${apiUrl}/verify/${confirmationToken}>Verification Link</a>`,
+    };
+
+    // Send the email
+    await Transport.sendMail(mailOptions);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 
 // Register1 contains => (fullName, email, password)
 const register1 = async (req: Request, res: Response) => {
@@ -60,9 +92,10 @@ const register1 = async (req: Request, res: Response) => {
     const userIdString: string = savedUser._id.toString();
 
     // Set the token as a cookie in the response
-    setTokenCookie(userIdString, newUser.fullName, res);
+    setTokenCookie(userIdString, newUser.fullName, newUser.email, res);
 
     req.user = savedUser;
+    await sendEmail(email, fullName, res);
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',
@@ -74,6 +107,32 @@ const register1 = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const verifyEmail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Get the confirmation token
+    const { confirmationToken } = req.params;
+    // Decrypt the username
+    const email = decrypt(confirmationToken);
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+      // If there is anyone, mark them as confirmed account
+      user.isConfirmed = true;
+      await user.save();
+
+      // Return the created user data
+      res
+        .status(201)
+        .json({ message: 'User verified successfully', data: user });
+    } else {
+      res.status(409).send('User Not Found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(400).send(err);
   }
 };
 
@@ -112,7 +171,7 @@ const completedRegister = async (req: Request, res: Response) => {
     user.address = address;
     user.phone = phone;
     user.role = role;
-    user.isConfirmed = true;
+    user.isRegistrationComplete = true;
 
     // Save the updated user to the database
     await user.save();
@@ -124,6 +183,7 @@ const completedRegister = async (req: Request, res: Response) => {
     setCompletedTokenCookie(userId, user.role, user.fullName, res);
 
     req.user = user;
+
     // Return the response
     res.status(201).json({
       message: 'User information updated',
@@ -214,4 +274,5 @@ export default {
   completedRegister,
   login,
   logout,
+  verifyEmail,
 };

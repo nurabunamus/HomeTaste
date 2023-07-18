@@ -7,12 +7,14 @@ import { Response } from 'express';
 export const setTokenCookie = (
   userId: string,
   fullName: string,
+  email: string,
   res: Response
 ): void => {
   const payload = {
     _id: userId,
     // eslint-disable-next-line object-shorthand
     fullName: fullName,
+    email: email,
   };
 
   const token = jwt.sign(payload, process.env.SECRET_KEY as Secret, {

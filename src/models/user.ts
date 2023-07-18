@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Schema, model } from 'mongoose';
@@ -66,6 +67,7 @@ export const UserSchema = new Schema<IUser>(
       default: false,
     },
     isConfirmed: { type: Boolean, default: false },
+    isRegistrationComplete: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
