@@ -1,3 +1,7 @@
+
+
+
+
 import express, { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
@@ -52,7 +56,11 @@ const register1 = async (req: Request, res: Response) => {
     const userIdString: string = savedUser._id.toString();
 
     // Set the token as a cookie in the response
-    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, res });
+
+    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, res })
+    
+  
+
 
     req.user = savedUser;
     // Return the response
@@ -110,6 +118,7 @@ const completedRegister = async (req: Request, res: Response) => {
     await user.save();
 
     // // Clear the existing cookie
+
     res.clearCookie('authToken');
 
     // Set the new token as a cookie in the response
@@ -119,6 +128,9 @@ const completedRegister = async (req: Request, res: Response) => {
       fullName: user.fullName,
       res,
     });
+
+  
+
 
     req.user = user;
     // Return the response
@@ -173,12 +185,16 @@ const login = async (req: Request, res: Response) => {
 
     // Generate a new token for the authenticated user
     const userIdString: string = user._id.toString();
+
     setCompletedTokenCookie({
       userId: userIdString,
       role: user.role,
       fullName: user.fullName,
       res,
     });
+
+   
+
 
     // Store the user information in req.user
     req.user = {
@@ -200,9 +216,13 @@ const login = async (req: Request, res: Response) => {
 
 const logout = (req: Request, res: Response) => {
   try {
+
     // Clear the authToken cookie to log out the user
     res.clearCookie('authToken');
     res.clearCookie('authTokenCompleted');
+
+   
+
 
     // Return the response
     res.status(200).json({ message: 'User successfully logged out' });
