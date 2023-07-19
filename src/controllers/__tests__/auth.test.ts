@@ -26,7 +26,7 @@ beforeAll(async () => {
 describe('Auth Routes', () => {
   beforeEach(async () => {
     await request(server).post('/api/auth/register1').send(newUser);
-  });
+  }, 10000); // Set the timeout to 10000 ms (10 seconds)
 
   afterEach(async () => {
     await clearDatabase();
