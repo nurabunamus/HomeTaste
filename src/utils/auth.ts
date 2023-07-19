@@ -21,7 +21,7 @@ export const setTokenCookie = ({
     fullName: fullName,
   };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET_KEY!, {
+  const token = jwt.sign(payload, process.env.SECRET_KEY!, {
     expiresIn: '14 days',
   });
   res?.cookie('authToken', token, {

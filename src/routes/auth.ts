@@ -7,15 +7,11 @@ import saveGoogle from '../controllers/google';
 import FacebookAuthController from '../controllers/facebook';
 
 const router = express.Router();
-import FacebookAuthController from '../controllers/facebook';
-import JWTAuthController from '../controllers/jwt';
-
-const router = express.Router();
 
 router.post('/register1', authController.register1);
 router.post('/register2', authController.completedRegister);
 router.post('/login', authController.login);
-router.get('/logout', JWTAuthController.jwtAuthenticate, authController.logout);
+router.get('/logout', authController.logout);
 
 /**
  * Initiates the Google authentication process.
@@ -56,11 +52,5 @@ router.get(
 router.get('/facebook/failure', FacebookAuthController.fBAuthFailure);
 
 router.get('/facebook/success', FacebookAuthController.fbAuthSuccess);
-
-router.get(
-  '/me',
-  JWTAuthController.jwtAuthenticate,
-  JWTAuthController.viewProfile
-);
 
 export default router;
