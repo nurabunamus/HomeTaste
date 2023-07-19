@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import passport from '../middlewares/authentication';
+import jwt from 'jsonwebtoken';
+import passport from '../config/passport';
 
 dotenv.config();
 
@@ -17,15 +18,30 @@ class FacebookAuthController {
   });
 
   static afterFbCallback = (req: Request, res: Response) => {
-    res.cookie('auth_token', req.user, {
-      httpOnly: true,
-      signed: true,
-      expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-      secure: false,
-      // We should add them when we are going to deploy our app
-      // secure: process.env.DEPLOYED === 'yes',
-      // sameSite: 'none',
-    });
+    const token = req.user as string;
+    const verified = jwt.verify(token, process.env.SECRET_KEY!);
+
+    if ('role' in (verified as object))
+      res.cookie('authTokenCompleted', req.user, {
+        httpOnly: true,
+        signed: true,
+        expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        secure: false,
+        // We should add them when we are going to deploy our app
+        // secure: process.env.DEPLOYED === 'yes',
+        // sameSite: 'none',
+      });
+    else {
+      res.cookie('authToken', req.user, {
+        httpOnly: true,
+        signed: true,
+        expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        secure: false,
+        // We should add them when we are going to deploy our app
+        // secure: process.env.DEPLOYED === 'yes',
+        // sameSite: 'none',
+      });
+    }
 
     res.redirect(`${process.env.BASE_URL}/api/auth/facebook/success`);
   };

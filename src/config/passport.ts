@@ -6,7 +6,7 @@ import { HydratedDocument } from 'mongoose';
 import dotenv from 'dotenv';
 import User from '../models/user';
 import { IUser } from '../types/interfaces';
-import createJWTToken from '../utils/auth';
+import { setCompletedTokenCookie, setTokenCookie } from '../utils/auth';
 
 dotenv.config();
 
@@ -57,23 +57,35 @@ passport.use(
     ) => {
       try {
         const existingUser = await User.findOne({ provider_id: profile.id });
-
+        // Check if user has a facebook provider id
         if (existingUser) {
-          const newToken = createJWTToken(
-            existingUser._id,
-            existingUser.fullName,
-            existingUser.email
-          );
+          let newToken;
+          // Check if user completed /register2
+          if (existingUser.isConfirmed) {
+            newToken = setCompletedTokenCookie({
+              userId: existingUser._id,
+              fullName: existingUser.fullName,
+              email: existingUser.email,
+              role: existingUser.role,
+            });
+          } else {
+            newToken = setTokenCookie({
+              userId: existingUser._id,
+              fullName: existingUser.fullName,
+              email: existingUser.email,
+            });
+          }
           return done(null, newToken);
         }
-
+        // if a user doesnt have a facebook provider id, check the email info from the profile
         const existingEmailUser = await User.findOne({
           email: profile._json.email,
         });
-
+        // if user exists with this email, the login attempt will be unsuccesful
         if (existingEmailUser) {
           return done(null, false);
         }
+        // Else, create a new user and make a new token for them.
         const createdUser: HydratedDocument<IUser> = await User.create({
           email: profile._json.email,
           provider_id: profile.id,
@@ -89,11 +101,11 @@ passport.use(
           );
         }
 
-        const token = createJWTToken(
-          createdUser._id,
-          createdUser.fullName,
-          createdUser.email
-        );
+        const token = setTokenCookie({
+          userId: createdUser._id,
+          fullName: createdUser.fullName,
+          email: createdUser.email,
+        });
         return done(null, token);
       } catch (err) {
         return done(err);

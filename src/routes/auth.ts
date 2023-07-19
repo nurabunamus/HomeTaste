@@ -2,12 +2,9 @@ import express from 'express';
 import passport from '../config/passport';
 import { preventMultiLogin } from '../middlewares/authentication';
 
-const router = express.Router();
-
 import authController from '../controllers/auth';
 import saveGoogle from '../controllers/google';
 import FacebookAuthController from '../controllers/facebook';
-import JWTAuthController from '../controllers/jwt';
 
 const router = express.Router();
 import FacebookAuthController from '../controllers/facebook';

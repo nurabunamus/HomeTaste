@@ -35,6 +35,8 @@
     "prettier/prettier": "error",
     "node/no-unsupported-features/es-syntax": "warn",
     "node/no-unpublished-import": "warn",
+    "@typescript-eslint/no-namespace": "warn",
+    "no-lonely-if": "warn",
     "guard-for-in": "warn",
     "no-restricted-syntax": "warn",
     "arrow-body-style": "warn",
