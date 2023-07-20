@@ -1,5 +1,3 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Schema, model } from 'mongoose';
 import { IUser, IAddress, IPaymentMethod } from '../types/interfaces';
 

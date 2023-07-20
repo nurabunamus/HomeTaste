@@ -1,10 +1,8 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable node/no-unpublished-import */
 import request from 'supertest';
 import server from '../../app';
 import {
   connectToMongo,
-  closeDatabase,
+  closeDbConnection,
   clearDatabase,
 } from '../../db/connection';
 
@@ -15,7 +13,7 @@ const newUser = {
 };
 
 afterAll(async () => {
-  await closeDatabase();
+  await closeDbConnection();
   server.close();
 });
 
@@ -150,7 +148,7 @@ describe('Auth Routes', () => {
       expect(res.status).toBe(200);
       expect(res.headers['content-type']).toMatch('application/json');
       expect(res.headers['set-cookie']).toBeDefined();
-      expect(res.headers['set-cookie'][0]).toContain('auth_token');
+      expect(res.headers['set-cookie'][0]).toContain('authToken');
       expect(res.body).toEqual(expect.objectContaining(expectedResponse));
     });
   });

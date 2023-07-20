@@ -1,5 +1,8 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose, { Collection, ConnectOptions } from 'mongoose';
+import dotenv from 'dotenv';
+import { IUser } from '../types/interfaces';
+
+dotenv.config();
 
 const { DB_USERNAME, DB_PASSWORD } = process.env;
 
@@ -24,16 +27,24 @@ export const connectToMongo = (): void => {
   });
 };
 
-export const closeDatabase = async () => {
+export const closeDbConnection = async () => {
   // await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
 };
 
 export const clearDatabase = async () => {
   const { collections } = mongoose.connection;
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
+
+  // Dont use await in for loops, instead use Promise.all
+  // Promise.all runs all the callbacks concurrently (almost in parallel), but using awaits in for loops will run the callbacks one after another
+  // Deleting all the records in a collection isn't depenedant on any other collection, so we dont need to wait until one collection is deleted before deleting other collections
+  // mongoose.mongo.DeleteResult is the promise type of the mongoose deleteMany() method
+  const mongooseDeletePromises: Array<Promise<mongoose.mongo.DeleteResult>> =
+    [];
+
   for (const key in collections) {
-    // eslint-disable-next-line no-await-in-loop
-    await collections[key].deleteMany();
+    mongooseDeletePromises.push(collections[key].deleteMany());
   }
+
+  await Promise.all(mongooseDeletePromises);
 };

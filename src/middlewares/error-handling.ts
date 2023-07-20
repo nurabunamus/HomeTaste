@@ -1,12 +1,17 @@
-import { Request, Response, NextFunction } from 'express'
-import customError from '../errors/customErrors'
+import { Request, Response, NextFunction } from 'express';
+import customError from '../errors/customErrors';
 
-const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-    if(err instanceof customError) {
-        res.status(err.errorCode).send( { errors: err.serializeErrors() } )
-    } else {
-        res.send('An error occur!')
-    }
-}
+const errorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (err instanceof customError) {
+    res.status(err.errorCode).send({ errors: err.serializeErrors() });
+  } else {
+    res.send('An error occur!');
+  }
+};
 
-export default errorHandler
+export default errorHandler;
