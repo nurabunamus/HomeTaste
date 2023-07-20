@@ -59,8 +59,8 @@ const foodSchema = new Schema<IFood>(
       },
     },
     image: { type: String, required: true },
-    categories: { type: String, enum: Object.values(Categories) },
-    allergies: { type: String, enum: Object.values(Allergies) },
+    categories: [{ type: String, enum: Object.values(Categories) }],
+    allergies: [{ type: String, enum: Object.values(Allergies) }],
   },
   { timestamps: true }
 );
