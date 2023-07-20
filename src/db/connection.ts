@@ -1,12 +1,13 @@
-import mongoose, { Collection, ConnectOptions } from 'mongoose';
-import dotenv from 'dotenv';
-import { IUser } from '../types/interfaces';
+/* eslint-disable prettier/prettier */
+/* eslint-disable node/no-unsupported-features/es-syntax */
+import mongoose, { ConnectOptions } from 'mongoose';
 
-dotenv.config();
+const { DB_USERNAME, DB_PASSWORD, NODE_ENV } = process.env;
 
-const { DB_USERNAME, DB_PASSWORD } = process.env;
+const DB_URI = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@home-taste-capstone.wyqdpan.mongodb.net/home-taste-db?retryWrites=true&w=majority`;
+const TEST_DB_URI = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@home-taste-capstone.wyqdpan.mongodb.net/home-taste-test-db?retryWrites=true&w=majority`;
 
-const url = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@home-taste-capstone.wyqdpan.mongodb.net/?retryWrites=true&w=majority`;
+const url = NODE_ENV === 'test' ? TEST_DB_URI : DB_URI;
 
 // Function to connect to MongoDB
 export const connectToMongo = (): void => {
