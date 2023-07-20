@@ -1,10 +1,6 @@
-/* eslint-disable import/namespace */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-import-module-exports */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable node/no-unsupported-features/es-syntax */
-// eslint-disable-next-line import/no-default-export
+
+
+
 
 import express, { Request, Response } from 'express';
 
@@ -60,7 +56,11 @@ const register1 = async (req: Request, res: Response) => {
     const userIdString: string = savedUser._id.toString();
 
     // Set the token as a cookie in the response
-    setTokenCookie(userIdString, newUser.fullName, res);
+
+    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, res })
+    
+  
+
 
     req.user = savedUser;
     // Return the response
@@ -82,14 +82,14 @@ const completedRegister = async (req: Request, res: Response) => {
   try {
     const { address, phone, role } = req.body as Register2Request;
     // eslint-disable-next-line dot-notation
-    const authToken = req.signedCookies['auth_token'];
+    const { authToken } = req.signedCookies;
 
     if (!phone || !address || !role) {
       res.status(400).json({ error: 'Missing required fields' });
       return;
     }
 
-    // Extract user data from the auth_token
+    // Extract user data from the authToken
     const decodedToken = jwt.verify(
       authToken,
       process.env.SECRET_KEY as Secret
@@ -118,10 +118,19 @@ const completedRegister = async (req: Request, res: Response) => {
     await user.save();
 
     // // Clear the existing cookie
-    res.clearCookie('auth_token');
+
+    res.clearCookie('authToken');
 
     // Set the new token as a cookie in the response
-    setCompletedTokenCookie(userId, user.role, user.fullName, res);
+    setCompletedTokenCookie({
+      userId: userId,
+      role: user.role,
+      fullName: user.fullName,
+      res,
+    });
+
+  
+
 
     req.user = user;
     // Return the response
@@ -176,7 +185,16 @@ const login = async (req: Request, res: Response) => {
 
     // Generate a new token for the authenticated user
     const userIdString: string = user._id.toString();
-    setCompletedTokenCookie(userIdString, user.role, user.fullName, res);
+
+    setCompletedTokenCookie({
+      userId: userIdString,
+      role: user.role,
+      fullName: user.fullName,
+      res,
+    });
+
+   
+
 
     // Store the user information in req.user
     req.user = {
@@ -198,9 +216,13 @@ const login = async (req: Request, res: Response) => {
 
 const logout = (req: Request, res: Response) => {
   try {
-    // Clear the auth_token cookie to log out the user
-    res.clearCookie('auth_token');
-    res.clearCookie('auth_token_completed');
+
+    // Clear the authToken cookie to log out the user
+    res.clearCookie('authToken');
+    res.clearCookie('authTokenCompleted');
+
+   
+
 
     // Return the response
     res.status(200).json({ message: 'User successfully logged out' });

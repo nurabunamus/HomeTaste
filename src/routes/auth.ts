@@ -1,15 +1,13 @@
-/* eslint-disable import/first */
-/* eslint-disable import/default */
-/* eslint-disable node/no-unsupported-features/es-syntax */
-
 import express from 'express';
 import passport from '../config/passport';
 import { preventMultiLogin } from '../middlewares/authentication';
 
-const router = express.Router();
 
 import authController from '../controllers/auth';
 import saveGoogle from '../controllers/google';
+import FacebookAuthController from '../controllers/facebook';
+
+const router = express.Router();
 
 router.post('/register1', authController.register1);
 router.post('/register2', authController.completedRegister);
@@ -43,5 +41,17 @@ router.get(
   }),
   saveGoogle
 );
+
+router.get('/facebook', FacebookAuthController.fBAuthenticate);
+
+router.get(
+  '/facebook/callback',
+  FacebookAuthController.fbCallBackAuthenticate,
+  FacebookAuthController.afterFbCallback
+);
+
+router.get('/facebook/failure', FacebookAuthController.fBAuthFailure);
+
+router.get('/facebook/success', FacebookAuthController.fbAuthSuccess);
 
 export default router;

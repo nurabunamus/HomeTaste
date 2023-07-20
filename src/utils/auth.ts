@@ -1,24 +1,31 @@
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable node/no-unsupported-features/es-syntax */
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import jwt, { Secret } from 'jsonwebtoken';
 import { Response } from 'express';
 
-export const setTokenCookie = (
-  userId: string,
-  fullName: string,
-  res: Response
-): void => {
+
+// This type makes it possible for the two functions in this file to have typed named parameters
+type Params = {
+  userId: string;
+  fullName: string;
+  email?: string;
+  res?: Response;
+  role?: string;
+};
+
+export const setTokenCookie = ({
+  userId,
+  fullName,
+  res,
+}: Params): void | string => {
   const payload = {
     _id: userId,
-    // eslint-disable-next-line object-shorthand
+
     fullName: fullName,
   };
 
-  const token = jwt.sign(payload, process.env.SECRET_KEY as Secret, {
+  const token = jwt.sign(payload, process.env.SECRET_KEY!, {
     expiresIn: '14 days',
   });
-  res.cookie('auth_token', token, {
+  res?.cookie('authToken', token, {
     httpOnly: true,
     signed: true,
     expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
@@ -27,26 +34,32 @@ export const setTokenCookie = (
     // secure: process.env.DEPLOYED === 'yes',
     // sameSite: 'none',
   });
+
+  return token;
 };
 
-export const setCompletedTokenCookie = (
-  userId: string,
-  role: string,
-  fullName: string,
-  res: Response
-): void => {
+export const setCompletedTokenCookie = ({
+  userId,
+  role,
+  fullName,
+  res,
+  email,
+}: Params): void | string => {
+
   const payload = {
     _id: userId,
-    // eslint-disable-next-line object-shorthand
+
     fullName: fullName,
-    // eslint-disable-next-line object-shorthand
+
     role: role,
   };
 
   const token = jwt.sign(payload, process.env.SECRET_KEY as Secret, {
     expiresIn: '14 days',
   });
-  res.cookie('auth_token_completed', token, {
+
+  res?.cookie('authTokenCompleted', token, {
+
     httpOnly: true,
     signed: true,
     expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
@@ -55,4 +68,5 @@ export const setCompletedTokenCookie = (
     // secure: process.env.DEPLOYED === 'yes',
     // sameSite: 'none',
   });
+  return token;
 };
