@@ -1,5 +1,5 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
-import { Types } from 'mongoose';
+import { Types, Document } from 'mongoose';
 
 interface IAddress {
   street_name: string;
@@ -36,14 +36,14 @@ interface IUser {
   isConfirmed: boolean;
 }
 
-interface IFood {
+interface IFood extends Document {
   user_id: Types.ObjectId;
   name: string;
   description: string;
   price: number;
   image: string;
-  categories: string;
-  allergies: string;
+  categories: string[];
+  allergies: string[];
 }
 
 interface ICart {
