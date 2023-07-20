@@ -5,7 +5,7 @@ import getFoodById from '../controllers/food';
 
 const foodRouter = express.Router();
 
-foodRouter.get('/foods/:foodId', getFoodById);
+foodRouter.get('/:foodId', getFoodById);
 
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
 export default foodRouter;

@@ -16,7 +16,6 @@ import { connectToMongo } from './db/connection';
 import SwaggerOptions from './utils/variables';
 import './config/passport';
 import routes from './routes';
-import foodRouter from './routes/foods';
 
 const app = express();
 app.use(cookieParser(process.env.SECRET_KEY));
@@ -32,7 +31,6 @@ app.use(
 );
 
 app.use('/api', routes);
-app.use('/api', foodRouter);
 
 app.use('*', errorHandler);
 
