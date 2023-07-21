@@ -5,14 +5,14 @@ import app from '../../app';
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
 import Food from '../../models/food';
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
-import { connectToMongo, closeDatabase } from '../../db/connection';
+import { connectToMongo, closeDbConnection } from '../../db/connection';
 
 beforeAll(async () => {
   await connectToMongo();
 });
 
 afterAll(async () => {
-  await closeDatabase();
+  await closeDbConnection();
 });
 
 const foodOne = {
