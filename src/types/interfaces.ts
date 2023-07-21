@@ -67,4 +67,19 @@ interface IReview {
   order: IOrder;
 }
 
-export { IAddress, IPaymentMethod, IUser, IFood, ICart, IOrder, IReview };
+interface IPasswordResetToken {
+  userId: Types.ObjectId;
+  token: string;
+  expiresAt: Date;
+}
+
+export {
+  IAddress,
+  IPaymentMethod,
+  IUser,
+  IFood,
+  ICart,
+  IOrder,
+  IReview,
+  IPasswordResetToken,
+};

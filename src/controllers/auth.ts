@@ -1,5 +1,5 @@
+/* eslint-disable consistent-return */
 /* eslint-disable object-shorthand */
-/* eslint-disable import/namespace */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-import-module-exports */
 /* eslint-disable no-unused-vars */
@@ -15,8 +15,8 @@ import jwt, { Secret } from 'jsonwebtoken';
 import { IAddress, IUser } from '../types/interfaces';
 import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 import User from '../models/user';
-import createTransporter from '../config/email';
-import { encrypt, decrypt } from '../utils/confirmation';
+import sendEmail from '../utils/email';
+import { encrypt, decrypt, generateResetToken } from '../utils/confirmation';
 
 interface RegisterRequest {
   email: string;
@@ -29,34 +29,6 @@ interface Register2Request {
   phone: string;
   role: string;
 }
-
-const sendEmail = async (
-  email: string,
-  fullName: string,
-  res: Response
-): Promise<void> => {
-  try {
-    // Create a unique confirmation token
-    const confirmationToken = encrypt(email);
-    const apiUrl = process.env.API_URL;
-
-    // Initialize the Nodemailer with your Gmail credentials
-    const Transport = await createTransporter();
-
-    // Configure the email options
-    const mailOptions = {
-      from: 'HomeTaste',
-      to: email,
-      subject: 'Email Confirmation',
-      html: `Press the following link to verify your email: <a href=${apiUrl}/verify/${confirmationToken}>Verification Link</a>`,
-    };
-
-    // Send the email
-    await Transport.sendMail(mailOptions);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
 
 // Register1 contains => (fullName, email, password)
 const register1 = async (req: Request, res: Response) => {
@@ -95,7 +67,8 @@ const register1 = async (req: Request, res: Response) => {
     setTokenCookie(userIdString, newUser.fullName, newUser.email, res);
 
     req.user = savedUser;
-    await sendEmail(email, fullName, res);
+    const subject = 'Email Verification';
+    await sendEmail(email, fullName, subject, res);
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',

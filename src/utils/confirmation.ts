@@ -37,4 +37,9 @@ const decrypt = (hash: string): string => {
   return decrypted.toString();
 };
 
-export { encrypt, decrypt };
+const generateResetToken = () => {
+  const tokenBytes = 32; // Adjust the number of bytes as per your requirement (32 bytes = 256 bits, a common size for secure tokens)
+  return crypto.randomBytes(tokenBytes).toString('hex');
+};
+
+export { encrypt, decrypt, generateResetToken };
