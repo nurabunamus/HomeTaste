@@ -37,16 +37,14 @@ async function saveGoogle(req: Request, res: Response) {
           provider_id: googleId,
         });
 
-
         setTokenCookie({
           userId: newUser._id,
           fullName: newUser.fullName,
+          email: newUser.email,
           res,
         });
 
        
-
-
         res.status(200).json({
           message: 'User successfully signed in',
           user: {
@@ -67,7 +65,7 @@ async function saveGoogle(req: Request, res: Response) {
         });
       }
     } else {
-      if (user.isConfirmed) {
+      if (user.isRegistrationComplete) {
         // User exists with Google authentication
         // Generate a new token for the authenticated user
         const userIdString: string = user._id.toString();
@@ -84,7 +82,6 @@ async function saveGoogle(req: Request, res: Response) {
         req.user = {
           id: user._id,
           fullName: user.fullName,
-          email: user.email,
           role: user.role,
         };
         // Return the response
@@ -97,7 +94,9 @@ async function saveGoogle(req: Request, res: Response) {
         // Generate a new token for the authenticated user
         const userIdString: string = user._id.toString();
 
-        setTokenCookie({ userId: userIdString, fullName: user.fullName, res });
+
+        setTokenCookie({ userId: userIdString, fullName: user.fullName, email: user.email, res });
+
 
 
         // Store the user information in req.user

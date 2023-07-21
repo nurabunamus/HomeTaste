@@ -14,6 +14,8 @@ router.post('/register2', authController.completedRegister);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
+router.get('/verify/:confirmationToken', authController.verifyEmail);
+
 /**
  * Initiates the Google authentication process.
  * Redirects the user to the Google authentication page.

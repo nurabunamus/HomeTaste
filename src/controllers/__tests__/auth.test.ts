@@ -24,7 +24,7 @@ beforeAll(async () => {
 describe('Auth Routes', () => {
   beforeEach(async () => {
     await request(server).post('/api/auth/register1').send(newUser);
-  });
+  }, 10000); // Set the timeout to 10000 ms (10 seconds)
 
   afterEach(async () => {
     await clearDatabase();
@@ -43,7 +43,7 @@ describe('Auth Routes', () => {
       expect(res.status).toBe(400);
       expect(res.body.error).toBe('Missing required fields');
       expect(res.headers['content-type']).toMatch('application/json');
-    });
+    }, 10000);
 
     test('If user email exists, should return an error with status code 400', async () => {
       const res = await request(server)

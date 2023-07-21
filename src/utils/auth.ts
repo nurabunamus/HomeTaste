@@ -1,7 +1,6 @@
 import jwt, { Secret } from 'jsonwebtoken';
 import { Response } from 'express';
 
-
 // This type makes it possible for the two functions in this file to have typed named parameters
 type Params = {
   userId: string;
@@ -14,12 +13,14 @@ type Params = {
 export const setTokenCookie = ({
   userId,
   fullName,
+  email,
   res,
 }: Params): void | string => {
+
   const payload = {
     _id: userId,
-
     fullName: fullName,
+    email: email,
   };
 
   const token = jwt.sign(payload, process.env.SECRET_KEY!, {

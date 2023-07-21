@@ -1,3 +1,4 @@
+
 import { Schema, model } from 'mongoose';
 import { IUser, IAddress, IPaymentMethod } from '../types/interfaces';
 
@@ -64,6 +65,7 @@ export const UserSchema = new Schema<IUser>(
       default: false,
     },
     isConfirmed: { type: Boolean, default: false },
+    isRegistrationComplete: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

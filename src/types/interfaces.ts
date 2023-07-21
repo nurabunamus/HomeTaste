@@ -34,6 +34,7 @@ interface IUser {
   payment_method_status: boolean;
   fullName: string;
   isConfirmed: boolean;
+  isRegistrationComplete: boolean;
 }
 
 interface IFood extends Document {
@@ -66,4 +67,19 @@ interface IReview {
   order: IOrder;
 }
 
-export { IAddress, IPaymentMethod, IUser, IFood, ICart, IOrder, IReview };
+interface IPasswordResetToken {
+  userId: Types.ObjectId;
+  token: string;
+  expiresAt: Date;
+}
+
+export {
+  IAddress,
+  IPaymentMethod,
+  IUser,
+  IFood,
+  ICart,
+  IOrder,
+  IReview,
+  IPasswordResetToken,
+};

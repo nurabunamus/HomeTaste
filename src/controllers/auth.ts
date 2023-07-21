@@ -1,14 +1,13 @@
-
-
-
-
 import express, { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
+
 import jwt, { Secret } from 'jsonwebtoken';
 import { IAddress, IUser } from '../types/interfaces';
 import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 import User from '../models/user';
+import sendEmail from '../utils/email';
+import { encrypt, decrypt, generateResetToken } from '../utils/confirmation';
 
 interface RegisterRequest {
   email: string;
@@ -57,12 +56,12 @@ const register1 = async (req: Request, res: Response) => {
 
     // Set the token as a cookie in the response
 
-    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, res })
+    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, email: newUser.email, res })
     
-  
-
 
     req.user = savedUser;
+    const subject = 'Email Verification';
+    await sendEmail(email, fullName, subject, res);
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',
@@ -74,6 +73,32 @@ const register1 = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const verifyEmail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Get the confirmation token
+    const { confirmationToken } = req.params;
+    // Decrypt the username
+    const email = decrypt(confirmationToken);
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+      // If there is anyone, mark them as confirmed account
+      user.isConfirmed = true;
+      await user.save();
+
+      // Return the created user data
+      res
+        .status(201)
+        .json({ message: 'User verified successfully', data: user });
+    } else {
+      res.status(409).send('User Not Found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(400).send(err);
   }
 };
 
@@ -112,7 +137,7 @@ const completedRegister = async (req: Request, res: Response) => {
     user.address = address;
     user.phone = phone;
     user.role = role;
-    user.isConfirmed = true;
+    user.isRegistrationComplete = true;
 
     // Save the updated user to the database
     await user.save();
@@ -130,9 +155,8 @@ const completedRegister = async (req: Request, res: Response) => {
     });
 
   
-
-
     req.user = user;
+
     // Return the response
     res.status(201).json({
       message: 'User information updated',
@@ -194,8 +218,6 @@ const login = async (req: Request, res: Response) => {
     });
 
    
-
-
     // Store the user information in req.user
     req.user = {
       id: user._id,
@@ -236,4 +258,5 @@ export default {
   completedRegister,
   login,
   logout,
+  verifyEmail,
 };
