@@ -5,6 +5,7 @@ import Food from '../models/food';
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
 import User from '../models/user';
 
+// eslint-disable-next-line consistent-return
 const createDish = async (req: Request, res: Response) => {
   try {
     const { cookerId } = req.params;
@@ -25,6 +26,7 @@ const createDish = async (req: Request, res: Response) => {
     }
 
     const food = await Food.create({
+      // eslint-disable-next-line node/no-unsupported-features/es-syntax
       ...dishData,
       user_id: cookerId,
     });
