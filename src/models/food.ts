@@ -1,5 +1,3 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import { Schema, model } from 'mongoose';
 import { IFood } from '../types/interfaces';
 
@@ -59,8 +57,8 @@ const foodSchema = new Schema<IFood>(
       },
     },
     image: { type: String, required: true },
-    categories: { type: String, enum: Object.values(Categories) },
-    allergies: { type: String, enum: Object.values(Allergies) },
+    categories: [{ type: String, enum: Object.values(Categories) }],
+    allergies: [{ type: String, enum: Object.values(Allergies) }],
   },
   { timestamps: true }
 );
