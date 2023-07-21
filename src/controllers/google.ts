@@ -1,7 +1,6 @@
-/* eslint-disable no-else-return */
+/* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable no-lonely-if */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Request, Response } from 'express';
 import User from '../models/user';
 import { IUser } from '../types/interfaces';
@@ -41,7 +40,11 @@ async function saveGoogle(req: Request, res: Response) {
           provider_id: googleId,
         });
 
-        setTokenCookie(newUser._id, newUser.fullName, newUser.email, res);
+        setTokenCookie({
+          userId: newUser._id,
+          fullName: newUser.fullName,
+          res,
+        });
 
         res.status(200).json({
           message: 'User successfully signed in',
@@ -51,27 +54,29 @@ async function saveGoogle(req: Request, res: Response) {
             email: newUser.email,
           },
         });
+      } else if (existingUserWithEmail.provider_id) {
+        res.status(400).send({
+          error:
+            'User already exists with Facebook. Please sign in with your Facebook account.',
+        });
       } else {
-        if (existingUserWithEmail.provider_id) {
-          res.status(400).send({
-            error:
-              'User already exists with Facebook. Please sign in with your Facebook account.',
-          });
-          return;
-        } else {
-          res.status(400).send({
-            error:
-              'User already exists with Email and Password. Please sign in with your registered email and password.',
-          });
-          return;
-        }
+        res.status(400).send({
+          error:
+            'User already exists with Email and Password. Please sign in with your registered email and password.',
+        });
       }
     } else {
       if (user.isRegistrationComplete) {
         // User exists with Google authentication
         // Generate a new token for the authenticated user
         const userIdString: string = user._id.toString();
-        setCompletedTokenCookie(userIdString, user.role, user.fullName, res);
+
+        setCompletedTokenCookie({
+          userId: userIdString,
+          role: user.role,
+          fullName: user.fullName,
+          res,
+        });
 
         // Store the user information in req.user
         req.user = {
@@ -89,7 +94,8 @@ async function saveGoogle(req: Request, res: Response) {
         // User exists with Google authentication
         // Generate a new token for the authenticated user
         const userIdString: string = user._id.toString();
-        setTokenCookie(userIdString, user.fullName, user.email, res);
+
+        setTokenCookie({ userId: userIdString, fullName: user.fullName, res });
 
         // Store the user information in req.user
         req.user = {

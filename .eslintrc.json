@@ -41,6 +41,8 @@
     "func-names": "off",
     "no-process-exit": "off",
     "class-methods-use-this": "off",
+    "no-unsupported-features/es-syntax": "off",
+    " no-underscore-dangle": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "no-shadow": "off"
   },
