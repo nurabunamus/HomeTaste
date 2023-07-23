@@ -116,7 +116,8 @@ paths:
       tags:
         - Auth
       summary: Complete User Registration (Second Step)
-      parameters:
+      security:
+        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
         - in: header
           name: userId
           required: true
@@ -280,7 +281,7 @@ components:
           $ref: '#/components/schemas/IAddress'
         phone:
           type: string
-          example: '05342338743'
+          example: '+905342338743'
         role:
           type: string
           example: customer

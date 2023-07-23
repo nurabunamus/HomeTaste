@@ -65,7 +65,10 @@ const register1 = async (req: Request, res: Response) => {
 
     req.user = savedUser;
     const subject = 'Email Verification';
-    await sendEmail(email, fullName, subject, res);
+    const apiUrl = process.env.API_URL;
+    const confirmationToken = encrypt(email);
+    const link = `${apiUrl}/verify/${confirmationToken}`;
+    await sendEmail(email, subject, link, res);
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',
@@ -112,7 +115,6 @@ const completedRegister = async (req: Request, res: Response) => {
     const { address, phone, role } = req.body as Register2Request;
     // eslint-disable-next-line dot-notation
     const { authToken } = req.signedCookies;
-
     if (!phone || !address || !role) {
       res.status(400).json({ error: 'Missing required fields' });
       return;
@@ -213,12 +215,21 @@ const login = async (req: Request, res: Response) => {
     // Generate a new token for the authenticated user
     const userIdString: string = user._id.toString();
 
-    setCompletedTokenCookie({
-      userId: userIdString,
-      role: user.role,
-      fullName: user.fullName,
-      res,
-    });
+    if (user.isRegistrationComplete) {
+      setCompletedTokenCookie({
+        userId: userIdString,
+        role: user.role,
+        fullName: user.fullName,
+        res,
+      });
+    } else {
+      setTokenCookie({
+        userId: userIdString,
+        fullName: user.fullName,
+        email: user.email,
+        res,
+      });
+    }
 
     // Store the user information in req.user
     req.user = {
