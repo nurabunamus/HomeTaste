@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import express, { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
@@ -56,8 +57,12 @@ const register1 = async (req: Request, res: Response) => {
 
     // Set the token as a cookie in the response
 
-    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, email: newUser.email, res })
-    
+    setTokenCookie({
+      userId: userIdString,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      res,
+    });
 
     req.user = savedUser;
     const subject = 'Email Verification';
@@ -105,7 +110,27 @@ const verifyEmail = async (req: Request, res: Response): Promise<void> => {
 // completedRegister contains => (address,phone,role)
 const completedRegister = async (req: Request, res: Response) => {
   try {
-    const { address, phone, role } = req.body as Register2Request;
+    const {
+      phone,
+      role,
+      street_name,
+      street_number,
+      city,
+      state,
+      flat_number,
+      district,
+      zip,
+    } = req.body;
+    const address: IAddress = {
+      street_name,
+      street_number,
+      state,
+      city,
+      flat_number,
+      district,
+      zip,
+    };
+    // const { address, phone, role } = req.body as Register2Request;
     // eslint-disable-next-line dot-notation
     const { authToken } = req.signedCookies;
 
@@ -154,7 +179,6 @@ const completedRegister = async (req: Request, res: Response) => {
       res,
     });
 
-  
     req.user = user;
 
     // Return the response
@@ -217,7 +241,6 @@ const login = async (req: Request, res: Response) => {
       res,
     });
 
-   
     // Store the user information in req.user
     req.user = {
       id: user._id,
@@ -238,13 +261,9 @@ const login = async (req: Request, res: Response) => {
 
 const logout = (req: Request, res: Response) => {
   try {
-
     // Clear the authToken cookie to log out the user
     res.clearCookie('authToken');
     res.clearCookie('authTokenCompleted');
-
-   
-
 
     // Return the response
     res.status(200).json({ message: 'User successfully logged out' });
