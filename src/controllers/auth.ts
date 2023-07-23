@@ -35,7 +35,7 @@ const register1 = async (req: Request, res: Response) => {
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(400).send({ error: 'User already exists' });
+      res.status(409).send({ error: 'User already exists' });
       return;
     }
 
@@ -56,8 +56,12 @@ const register1 = async (req: Request, res: Response) => {
 
     // Set the token as a cookie in the response
 
-    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, email: newUser.email, res })
-    
+    setTokenCookie({
+      userId: userIdString,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      res,
+    });
 
     req.user = savedUser;
     const subject = 'Email Verification';
@@ -154,7 +158,6 @@ const completedRegister = async (req: Request, res: Response) => {
       res,
     });
 
-  
     req.user = user;
 
     // Return the response
@@ -217,7 +220,6 @@ const login = async (req: Request, res: Response) => {
       res,
     });
 
-   
     // Store the user information in req.user
     req.user = {
       id: user._id,
@@ -238,13 +240,9 @@ const login = async (req: Request, res: Response) => {
 
 const logout = (req: Request, res: Response) => {
   try {
-
     // Clear the authToken cookie to log out the user
     res.clearCookie('authToken');
     res.clearCookie('authTokenCompleted');
-
-   
-
 
     // Return the response
     res.status(200).json({ message: 'User successfully logged out' });
