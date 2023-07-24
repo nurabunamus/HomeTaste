@@ -114,3 +114,132 @@ paths:
                   message:
                     type: string
                     example: User not found
+
+  /api/cooker/{cookerId}/{dishId}:
+    put:
+      tags:
+        - Cooker
+      summary: Update a specific dish associated with a specific cooker by ID
+      parameters:
+        - in: path
+          name: cookerId
+          required: true
+          schema:
+            type: string
+          description: The ID of the cooker to update the dish for
+        - in: path
+          name: dishId
+          required: true
+          schema:
+            type: string
+          description: The ID of the dish to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Pizza Margherita
+                description:
+                  type: string
+                  example: Classic pizza with tomato sauce, mozzarella, and basil
+                price:
+                  type: number
+                  example: 10.0
+                image:
+                  type: string
+                  example: https://example.com/pizza.jpg
+                categories:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      [
+                        Pizza,
+                        Doner,
+                        Çiğ Köfte,
+                        Dessert,
+                        Turkish,
+                        Chicken,
+                        Fast Food,
+                        Burger,
+                        Kumpir,
+                        Meat,
+                        Italian,
+                        Healthy/Diet,
+                        Drinks,
+                        Far East,
+                        Vegan,
+                        Keto,
+                      ]
+                  example: [Pizza, Italian]
+                allergies:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      [
+                        Dairy,
+                        Eggs,
+                        Seafood,
+                        Gluten,
+                        Peanuts,
+                        Soy,
+                        Sesame,
+                        Corn,
+                        Meat,
+                        Chicken,
+                        Potatoes,
+                        Rice,
+                        Oats,
+                        Barley,
+                        Rye,
+                        Sorghum,
+                      ]
+                  example: [Gluten, Dairy]
+      responses:
+        '200':
+          description: Dish updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Dish updated successfully
+        '403':
+          description: User is not a cooker
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User is not a cooker
+        '404':
+          description: Dish not found or user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Dish not found or user not found
+        '500':
+          description: An error occurred while updating the dish.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: An error occurred while updating the dish.
+                  error:
+                    type: object
