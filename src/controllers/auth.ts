@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import express, { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
@@ -112,7 +113,27 @@ const verifyEmail = async (req: Request, res: Response): Promise<void> => {
 // completedRegister contains => (address,phone,role)
 const completedRegister = async (req: Request, res: Response) => {
   try {
-    const { address, phone, role } = req.body as Register2Request;
+    const {
+      phone,
+      role,
+      street_name,
+      street_number,
+      city,
+      state,
+      flat_number,
+      district,
+      zip,
+    } = req.body;
+    const address: IAddress = {
+      street_name,
+      street_number,
+      state,
+      city,
+      flat_number,
+      district,
+      zip,
+    };
+    // const { address, phone, role } = req.body as Register2Request;
     // eslint-disable-next-line dot-notation
     const { authToken } = req.signedCookies;
     if (!phone || !address || !role) {
