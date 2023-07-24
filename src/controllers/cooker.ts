@@ -45,5 +45,44 @@ const createDish = async (req: Request, res: Response) => {
   }
 };
 
+const deleteDish = async (req: Request, res: Response) => {
+  try {
+    const { cookerId, dishId } = req.params;
+
+    const user = await User.findById(cookerId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
+
+    if (user.role !== 'cooker') {
+      return res.status(403).json({
+        message: 'User is not a cooker',
+      });
+    }
+
+    const dish = await Food.findOne({ _id: dishId, user_id: cookerId });
+
+    if (!dish) {
+      return res.status(404).json({
+        message: 'Dish not found',
+      });
+    }
+
+    await Food.deleteOne({ _id: dishId });
+
+    res.status(200).json({
+      message: 'Dish deleted successfully',
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'An error occurred while deleting the dish',
+      error: err,
+    });
+  }
+};
+
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
-export default createDish;
+export { createDish, deleteDish };
