@@ -14,7 +14,7 @@ router.use('/auth', authRoutes);
 
 router.use('/auth', passwordResetRoutes);
 
-router.use('/users', userRoutes);
+router.use('/user', userRoutes);
 router.use('/foods', foodRouter);
 router.use('/cooker', cookerRouter);
 
