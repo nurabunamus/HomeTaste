@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import express, { Request, Response } from 'express';
 
 import bcrypt from 'bcrypt';
@@ -9,6 +8,7 @@ import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 import User from '../models/user';
 import sendEmail from '../utils/email';
 import { encrypt, decrypt, generateResetToken } from '../utils/confirmation';
+import Cart from '../models/cart';
 
 interface RegisterRequest {
   email: string;
@@ -113,6 +113,7 @@ const verifyEmail = async (req: Request, res: Response): Promise<void> => {
 // completedRegister contains => (address,phone,role)
 const completedRegister = async (req: Request, res: Response) => {
   try {
+    // const { address, phone, role } = req.body as Register2Request;
     const {
       phone,
       role,
@@ -133,10 +134,9 @@ const completedRegister = async (req: Request, res: Response) => {
       district,
       zip,
     };
-    // const { address, phone, role } = req.body as Register2Request;
-    // eslint-disable-next-line dot-notation
     const { authToken } = req.signedCookies;
     if (!phone || !address || !role) {
+      console.log(phone, address, role);
       res.status(400).json({ error: 'Missing required fields' });
       return;
     }
@@ -180,6 +180,11 @@ const completedRegister = async (req: Request, res: Response) => {
       fullName: user.fullName,
       res,
     });
+
+    // Create the cart for the customer
+    if (user.role === 'customer') {
+      await Cart.create({ user: userId });
+    }
 
     req.user = user;
 

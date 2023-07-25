@@ -1,0 +1,35 @@
+paths:
+  /api/cart:
+    get:
+      tags:
+        - Cart
+      summary: Gets A User's Cart
+      responses:
+        200:
+          description: Gets A User's Cart Based On Thier User ID
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Cart'
+        404:
+          description: User's Cart Not Found 
+
+ 
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 63b2af3ea060d606a4409682
+        totalPrice:
+          type: number
+          example: 0
+        Items:
+          type: Array
+          example: []
+        user:
+          type: string
+          example: 64b2af3ea060d606a4409682
