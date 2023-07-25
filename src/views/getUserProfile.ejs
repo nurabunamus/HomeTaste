@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <%= `${userProfile.first_name.toUpperCase()} ${
+      userProfile.last_name.toUpperCase()}` %> Profile
+    </title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      /* Styling for the container that holds user information */
+      .user-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .user-details {
+        margin-left: 20px;
+      }
+
+      /* Styling for the circular profile image */
+      .profile-image {
+        display: block;
+        max-width: 200px; /* Set the maximum width of the image */
+        max-height: 200px;
+        height: auto;
+        border-radius: 50%; /* Make the image circular */
+        border: 2px solid #333; /* Add a border to the circular image */
+      }
+
+      p {
+        margin: 5px 0;
+      }
+
+      strong {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <%=`${userProfile.first_name.toUpperCase()} ${
+      userProfile.last_name.toUpperCase()}` %> PROFILE
+    </h1>
+    <div class="user-info">
+      <!-- Profile image -->
+      <img
+        src="<%= userProfile.profile_image %>"
+        alt="<%= userProfile.fullName %> Profile Image"
+        class="profile-image"
+      />
+
+      <!-- User information -->
+      <div class="user-details">
+        <p><strong>First Name:</strong> <%= userProfile.first_name %></p>
+        <p><strong>Last Name:</strong> <%= userProfile.last_name %></p>
+        <p><strong>Email:</strong> <%= userProfile.email %></p>
+        <p><strong>Phone:</strong> <%= userProfile.phone %></p>
+        <p>
+          <strong>Address:</strong>
+          <%= userProfile.address.street_name %> <%= userProfile.address.state
+          %> No:<%= userProfile.address.flat_number %> <%=
+          userProfile.address.district.toUpperCase() %> - <%=
+          userProfile.address.city.toUpperCase() %>
+        </p>
+        <% if (userProfile.role === 'customer') { %>
+        <p><strong>Cooker Status:</strong> <%= userProfile.cooker_status %></p>
+        <% } %>
+      </div>
+    </div>
+    <!-- Additional HTML or styling can be added as needed -->
+  </body>
+</html>
