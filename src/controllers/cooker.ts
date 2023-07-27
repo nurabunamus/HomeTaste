@@ -79,10 +79,31 @@ const deleteDish = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       message: 'An error occurred while deleting the dish',
+
+    });
+  }
+};
+      
+const getDishes = async (req: Request, res: Response) => {
+  try {
+    const { cookerId } = req.params;
+
+    const dishes = await Food.find({ user_id: cookerId });
+
+    res.status(200).json({
+      message: 'Dishes retrieved successfully',
+      data: {
+        dishes,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'An error occurred while retrieving the dishes',
       error: err,
     });
   }
 };
 
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
-export { createDish, deleteDish };
+
+export { createDish, getDishes, deleteDish };

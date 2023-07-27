@@ -45,11 +45,11 @@ describe('Auth Routes', () => {
       expect(res.headers['content-type']).toMatch('application/json');
     }, 10000);
 
-    test('If user email exists, should return an error with status code 400', async () => {
+    test('If user email exists, should return an error with status code 409', async () => {
       const res = await request(server)
         .post('/api/auth/register1')
         .send(newUser);
-      expect(res.status).toBe(400);
+      expect(res.status).toBe(409);
       expect(res.body.error).toBe('User already exists');
       expect(res.headers['content-type']).toMatch('application/json');
     });

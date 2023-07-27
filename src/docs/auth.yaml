@@ -1,0 +1,349 @@
+paths:
+  /api/auth/register1:
+    post:
+      tags:
+        - Auth
+      summary: User Registration (First Step)
+      description: In the first step of the registration process, users can create a new account by providing their basic information, including email, password, and fullName. Upon successful submission of this data, a verification email will be sent to the provided email address to proceed with the registration process.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: dev.tesst9999@gmail.com
+                password:
+                  type: string
+                  example: Password123
+                fullName:
+                  type: string
+                  example: Nur Abuanamus
+      responses:
+        '201':
+          description: Indicates that the first step of the registration was successful. The response will contain the newly created user's details, including an id, fullName, and email.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully signed up
+                  user:
+                    $ref: '#/components/schemas/Auth'
+        '400':
+          description: Returned if any of the required fields (email, password, fullName) are missing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required fields
+        '409':
+          description: Returned if the user with the provided email already exists in the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User already exists
+        '500':
+          description: Returned if there is an issue with the server during user registration.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+  /api/auth/verify/{confirmationToken}:
+    get:
+      tags:
+        - Auth
+      summary: Verify User's Email
+      description: |
+        Verify the user's email address using the provided confirmation token. If a user with the corresponding email is found, their account will be marked as confirmed.
+
+        **Note:** The confirmation token should be included in the URL path.
+
+      parameters:
+        - in: path
+          name: confirmationToken
+          required: true
+          schema:
+            type: string
+          description: The confirmation token received via email.
+
+      responses:
+        '201':
+          description: User's email verified successfully. The response will contain the verified user's details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User verified successfully
+                  data:
+                    $ref: '#/components/schemas/Auth' # Assuming you have a User schema defined in the components section.
+
+        '409':
+          description: User Not Found. The provided confirmation token does not match any user in the database.
+
+        '400':
+          description: Bad Request. An error occurred during email verification.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error message describing the issue.
+
+  /api/auth/register2:
+    post:
+      tags:
+        - Auth
+      summary: Complete User Registration (Second Step)
+      security:
+        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
+        - in: header
+          name: userId
+          required: true
+          schema:
+            type: string
+          description: The user ID obtained from the authentication token during the first step of registration.
+      description: Complete the user registration process by providing additional information, including address, phone, and role.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register2Request'
+      responses:
+        '201':
+          description: User information updated successfully. The response will contain the updated user's details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletedUserInfo'
+        '400':
+          description: Returned if any of the required fields (address, phone, role) are missing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required fields
+        '404':
+          description: Returned if the user with the provided ID is not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User not found
+        '500':
+          description: Returned if there is an issue with the server during user registration.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+  /api/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: User Login
+      description: Authenticate a user by their email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: dev.tesst9999@gmail.com
+                password:
+                  type: string
+                  example: Password123
+      responses:
+        '200':
+          description: User successfully logged in. The response will contain the authenticated user's details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully logged in
+                  user:
+                    $ref: '#/components/schemas/LoggedInUserInfo'
+        '400':
+          description: Returned if any of the required fields (email, password) are missing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required fields
+        '404':
+          description: Returned if the user does not exist in the database or if the user tries to log in using a different method than used for registering.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User not found or use the appropriate method for login (e.g., Google or Facebook)
+        '401':
+          description: Returned if provided password is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid credentials
+
+  /api/auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: User Logout
+      description: Log out the currently authenticated user by clearing the authentication cookies.
+      responses:
+        '200':
+          description: User successfully logged out.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully logged out
+        '500':
+          description: Returned if there is an issue with the server during the logout process.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+components:
+  schemas:
+    Auth:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64bcf5b114595ebfd3f094ac
+        fullName:
+          type: string
+          example: Nur Abuanamus
+        email:
+          type: string
+          example: dev.tesst9999@gmail.com
+    Register2Request:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/IAddress'
+        phone:
+          type: string
+          example: '+905342338743'
+        role:
+          type: string
+          example: customer
+    IAddress:
+      type: object
+      properties:
+        street_name:
+          type: string
+          example: Main Street
+        street_number:
+          type: number
+          example: 123
+        flat_number:
+          type: number
+          example: 4
+        district:
+          type: string
+          example: Downtown
+        city:
+          type: string
+          example: New York
+        state:
+          type: string
+          example: NY
+        zip:
+          type: number
+          example: 10001
+    CompletedUserInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64bcf5b114595ebfd3f094ac
+        fullName:
+          type: string
+          example: Nur Abuanamus
+        email:
+          type: string
+          example: dev.tesst9999@gmail.com
+        role:
+          type: string
+          example: customer
+        address:
+          $ref: '#/components/schemas/IAddress'
+        phone:
+          type: string
+          example: '05342338743'
+        isConfirmed:
+          type: boolean
+          example: true
+    LoggedInUserInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64bcf5b114595ebfd3f094ac
+        fullName:
+          type: string
+          example: Nur Abuanamus
+        email:
+          type: string
+          example: dev.tesst9999@gmail.com
+        role:
+          type: string
+          example: customer

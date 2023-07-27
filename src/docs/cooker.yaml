@@ -114,6 +114,49 @@ paths:
                   message:
                     type: string
                     example: User not found
+
+  /api/cooker/{cookerId}/dishes:
+    get:
+      tags:
+        - Cooker
+      summary: Get the list of dishes associated with a specific cooker by ID
+      parameters:
+        - in: path
+          name: cookerId
+          required: true
+          schema:
+            type: string
+          description: The ID of the cooker to get the dishes for
+      responses:
+        '200':
+          description: Dishes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Dishes retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      dishes:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Food'
+        '500':
+          description: An error occurred while retrieving the dishes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: An error occurred while retrieving the dishes
+                  error:
+                    type: object
   /api/cooker/{cookerId}/{dishId}:
     delete:
       tags:
