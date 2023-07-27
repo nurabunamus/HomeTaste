@@ -6,16 +6,13 @@ const cartSchema = new Schema<ICart>({
     type: [
       {
         quantity: { type: Number, min: [1, 'Quantity Must Atleast Be 1'] },
-        dishId: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Food',
+        dishId: { type: Schema.Types.ObjectId, ref: 'Food', required: true },
       },
     ],
-    required: true,
   },
   totalPrice: {
     type: Number,
-    required: true,
+    default: 0,
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -29,7 +26,7 @@ const cartSchema = new Schema<ICart>({
 Document Middlewares have a "this" object which points to the document itself
 the "this" object must have the same type as the interface of the schema, in this case, the interface here is ICart */
 cartSchema.pre('save', function (this: ICart): any {
-  return this.totalPrice >= 0
+  return this.totalPrice! >= 0
     ? this.totalPrice
     : new Error('Total Price Cant Be Less Than 0...');
 });

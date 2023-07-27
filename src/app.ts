@@ -7,6 +7,7 @@ import passport from 'passport';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import * as dotenv from 'dotenv';
+import path from 'path';
 import errorHandler from './middlewares/error-handling';
 
 dotenv.config();
@@ -22,6 +23,9 @@ app.use(cookieParser(process.env.SECRET_KEY));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(passport.initialize());
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 const swaggerSpec = swaggerJsdoc(SwaggerOptions);
 app.use(

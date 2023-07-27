@@ -23,6 +23,14 @@ const SWAGGER_OPTIONS = {
         url: process.env.BASE_URL,
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+        },
+      },
+    },
   },
   apis: ['./src/docs/**/*.yaml'],
 };

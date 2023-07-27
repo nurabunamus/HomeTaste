@@ -8,6 +8,7 @@ import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 import User from '../models/user';
 import sendEmail from '../utils/email';
 import { encrypt, decrypt, generateResetToken } from '../utils/confirmation';
+import Cart from '../models/cart';
 
 interface RegisterRequest {
   email: string;
@@ -35,7 +36,7 @@ const register1 = async (req: Request, res: Response) => {
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(400).send({ error: 'User already exists' });
+      res.status(409).send({ error: 'User already exists' });
       return;
     }
 
@@ -56,12 +57,19 @@ const register1 = async (req: Request, res: Response) => {
 
     // Set the token as a cookie in the response
 
-    setTokenCookie({ userId: userIdString, fullName: newUser.fullName, email: newUser.email, res })
-    
+    setTokenCookie({
+      userId: userIdString,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      res,
+    });
 
     req.user = savedUser;
     const subject = 'Email Verification';
-    await sendEmail(email, fullName, subject, res);
+    const apiUrl = process.env.API_URL;
+    const confirmationToken = encrypt(email);
+    const link = `${apiUrl}/verify/${confirmationToken}`;
+    await sendEmail(email, subject, link, res);
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',
@@ -105,11 +113,30 @@ const verifyEmail = async (req: Request, res: Response): Promise<void> => {
 // completedRegister contains => (address,phone,role)
 const completedRegister = async (req: Request, res: Response) => {
   try {
-    const { address, phone, role } = req.body as Register2Request;
-    // eslint-disable-next-line dot-notation
+    // const { address, phone, role } = req.body as Register2Request;
+    const {
+      phone,
+      role,
+      street_name,
+      street_number,
+      city,
+      state,
+      flat_number,
+      district,
+      zip,
+    } = req.body;
+    const address: IAddress = {
+      street_name,
+      street_number,
+      state,
+      city,
+      flat_number,
+      district,
+      zip,
+    };
     const { authToken } = req.signedCookies;
-
     if (!phone || !address || !role) {
+      console.log(phone, address, role);
       res.status(400).json({ error: 'Missing required fields' });
       return;
     }
@@ -154,7 +181,11 @@ const completedRegister = async (req: Request, res: Response) => {
       res,
     });
 
-  
+    // Create the cart for the customer
+    if (user.role === 'customer') {
+      await Cart.create({ user: userId });
+    }
+
     req.user = user;
 
     // Return the response
@@ -210,14 +241,22 @@ const login = async (req: Request, res: Response) => {
     // Generate a new token for the authenticated user
     const userIdString: string = user._id.toString();
 
-    setCompletedTokenCookie({
-      userId: userIdString,
-      role: user.role,
-      fullName: user.fullName,
-      res,
-    });
+    if (user.isRegistrationComplete) {
+      setCompletedTokenCookie({
+        userId: userIdString,
+        role: user.role,
+        fullName: user.fullName,
+        res,
+      });
+    } else {
+      setTokenCookie({
+        userId: userIdString,
+        fullName: user.fullName,
+        email: user.email,
+        res,
+      });
+    }
 
-   
     // Store the user information in req.user
     req.user = {
       id: user._id,
@@ -238,13 +277,9 @@ const login = async (req: Request, res: Response) => {
 
 const logout = (req: Request, res: Response) => {
   try {
-
     // Clear the authToken cookie to log out the user
     res.clearCookie('authToken');
     res.clearCookie('authTokenCompleted');
-
-   
-
 
     // Return the response
     res.status(200).json({ message: 'User successfully logged out' });
