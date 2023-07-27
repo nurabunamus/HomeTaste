@@ -157,3 +157,64 @@ paths:
                     example: An error occurred while retrieving the dishes
                   error:
                     type: object
+  /api/cooker/{cookerId}/{dishId}:
+    delete:
+      tags:
+        - Cooker
+      summary: Delete a specific dish associated with a specific cooker by ID
+      parameters:
+        - in: path
+          name: cookerId
+          required: true
+          schema:
+            type: string
+          description: The ID of the cooker to delete the dish for
+        - in: path
+          name: dishId
+          required: true
+          schema:
+            type: string
+          description: The ID of the dish to delete
+      responses:
+        '200':
+          description: Dish deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Dish deleted successfully
+        '403':
+          description: User is not a cooker
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User is not a cooker
+        '404':
+          description: Dish not found or user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Dish not found or user not found
+        '500':
+          description: An error occurred while deleting the dish.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: An error occurred while deleting the dish.
+                  error:
+                    type: object
