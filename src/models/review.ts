@@ -1,6 +1,5 @@
 import { Schema, Model, model, Types } from 'mongoose';
 import { IReview, IOrder } from '../types/interfaces';
-import { orderSchema } from './order';
 
 /* check the mongoose typescript documentation for more info
  https://mongoosejs.com/docs/typescript/subdocuments.html */
@@ -15,7 +14,7 @@ export const ReviewSchema = new Schema<IReview, ReviewModelType>({
   comment: String,
   userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   dishId: { type: Schema.Types.ObjectId, required: true, ref: 'Food' },
-  order: { type: orderSchema, required: true },
+  order: { type: Schema.Types.ObjectId, required: true, ref: 'Order' },
 });
 
 // makes sure each review record has a comment and/or rating, we cant have a review without both a rating AND a comment
