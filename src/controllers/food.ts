@@ -18,17 +18,21 @@ const getFoodById = async (req: Request, res: Response) => {
 };
 
 const getFoodFilter = async (req: Request, res: Response) => {
-  const { categories } = req.query;
-  const { allergies } = req.query;
-  const query: { categories?: unknown; allergies?: unknown } = {};
-  if (categories) {
-    query.categories = { $in: (categories as string).split(',') };
+  try {
+    const { categories } = req.query;
+    const { allergies } = req.query;
+    const query: { categories?: unknown; allergies?: unknown } = {};
+    if (categories) {
+      query.categories = { $in: (categories as string).split(',') };
+    }
+    if (allergies) {
+      query.allergies = { $nin: (allergies as string).split(',') };
+    }
+    const foods = await Food.find(query);
+    res.json(foods);
+  } catch (error) {
+    res.status(500).json({ message: error });
   }
-  if (allergies) {
-    query.allergies = { $nin: (allergies as string).split(',') };
-  }
-  const foods = await Food.find(query);
-  res.json(foods);
 };
 
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
