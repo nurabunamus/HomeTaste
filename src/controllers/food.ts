@@ -18,7 +18,8 @@ const getFoodById = async (req: Request, res: Response) => {
 };
 
 const getFoodFilter = async (req: Request, res: Response) => {
-  const { categories } = req.query;
+  try {
+      const { categories } = req.query;
   const { allergies } = req.query;
   const query: { categories?: unknown; allergies?: unknown } = {};
   if (categories) {
@@ -29,6 +30,9 @@ const getFoodFilter = async (req: Request, res: Response) => {
   }
   const foods = await Food.find(query);
   res.json(foods);
+  } catch(err) {
+    res.status(500).json({ message: error });
+  }
 };
 
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
