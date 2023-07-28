@@ -30,8 +30,10 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
+        console.log('hello from passport google middleware');
         cb(null, profile as Profile);
       } catch (error) {
+        // console.log('error ' + error);
         cb(null, error as Error);
       }
     }
@@ -56,12 +58,13 @@ passport.use(
       done: any
     ) => {
       try {
+        console.log('hello from facebook strategy');
         const existingUser = await User.findOne({ provider_id: profile.id });
         // Check if user has a facebook provider id
         if (existingUser) {
           let newToken;
           // Check if user completed /register2
-          if (existingUser.isConfirmed) {
+          if (existingUser.isRegistrationComplete) {
             newToken = setCompletedTokenCookie({
               userId: existingUser._id,
               fullName: existingUser.fullName,
@@ -86,6 +89,7 @@ passport.use(
           return done(null, false);
         }
         // Else, create a new user and make a new token for them.
+        console.log('created new user');
         const createdUser: HydratedDocument<IUser> = await User.create({
           email: profile._json.email,
           provider_id: profile.id,

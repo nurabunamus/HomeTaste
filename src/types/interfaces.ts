@@ -48,8 +48,8 @@ interface IFood extends Document {
 }
 
 interface ICart {
-  items: { quantity: number; dishId: Types.ObjectId }[];
-  totalPrice: number;
+  items?: { quantity: number; dishId: Types.ObjectId }[];
+  totalPrice?: number;
   user: Types.ObjectId;
 }
 

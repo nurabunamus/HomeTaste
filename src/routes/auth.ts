@@ -2,7 +2,6 @@ import express from 'express';
 import passport from '../config/passport';
 import { preventMultiLogin } from '../middlewares/authentication';
 
-
 import authController from '../controllers/auth';
 import saveGoogle from '../controllers/google';
 import FacebookAuthController from '../controllers/facebook';
@@ -15,6 +14,18 @@ router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
 router.get('/verify/:confirmationToken', authController.verifyEmail);
+
+router.get('/register1', (req, res) => {
+  res.render('register1');
+});
+
+router.get('/register2', (req, res) => {
+  res.render('register2');
+});
+
+router.get('/login', (req, res) => {
+  res.render('login');
+});
 
 /**
  * Initiates the Google authentication process.

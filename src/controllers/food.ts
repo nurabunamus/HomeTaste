@@ -36,4 +36,4 @@ const getFoodFilter = async (req: Request, res: Response) => {
 };
 
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
-export { getFoodById, getFoodFilter };
+export default getFoodById;
