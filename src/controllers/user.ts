@@ -18,14 +18,24 @@ interface userProfile {
   address: IAddress;
   profile_image: string;
 }
-export const getUserProfile = async (req: Request, res: Response) => {
+interface updateProfile {
+  address: IAddress;
+  phone: string;
+  profile_image: string;
+  cooker_status: string;
+  first_name: string;
+  last_name: string;
+}
+const getUserProfile = async (req: Request, res: Response) => {
   try {
+    // Get the user information from the request
     const userReq = req.user as IUser;
     const user = await User.findById({ _id: userReq._id });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    // Create a userProfile object using data from the user document
     const userProfile: userProfile = {
       first_name: user.first_name,
       last_name: user.last_name,
@@ -45,15 +55,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-interface updateProfile {
-  address: IAddress;
-  phone: string;
-  profile_image: string;
-  cooker_status: string;
-  first_name: string;
-  last_name: string;
-}
-export const updateUserProfile = async (req: Request, res: Response) => {
+const updateUserProfile = async (req: Request, res: Response) => {
   try {
     const userReq = req.user as IUser;
     const {
@@ -109,3 +111,5 @@ export const updateUserProfile = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export default { getUserProfile, updateUserProfile };
