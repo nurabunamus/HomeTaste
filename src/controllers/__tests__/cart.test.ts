@@ -1,10 +1,4 @@
-describe('Test Suite', () => {
-  test('Always passing test', () => {
-    expect(true).toBe(true);
-  });
-});
-
-/*
+/* eslint-disable node/no-extraneous-import */
 import jwt from 'jsonwebtoken';
 import request from 'supertest';
 import dotenv from 'dotenv';
@@ -86,4 +80,3 @@ describe('Cart Routes', () => {
     });
   });
 });
-*/
