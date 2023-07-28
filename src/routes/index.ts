@@ -2,6 +2,7 @@
 import express from 'express';
 import authRoutes from './auth';
 import userRoutes from './users';
+import reviewRouter from './review';
 
 import passwordResetRoutes from './passwordReset';
 
@@ -19,4 +20,5 @@ router.use('/user', userRoutes);
 router.use('/foods', foodRouter);
 router.use('/cooker', cookerRouter);
 router.use('/cart', cartRoutes);
+router.use('/review', reviewRouter);
 export default router;
