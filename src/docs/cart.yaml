@@ -55,7 +55,27 @@ paths:
               message:
                 type: string
                 description: An error message
- 
+  /api/cart/deleteAll:
+    get:
+      tags:
+        - Cart
+      summary: Delete All Items In A User's Cart
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: All Items In The Cart Have Been Succesfully Removed
+          content:
+            application/json: 
+              schema:
+                 type: object
+                 properties:
+                   message:
+                     type: string
+                     description: A success message
+        500:
+          description: For Any Other Kind Of Error
+  
 
 components:
   securitySchemas:

@@ -22,13 +22,20 @@ afterAll(async () => {
   app.close();
 });
 
-const mockItem = { quantity: 1, dishId: '64c515f494e860d59451717' };
+const firstMockItem = {
+  quantity: 1,
+  dishId: { _id: '64c515f494e860d59451717c' },
+};
+const secondMockItem = {
+  quantity: 1,
+  dishId: { _id: '64c515f494e860d59451719c' },
+};
 
 const updatedCart = {
   _id: '64b9794d6e69a32c5b952b2e',
   totalPrice: 0,
   user: '64b9781dbee12ba0fe169821',
-  items: [mockItem],
+  items: [firstMockItem, secondMockItem],
   __v: 0,
 };
 
@@ -36,7 +43,7 @@ const firstMockCartWithSave = {
   _id: '64b9794d6e69a32c5b952b2e',
   totalPrice: 0,
   user: '64b9781dbee12ba0fe169821',
-  items: [],
+  items: [firstMockItem],
   __v: 0,
   save: jest.fn().mockReturnValue(updatedCart as any),
 };
@@ -54,7 +61,7 @@ const mockCartWithNoSave = {
   _id: '64b9794d6e69a32c5b952b2e',
   totalPrice: 0,
   user: '64b9781dbee12ba0fe169821',
-  items: [],
+  items: [firstMockItem],
   __v: 0,
 };
 
@@ -79,6 +86,7 @@ const spyFind = jest
 describe('Cart Routes', () => {
   afterEach(() => {
     spyFind.mockClear();
+    firstMockCartWithSave.save.mockClear();
   });
 
   describe('GET /cart', () => {
@@ -107,13 +115,26 @@ describe('Cart Routes', () => {
     it('Should Add A New Item To The Cart', async () => {
       const res = await request(app)
         .post('/api/cart')
-        .query({ dishId: '64c515f494e860d59451717c' })
+        .query({ dishId: '64c515f494e860d59451719c' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
       expect(spyFind).toBeCalledTimes(1);
       expect(firstMockCartWithSave.save).toBeCalledTimes(1);
       expect(res.status).toBe(200);
       expect(res.body.message).toBe('Dish Succesfully Added To Cart');
+    });
+  });
+  describe('GET /cart/deleteAll', () => {
+    it('Removes All Items From The Users Cart', async () => {
+      const res = await request(app)
+        .get('/api/cart/deleteAll')
+        .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
+      expect(firstMockCartWithSave.save).toBeCalledTimes(1);
+      expect(spyFind).toBeCalledTimes(1);
+      expect(res.status).toBe(200);
+      expect(res.body).toBe(
+        'All Items In The Cart Have Been Succesfully Removed'
+      );
     });
   });
 });
