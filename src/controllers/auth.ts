@@ -69,7 +69,7 @@ const register1 = async (req: Request, res: Response) => {
     const apiUrl = process.env.API_URL;
     const confirmationToken = encrypt(email);
     const link = `${apiUrl}/verify/${confirmationToken}`;
-    await sendEmail(email, subject, link, res);
+    // await sendEmail(email, subject, link, res);
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',
@@ -80,7 +80,7 @@ const register1 = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(error);
   }
 };
 

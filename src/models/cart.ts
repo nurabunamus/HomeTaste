@@ -31,4 +31,19 @@ cartSchema.pre('save', function (this: ICart): any {
     : new Error('Total Price Cant Be Less Than 0...');
 });
 
-export default model<ICart>('Cart', cartSchema);
+cartSchema.post<ICart>('save', async function (this, next: any) {
+  const userCart = await Cart.findOne({ user: this.user }).populate(
+    'items.dishId',
+    'price'
+  );
+  userCart!.totalPrice = userCart!.items?.reduce(
+    (accumlator: any, initialVal: any) =>
+      accumlator + initialVal.quantity * initialVal.dishId.price,
+    0
+  );
+  await userCart?.save();
+  next();
+});
+
+const Cart = model<ICart>('Cart', cartSchema);
+export default Cart;

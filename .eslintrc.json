@@ -37,6 +37,8 @@
     "node/no-unpublished-import": "warn",
     "@typescript-eslint/no-namespace": "warn",
     "no-lonely-if": "warn",
+    "camelcase": "Warn",
+    "no-use-before-define": "warn",
     "guard-for-in": "warn",
     "no-restricted-syntax": "warn",
     "arrow-body-style": "warn",

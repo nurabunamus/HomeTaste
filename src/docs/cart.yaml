@@ -13,10 +13,56 @@ paths:
                 $ref: '#/components/schemas/Cart'
         404:
           description: User's Cart Not Found 
-
+  
+    post:
+      tags:
+        - Cart
+      summary: Add a dish to the user's cart
+      description: |
+        Adds a dish to the user's cart. The user must be authenticated with a JWT token.
+      produces:
+        - application/json
+      parameters:
+        - name: dishId
+          in: query
+          description: The ID of the dish to be added to the cart
+          required: true
+          type: string
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Dish successfully added to the cart
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: A success message
+        401:
+          description: Unauthorized - JWT token not provided or invalid
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
+        404:
+          description: Not Found - The dish or user cart was not found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
  
 
 components:
+  securitySchemas:
+    cookieAuth:
+      type: apiKey
+      name: authTokenCompleted
+      in: cookie
   schemas:
     Cart:
       type: object
