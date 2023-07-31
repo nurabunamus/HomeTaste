@@ -1,10 +1,4 @@
-/* eslint-disable spaced-comment */
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable prettier/prettier */
 /* eslint-disable object-shorthand */
-/* eslint-disable camelcase */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/prefer-default-export */
 import { Request, Response } from 'express';
 import User from '../models/user';
 import { IAddress, IUser } from '../types/interfaces';
