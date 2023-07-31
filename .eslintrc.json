@@ -39,6 +39,7 @@
     "no-lonely-if": "warn",
     "camelcase": "Warn",
     "no-use-before-define": "warn",
+    "consistent-return": "warn",
     "guard-for-in": "warn",
     "no-restricted-syntax": "warn",
     "arrow-body-style": "warn",

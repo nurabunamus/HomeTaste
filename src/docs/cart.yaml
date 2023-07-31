@@ -3,7 +3,10 @@ paths:
     get:
       tags:
         - Cart
-      summary: Gets A User's Cart
+      summary: Gets a user's cart
+      description: Returns a user's cart, The user must be authenticated with a JWT token to access this endpoint and must have the role of a customer.
+      security:
+        - cookieAuth: []
       responses:
         200:
           description: Gets A User's Cart Based On Thier User ID
@@ -11,6 +14,22 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/Cart'
+        401:
+          description: Unauthenticated - the user isnt authenticated and doesnt have a JWT token
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message        
+        403:
+          description: Unauthorized, user doesnt have the appropiate role to access this endpoint
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
         404:
           description: User's Cart Not Found 
   
@@ -19,7 +38,7 @@ paths:
         - Cart
       summary: Add a dish to the user's cart
       description: |
-        Adds a dish to the user's cart. The user must be authenticated with a JWT token.
+        Adds a dish to the user's cart. The user must be authenticated with a JWT token to access this endpoint and must have the role of a customer.
       produces:
         - application/json
       parameters:
@@ -40,7 +59,15 @@ paths:
                 type: string
                 description: A success message
         401:
-          description: Unauthorized - JWT token not provided or invalid
+          description: Unauthenticated - the user isnt authenticated and doesnt have a JWT token
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message        
+        403:
+          description: Unauthorized, user doesnt have the appropiate role to access this endpoint
           schema:
             type: object
             properties:
@@ -60,7 +87,7 @@ paths:
         - Cart
       summary: Removes an item from the user's cart
       description: |
-        Removes one dish from the user's cart. The user must be authenticated with a JWT token.
+        Removes one dish from the user's cart. The user must be authenticated with a JWT token to access this endpoint and must have the role of a customer.
       produces:
         - application/json
       parameters:
@@ -80,6 +107,84 @@ paths:
               message:
                 type: string
                 description: A success message
+        401:
+          description: Unauthenticated - the user isnt authenticated and doesnt have a JWT token
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message        
+        403:
+          description: Unauthorized, user doesnt have the appropiate role to access this endpoint
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
+        404:
+          description: Not Found - the dish or user cart was not found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
+        500:
+          description: Interal Server Error - this might include any error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message   
+    put:  
+      tags:
+        - Cart
+      summary: Updates an item's quantity in the user's cart
+      description: |
+        Updates one dish's quantity in the user's cart. The user must be authenticated with a JWT token to access this endpoint and must have the role of a customer.
+      produces:
+        - application/json
+      parameters:
+        - name: dishId
+          in: query
+          description: The ID of the dish to be updated in the cart
+          required: true
+          type: string
+        - name: method
+          in: query
+          description: The method of update to be applied on an item's quantity in the cart, value can only be equal to increment or decrement
+          required: true
+          type: string  
+      security:
+        - cookieAuth: []
+      responses:
+        201:
+          description: Item quantity was successfully updated from the cart
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: A success message
+        401:
+          description: Unauthenticated - the user isnt authenticated and doesnt have a JWT token
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message        
+        403:
+          description: Unauthorized, user doesnt have the appropiate role to access this endpoint
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message             
         404:
           description: Not Found - the dish or user cart was not found
           schema:
@@ -101,6 +206,7 @@ paths:
       tags:
         - Cart
       summary: Delete All Items In A User's Cart
+      description: Removes all items in the user's cart, The user must be authenticated with a JWT token to access this endpoint and must have the role of a customer.
       security:
         - cookieAuth: []
       responses:
@@ -114,6 +220,22 @@ paths:
                    message:
                      type: string
                      description: A success message
+        401:
+          description: Unauthenticated - the user isnt authenticated and doesnt have a JWT token
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message        
+        403:
+          description: Unauthorized, user doesnt have the appropiate role to access this endpoint
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
         500:
           description: For Any Other Kind Of Error
   

@@ -25,4 +25,11 @@ router.delete(
   CartController.deleteItem
 );
 
+router.put(
+  '/',
+  isAuthenticated,
+  checkRole('customer'),
+  CartController.changeQuantity
+);
+
 export default router;

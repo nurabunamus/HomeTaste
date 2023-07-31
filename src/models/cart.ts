@@ -31,13 +31,17 @@ cartSchema.pre('save', function (this: ICart): any {
     : new Error('Total Price Cant Be Less Than 0...');
 });
 
+// A Document middleware to calculate the total price of the items in the cart after each save
+// We first populate (JOIN) the Cart table from the dish IDs in the items array to get the price of each dish
+// then, apply a reducer that sums up the multiples of price*quantity.
 cartSchema.post<ICart>('save', async function (this, next: any) {
   const userCart = await Cart.findOne({ user: this.user }).populate(
     'items.dishId',
     'price'
   );
+
   userCart!.totalPrice = userCart!.items?.reduce(
-    (accumlator: any, initialVal: any) =>
+    (accumlator: number, initialVal: any) =>
       accumlator + initialVal.quantity * initialVal.dishId.price,
     0
   );

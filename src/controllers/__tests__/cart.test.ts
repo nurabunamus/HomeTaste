@@ -159,6 +159,20 @@ describe('Cart Routes', () => {
       expect(res.status).toBe(204);
     });
   });
+  describe('PUT /cart', () => {
+    it('Should Update the quantity of an item in the cart', async () => {
+      const res = await request(app)
+        .put('/api/cart/')
+        .query({ dishId: '64c515f494e860d59451719c', method: 'increment' })
+        .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
+
+      expect(spyFind).toBeCalledTimes(1);
+      expect(firstMockCartWithSave.save).toBeCalledTimes(1);
+      expect(firstMockCartWithSave.items[0].quantity).toBe(2);
+      expect(res.status).toBe(201);
+      expect(res.body).toBe('Quantity Succesfully Updated');
+    });
+  });
   describe('GET /cart/deleteAll', () => {
     it('Removes All Items From The Users Cart', async () => {
       const res = await request(app)
