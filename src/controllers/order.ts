@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import Order from '../models/order';
+import Order, { OrderStatus } from '../models/order';
 import { IOrder, IUser } from '../types/interfaces';
 import User from '../models/user';
+import Cart from '../models/cart';
 
 const getOrders = async (req: Request, res: Response) => {
   try {
@@ -10,7 +11,7 @@ const getOrders = async (req: Request, res: Response) => {
     const user = await User.findById({ _id: userReq._id });
 
     if (!user) {
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
     // Find all orders associated with the user
     const orders = await Order.find({ 'user._id': user._id });
@@ -25,7 +26,8 @@ const getOrders = async (req: Request, res: Response) => {
       orderDetails: order.orderDetails,
       orderStatus: order.orderStatus,
       user: {
-        name: `${user.first_name} ${user.last_name}`,
+        first_name: user.first_name,
+        last_name: user.last_name,
         email: user.email,
         phone: user.phone,
         address: user.address,
@@ -44,27 +46,34 @@ const getOrders = async (req: Request, res: Response) => {
 const createOrder = async (req: Request, res: Response) => {
   try {
     const userReq = req.user as IUser;
-    const { orderDetails } = req.body as IOrder;
+    const { cookerId } = req.body as IOrder;
 
-    // Check if the orderDetails are valid
-    if (
-      !orderDetails ||
-      !Array.isArray(orderDetails) ||
-      orderDetails.length === 0
-    ) {
-      return res.status(400).json({ message: 'Invalid order details' });
+    // Check if the provided cookerId belongs to a user with the role "cooker"
+    const cooker = await User.findById(cookerId);
+    if (!cooker || cooker.role !== 'cooker') {
+      return res.status(403).json({ message: 'User is not a cooker' });
     }
 
+    // Find the user associated with the authenticated user ID
     const user = await User.findById(userReq._id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const order = new Order({
-      orderDetails,
+    // Find the user's cart in the database
+    const cart = await Cart.findOne({ user: user._id });
+    if (!cart) {
+      return res.status(404).json({ message: 'No cart found for this user' });
+    }
+
+    const newOrder = await Order.create({
+      orderDetails: cart.items,
       user,
+      cookerId,
     });
-    const newOrder = await order.save();
+
+    // Clear the cart items after the order is successfully created
+    await Cart.create({ user: user._id, items: [], totalPrice: 0 });
 
     return res
       .status(200)
@@ -74,4 +83,43 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-export default { createOrder, getOrders };
+const cancelOrder = async (req: Request, res: Response) => {
+  try {
+    const orderId = req.params.id;
+    const userReq = req.user as IUser;
+
+    const user = await User.findById({ _id: userReq._id });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const order = await Order.findById({ _id: orderId });
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    // Update the order status to "Canceled"
+    order.orderStatus = OrderStatus.Canceled;
+
+    // Save the updated order
+    const updatedOrder = await order.save();
+    // Format the orders data to make the response more concise and readable
+    const formattedOrder = {
+      _id: updatedOrder._id,
+      orderDetails: updatedOrder.orderDetails,
+      orderStatus: updatedOrder.orderStatus,
+      user: {
+        first_name: updatedOrder.user.first_name,
+        last_name: updatedOrder.user.last_name,
+        email: updatedOrder.user.email,
+        phone: updatedOrder.user.phone,
+        address: updatedOrder.user.address,
+      },
+    };
+    return res
+      .status(200)
+      .json({ message: 'Order canceled successfully', data: formattedOrder });
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export default { createOrder, getOrders, cancelOrder };
