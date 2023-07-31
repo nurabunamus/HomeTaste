@@ -18,4 +18,10 @@ router.post(
   orderControllers.createOrder
 );
 
+router.put(
+  '/:id/cancel',
+  isAuthenticated,
+  checkRole('customer'),
+  orderControllers.cancelOrder
+);
 export default router;
