@@ -33,7 +33,7 @@
     "import/first": "warn",
     "@typescript-eslint/ban-types": "warn",
     "prettier/prettier": "error",
-    "node/no-unsupported-features/es-syntax": "warn",
+    "node/no-unsupported-features/es-syntax": "off",
     "node/no-unpublished-import": "warn",
     "@typescript-eslint/no-namespace": "warn",
     "no-lonely-if": "warn",
@@ -43,7 +43,7 @@
     "guard-for-in": "warn",
     "no-restricted-syntax": "warn",
     "arrow-body-style": "warn",
-    "no-underscore-dangle": "warn",
+    "no-underscore-dangle": "off",
     "dot-notation": "warn",
     "object-shorthand": "warn",
     "no-useless-escape": "warn",
@@ -53,6 +53,8 @@
     "no-process-exit": "off",
     "class-methods-use-this": "off",
     "@typescript-eslint/no-shadow": ["error"],
+    "camelcase": "off",
+    "@typescript-eslint/camelcase": ["off"],
     "no-shadow": "off"
   },
   "settings": {

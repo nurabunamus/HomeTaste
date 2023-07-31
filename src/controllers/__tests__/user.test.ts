@@ -67,10 +67,10 @@ describe('User Routes', () => {
     findOneAndUpdateSpy.mockClear();
   });
 
-  describe('GET/api/user/profile', () => {
+  describe('GET/api/users/profile', () => {
     it('Should get the user profile', async () => {
       const res = await request(server)
-        .get('/api/user/profile')
+        .get('/api/users/profile')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
       expect(res.status).toBe(200);
       expect(res.body.message).toBe('User retrieved successfully');
@@ -78,7 +78,7 @@ describe('User Routes', () => {
       expect(spy).toHaveBeenCalledTimes(1);
     });
     it('should return a 401 error when the user is not authenticated', async () => {
-      const res = await request(server).get('/api/user/profile');
+      const res = await request(server).get('/api/users/profile');
 
       expect(res.status).toBe(401);
       expect(res.body.message).toBe('No token, Unauthorized.');
@@ -89,7 +89,7 @@ describe('User Routes', () => {
       spy.mockResolvedValueOnce(null);
 
       const res = await request(server)
-        .get('/api/user/profile')
+        .get('/api/users/profile')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
       expect(res.status).toBe(404);
@@ -101,7 +101,7 @@ describe('User Routes', () => {
       spy.mockRejectedValueOnce(new Error('Database connection failed'));
 
       const res = await request(server)
-        .get('/api/user/profile')
+        .get('/api/users/profile')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
       expect(res.status).toBe(500);
@@ -110,10 +110,10 @@ describe('User Routes', () => {
     });
   });
 
-  describe('PATCH/api/user/profile/edit', () => {
+  describe('PATCH/api/users/profile/edit', () => {
     it('should update the user profile', async () => {
       const res = await request(server)
-        .patch('/api/user/profile/edit')
+        .patch('/api/users/profile/edit')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`])
         .send(userData);
       expect(res.status).toBe(200);
@@ -128,7 +128,7 @@ describe('User Routes', () => {
         phone: '+905340718124',
       };
       const res = await request(server)
-        .patch('/api/user/profile/edit')
+        .patch('/api/users/profile/edit')
         .set('Cookie', [`authTokenCompleted=some_invalid_token`])
         .send(userData);
       expect(res.status).toBe(401);
@@ -137,7 +137,7 @@ describe('User Routes', () => {
     it('should return a 404 error when the user is not found when updating the profile', async () => {
       findOneAndUpdateSpy.mockResolvedValueOnce(null);
       const res = await request(server)
-        .patch('/api/user/profile/edit')
+        .patch('/api/users/profile/edit')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
       expect(res.status).toBe(404);
@@ -149,7 +149,7 @@ describe('User Routes', () => {
         new Error('Database connection failed')
       );
       const res = await request(server)
-        .patch('/api/user/profile/edit')
+        .patch('/api/users/profile/edit')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
       expect(res.status).toBe(500);

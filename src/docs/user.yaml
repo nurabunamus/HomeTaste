@@ -1,5 +1,5 @@
 paths:
-  /api/user/profile:
+  /api/users/profile:
     get:
       summary: Get user profile
       tags:
@@ -25,7 +25,7 @@ paths:
         '500':
           description: Internal server error
 
-  /api/user/profile/edit:
+  /api/users/profile/edit:
     patch:
       summary: Update user profile
       tags:
