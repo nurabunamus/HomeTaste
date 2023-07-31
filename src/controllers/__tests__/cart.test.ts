@@ -24,11 +24,20 @@ afterAll(async () => {
 
 const firstMockItem = {
   quantity: 1,
-  dishId: { _id: '64c515f494e860d59451717c' },
+  dishId: '64c515f494e860d59451717c',
 };
 const secondMockItem = {
   quantity: 1,
-  dishId: { _id: '64c515f494e860d59451719c' },
+  dishId: '64c515f494e860d59451719c',
+};
+
+const deleteItemCart = {
+  _id: '64b9794d6e69a32c5b952b2e',
+  totalPrice: 0,
+  user: '64b9781dbee12ba0fe169821',
+  items: [secondMockItem],
+  __v: 0,
+  save: jest.fn(),
 };
 
 const updatedCart = {
@@ -37,6 +46,7 @@ const updatedCart = {
   user: '64b9781dbee12ba0fe169821',
   items: [firstMockItem, secondMockItem],
   __v: 0,
+  save: jest.fn(),
 };
 
 const firstMockCartWithSave = {
@@ -45,7 +55,16 @@ const firstMockCartWithSave = {
   user: '64b9781dbee12ba0fe169821',
   items: [firstMockItem],
   __v: 0,
-  save: jest.fn().mockReturnValue(updatedCart as any),
+  save: jest.fn(),
+};
+
+const emptyCart = {
+  _id: '64b9794d6e69a32c5b952b2e',
+  totalPrice: 0,
+  user: '64b9781dbee12ba0fe169821',
+  items: [],
+  __v: 0,
+  save: jest.fn(),
 };
 
 const secondMockCartWithSave = {
@@ -54,7 +73,7 @@ const secondMockCartWithSave = {
   user: '64b9781dbee12ba0fe169820',
   items: [],
   __v: 0,
-  save: jest.fn().mockReturnValue(updatedCart as any),
+  save: jest.fn(),
 };
 
 const mockCartWithNoSave = {
@@ -79,9 +98,6 @@ const signedToken = cookie.sign(mockToken, process.env.SECRET_KEY!);
 const spyFind = jest
   .spyOn(Cart, 'findOne')
   .mockImplementation(() => mockUserCarts[0] as any);
-/* .mockReturnValueOnce(firstMockedUserCart as any)
-  .mockReturnValueOnce(firstMockedUserCart as any)
-  .mockReturnValueOnce(firstMockUserWithSave as any) */
 
 describe('Cart Routes', () => {
   afterEach(() => {
@@ -118,10 +134,29 @@ describe('Cart Routes', () => {
         .query({ dishId: '64c515f494e860d59451719c' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
+      expect(JSON.stringify(firstMockCartWithSave)).toEqual(
+        JSON.stringify(updatedCart)
+      );
       expect(spyFind).toBeCalledTimes(1);
       expect(firstMockCartWithSave.save).toBeCalledTimes(1);
       expect(res.status).toBe(200);
       expect(res.body.message).toBe('Dish Succesfully Added To Cart');
+    });
+  });
+
+  describe('DELETE /cart', () => {
+    it('Removes An Item From The Cart', async () => {
+      const res = await request(app)
+        .delete('/api/cart/')
+        .query({ dishId: '64c515f494e860d59451717c' })
+        .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
+
+      expect(spyFind).toBeCalledTimes(1);
+      expect(firstMockCartWithSave.save).toBeCalledTimes(1);
+      expect(JSON.stringify(firstMockCartWithSave)).toEqual(
+        JSON.stringify(deleteItemCart)
+      );
+      expect(res.status).toBe(204);
     });
   });
   describe('GET /cart/deleteAll', () => {
@@ -129,8 +164,12 @@ describe('Cart Routes', () => {
       const res = await request(app)
         .get('/api/cart/deleteAll')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
+
       expect(firstMockCartWithSave.save).toBeCalledTimes(1);
       expect(spyFind).toBeCalledTimes(1);
+      expect(JSON.stringify(firstMockCartWithSave)).toEqual(
+        JSON.stringify(emptyCart)
+      );
       expect(res.status).toBe(200);
       expect(res.body).toBe(
         'All Items In The Cart Have Been Succesfully Removed'

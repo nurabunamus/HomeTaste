@@ -1,14 +1,12 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable prettier/prettier */
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import { IUser } from '../types/interfaces';
 
-/*
-If authorized, it calls the 'next' function to proceed to the next middleware.
-If not authorized, it sends a 401 Unauthorized response.
-*/
-const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
+export const isAuthenticated = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { authTokenCompleted } = req.signedCookies;
 
   if (!authTokenCompleted) {
@@ -28,4 +26,22 @@ const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default isAuthorized;
+type IRole = 'admin' | 'customer' | 'cooker';
+
+export const checkRole =
+  (requiredRole: IRole) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    // Assuming you have already implemented an isAuth middleware to check if the user is authenticated
+    const userReq = req.user as IUser;
+    if (!userReq) {
+      return res.status(401).json({ message: 'No token, Unauthorized.' });
+    }
+
+    // Check if the user's role matches the required role
+    if (userReq.role !== requiredRole) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    // If the user has the required role, proceed to the next middleware/controller
+    return next();
+  };

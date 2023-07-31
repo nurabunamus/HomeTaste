@@ -55,6 +55,47 @@ paths:
               message:
                 type: string
                 description: An error message
+    delete:  
+      tags:
+        - Cart
+      summary: Removes an item from the user's cart
+      description: |
+        Removes one dish from the user's cart. The user must be authenticated with a JWT token.
+      produces:
+        - application/json
+      parameters:
+        - name: dishId
+          in: query
+          description: The ID of the dish to be removed from the cart
+          required: true
+          type: string
+      security:
+        - cookieAuth: []
+      responses:
+        204:
+          description: Dish successfully removed from the cart
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: A success message
+        404:
+          description: Not Found - the dish or user cart was not found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
+        500:
+          description: Interal Server Error - this might include any error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message   
   /api/cart/deleteAll:
     get:
       tags:

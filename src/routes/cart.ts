@@ -1,13 +1,28 @@
 import express, { Request, Response } from 'express';
 import { authenticate } from '../middlewares/authentication';
-import isAuthorized from '../middlewares/isAuth';
-import checkRole from '../middlewares/authorization';
+import { isAuthenticated, checkRole } from '../middlewares/isAuth';
 import CartController from '../controllers/cart';
 
 const router = express.Router();
 
-router.get('/', authenticate, checkRole('customer'), CartController.getCart);
-router.post('/', CartController.addDishToCart);
-router.get('/deleteAll', CartController.emptyCart);
+router.get('/', isAuthenticated, checkRole('customer'), CartController.getCart);
+router.post(
+  '/',
+  isAuthenticated,
+  checkRole('customer'),
+  CartController.addDishToCart
+);
+router.get(
+  '/deleteAll',
+  isAuthenticated,
+  checkRole('customer'),
+  CartController.emptyCart
+);
+router.delete(
+  '/',
+  isAuthenticated,
+  checkRole('customer'),
+  CartController.deleteItem
+);
 
 export default router;
