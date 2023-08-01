@@ -21,6 +21,7 @@ const sendEmail = async (
 
     // Send the email
     await Transport.sendMail(mailOptions);
+    return;
   } catch (error) {
     res.status(400).send(error);
   }

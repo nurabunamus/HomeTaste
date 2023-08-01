@@ -4,7 +4,6 @@ describe('Test Suite', () => {
   });
 });
 
-/*
 import request from 'supertest';
 import server from '../../app';
 import {
@@ -160,4 +159,3 @@ describe('Auth Routes', () => {
     });
   });
 });
-*/

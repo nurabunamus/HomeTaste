@@ -1,6 +1,6 @@
 import express from 'express';
-import userControllers from '../controllers/user';
-import upload from '../middlewares/multer';
+import userControllers from '../controllers/user'; // Import the controller function
+import upload from '../middlewares/multer'; // Import the Multer middleware
 import { isAuthenticated } from '../middlewares/isAuth';
 
 const router = express.Router();
