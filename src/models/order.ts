@@ -3,12 +3,13 @@ import { IUser, IOrder } from '../types/interfaces';
 import { UserSchema } from './user';
 
 // wrting On_The_Way as "On The Way" gives an eslint error, which is why its written like this here
-enum OrderStatus {
+export enum OrderStatus {
   Pending = 'Pending',
   Approved = 'Approved',
   Preparing = 'Preparing',
   On_The_Way = 'On The Way',
   Delivered = 'Delivered',
+  Canceled = 'Canceled',
 }
 
 type OrdersDocumentOverrides = {
@@ -28,7 +29,7 @@ export const orderSchema = new Schema<IOrder, OrdersModelType>({
           min: [1, 'Quantity Must Atleast Be 1'],
           required: true,
         },
-        dishId: { type: Schema.Types.ObjectId, required: true },
+        dishId: { type: Schema.Types.ObjectId, ref: 'Food', required: true },
       },
     ],
   },
@@ -39,6 +40,7 @@ export const orderSchema = new Schema<IOrder, OrdersModelType>({
     required: true,
   },
   user: UserSchema,
+  cookerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const Order = model<IOrder>('Order', orderSchema);

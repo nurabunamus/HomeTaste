@@ -57,6 +57,7 @@ interface IOrder {
   orderDetails: { quantity: number; dishId: Types.ObjectId }[];
   orderStatus: string;
   user: IUser;
+  cookerId: Types.ObjectId;
 }
 
 interface IReview {

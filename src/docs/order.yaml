@@ -35,16 +35,10 @@ paths:
             schema:
               type: object
               properties:
-                orderDetails:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/OrderDetail'
-              example:
-                orderDetails:
-                  - quantity: 2
-                    dishId: 'dish_id_1'
-                  - quantity: 5
-                    dishId: 'dish_id_2'
+                cookerId:
+                  type: string
+                  description: The ID of the cooker associated with the order.
+                  example: 'cooker_id_1'
       responses:
         '200':
           description: Successful response indicating order creation
@@ -52,8 +46,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-        '400':
-          description: Invalid order details provided
+        '404':
+          description: User not found or No cart found for this user
+        '403':
+          description: User is not a cooker
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/orders/{id}/cancel:
+    put:
+      summary: Cancel an order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the order to cancel.
+          schema:
+            type: string
+      tags:
+        - Order
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Order canceled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Order or user not found
         '401':
           description: Unauthorized
         '500':
