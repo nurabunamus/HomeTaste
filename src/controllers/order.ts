@@ -73,7 +73,9 @@ const createOrder = async (req: Request, res: Response) => {
     });
 
     // Clear the cart items after the order is successfully created
-    await Cart.create({ user: user._id, items: [], totalPrice: 0 });
+    cart.items = [];
+    cart.totalPrice = 0;
+    await cart.save;
 
     return res
       .status(200)
@@ -92,26 +94,26 @@ const cancelOrder = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    const order = await Order.findById({ _id: orderId });
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { orderStatus: OrderStatus.Canceled },
+      { new: true }
+    );
+
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    // Update the order status to "Canceled"
-    order.orderStatus = OrderStatus.Canceled;
-
-    // Save the updated order
-    const updatedOrder = await order.save();
     // Format the orders data to make the response more concise and readable
     const formattedOrder = {
-      _id: updatedOrder._id,
-      orderDetails: updatedOrder.orderDetails,
-      orderStatus: updatedOrder.orderStatus,
+      _id: order._id,
+      orderDetails: order.orderDetails,
+      orderStatus: order.orderStatus,
       user: {
-        first_name: updatedOrder.user.first_name,
-        last_name: updatedOrder.user.last_name,
-        email: updatedOrder.user.email,
-        phone: updatedOrder.user.phone,
-        address: updatedOrder.user.address,
+        first_name: order.user.first_name,
+        last_name: order.user.last_name,
+        email: order.user.email,
+        phone: order.user.phone,
+        address: order.user.address,
       },
     };
     return res
