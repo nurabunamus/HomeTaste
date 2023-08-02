@@ -167,7 +167,7 @@ const completedRegister = async (req: Request, res: Response) => {
     user.isRegistrationComplete = true;
 
     // Save the updated user to the database
-    await user.save();
+    user.save();
 
     // // Clear the existing cookie
 
