@@ -105,7 +105,6 @@ const verifyEmail = async (req: Request, res: Response): Promise<void> => {
       res.status(409).send('User Not Found');
     }
   } catch (err) {
-    console.error(err);
     res.status(400).send(err);
   }
 };
@@ -136,8 +135,14 @@ const completedRegister = async (req: Request, res: Response) => {
     };
     const { authToken } = req.signedCookies;
     if (!phone || !address || !role) {
-      console.log(phone, address, role);
       res.status(400).json({ error: 'Missing required fields' });
+      return;
+    }
+
+    if (role === 'admin') {
+      res.status(400).json({
+        error: 'Cannot register as an admin during user registration.',
+      });
       return;
     }
 

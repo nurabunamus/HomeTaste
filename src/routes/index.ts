@@ -7,6 +7,7 @@ import foodRouter from './foods';
 import cookerRouter from './cookers';
 import cartRoutes from './cart';
 import orderRoutes from './orders';
+import adminRoutes from './admin';
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use('/cooker', cookerRouter);
 router.use('/cart', cartRoutes);
 router.use('/review', reviewRouter);
 router.use('/orders', orderRoutes);
+router.use('/admin', adminRoutes);
 
 export default router;
