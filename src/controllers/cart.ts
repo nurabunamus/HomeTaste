@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import Cart from '../models/cart';
 import { IUser } from '../types/interfaces';
+import Food from '../models/food';
 
 const getCart = async (req: Request, res: Response) => {
   try {
@@ -27,21 +28,19 @@ const addDishToCart = async (req: Request, res: Response) => {
       req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
     )._id;
 
+    // Find the user cart first
     const userCart = await Cart.findOne({ user: userId });
 
+    // if cart is not found, then throw error
     if (!userCart) {
       throw new Error(
         'You dont have a cart yet because you didnt complete registration, please go do that first'
       );
-    } else {
-      const isDishExists = userCart?.items?.find(
-        (item) => item.dishId.toString() === (dishId as string)
-      );
+    }
 
-      if (isDishExists) {
-        throw new Error('Dish Already Exists In Cart');
-      }
-
+    // else if cart is found, and the the length of the items array is zero
+    else if (!userCart.items?.length) {
+      // just add the item to the items array, no need to check if the item existed before or the if item was made by a different cook
       userCart.items?.push({
         quantity: 1,
         dishId: new mongoose.Types.ObjectId(dishId as string),
@@ -50,6 +49,49 @@ const addDishToCart = async (req: Request, res: Response) => {
       userCart.save();
 
       res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
+    } else {
+      // else, if length of userCart.items array is not zero, then there is atleast one item in the array
+      // we need to check if the item with the given dishId is already in the cart or not first
+      const isDishExists = userCart?.items?.find(
+        (item) => item.dishId.toString() === (dishId as string)
+      );
+
+      // if it exists in the cart, throw an error
+      if (isDishExists) {
+        throw new Error('Dish Already Exists In Cart');
+      }
+
+      // else, we need to check if the dish was made by the same cook who made the other dishes in the userCart.items array
+      // first we make an array that has all the current dishIds that are in the current cart + the dishId from the query params
+      const dishIds: Array<string> = userCart.items!.map((item) =>
+        item.dishId.toString()
+      );
+      dishIds.push(dishId as string);
+
+      // Search the database for the dishes, and then count the number of distinct user_ids the returned dishes have
+      const numberOfCooks = await Food.find({ _id: { $in: dishIds } }).distinct(
+        'user_id'
+      );
+
+      // if all the dishes were made by the same user_id (cook), then the number of distinct user_ids must be 1
+      if (numberOfCooks.length === 1) {
+        userCart.items?.push({
+          quantity: 1,
+          dishId: new mongoose.Types.ObjectId(dishId as string),
+        });
+
+        userCart.save();
+
+        res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
+      }
+      // if the number of distnct user_id's (cooks) were more more than one than it means the dish that is to be added is made by a different cook
+      else {
+        res
+          .status(400)
+          .json(
+            'Cant Add Dishes Made By Different Cooks To The Cart, Only Dishes Made By The Same Cook Can Be Added'
+          );
+      }
     }
   } catch (err) {
     res.status(404).json({ message: (err as Error).message });
