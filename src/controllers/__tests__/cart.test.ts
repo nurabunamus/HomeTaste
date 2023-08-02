@@ -10,6 +10,7 @@ import {
   closeDbConnection,
   clearDatabase,
 } from '../../db/connection';
+import Food from '../../models/food';
 
 dotenv.config();
 
@@ -95,14 +96,19 @@ const mockToken = jwt.sign(
 const signedToken = cookie.sign(mockToken, process.env.SECRET_KEY!);
 
 // instead of perfoming an API request to the database, we can just mock the findOne method of the mongoose Cart model instead.
-const spyFind = jest
+const spyCartFind = jest
   .spyOn(Cart, 'findOne')
   .mockImplementation(() => mockUserCarts[0] as any);
 
+const spyFoodFind = jest
+  .spyOn(Food, 'find')
+  .mockReturnValue({ distinct: jest.fn().mockReturnValue([1]) } as any);
+
 describe('Cart Routes', () => {
   afterEach(() => {
-    spyFind.mockClear();
+    spyCartFind.mockClear();
     firstMockCartWithSave.save.mockClear();
+    spyFoodFind.mockClear();
   });
 
   describe('GET /cart', () => {
@@ -113,9 +119,11 @@ describe('Cart Routes', () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toEqual(mockCartWithNoSave);
-      expect(spyFind).toHaveBeenCalledTimes(1);
+      expect(spyCartFind).toHaveBeenCalledTimes(1);
 
-      expect(spyFind.mock.results[0].value._id).toBe(firstMockCartWithSave._id);
+      expect(spyCartFind.mock.results[0].value._id).toBe(
+        firstMockCartWithSave._id
+      );
     });
 
     it('Should Not Get The Cart Of Another User', async () => {
@@ -123,7 +131,7 @@ describe('Cart Routes', () => {
         .get('/api/cart')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
-      expect(spyFind).toHaveBeenCalledTimes(1);
+      expect(spyCartFind).toHaveBeenCalledTimes(1);
       expect(res.body).not.toEqual(mockUserCarts[1]);
     });
   });
@@ -133,11 +141,11 @@ describe('Cart Routes', () => {
         .post('/api/cart')
         .query({ dishId: '64c515f494e860d59451719c' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
-
+      expect(spyFoodFind).toBeCalledTimes(1);
       expect(JSON.stringify(firstMockCartWithSave)).toEqual(
         JSON.stringify(updatedCart)
       );
-      expect(spyFind).toBeCalledTimes(1);
+      expect(spyCartFind).toBeCalledTimes(1);
       expect(firstMockCartWithSave.save).toBeCalledTimes(1);
       expect(res.status).toBe(200);
       expect(res.body.message).toBe('Dish Succesfully Added To Cart');
@@ -151,7 +159,7 @@ describe('Cart Routes', () => {
         .query({ dishId: '64c515f494e860d59451717c' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
-      expect(spyFind).toBeCalledTimes(1);
+      expect(spyCartFind).toBeCalledTimes(1);
       expect(firstMockCartWithSave.save).toBeCalledTimes(1);
       expect(JSON.stringify(firstMockCartWithSave)).toEqual(
         JSON.stringify(deleteItemCart)
@@ -166,7 +174,7 @@ describe('Cart Routes', () => {
         .query({ dishId: '64c515f494e860d59451719c', method: 'increment' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
-      expect(spyFind).toBeCalledTimes(1);
+      expect(spyCartFind).toBeCalledTimes(1);
       expect(firstMockCartWithSave.save).toBeCalledTimes(1);
       expect(firstMockCartWithSave.items[0].quantity).toBe(2);
       expect(res.status).toBe(201);
@@ -180,7 +188,7 @@ describe('Cart Routes', () => {
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
       expect(firstMockCartWithSave.save).toBeCalledTimes(1);
-      expect(spyFind).toBeCalledTimes(1);
+      expect(spyCartFind).toBeCalledTimes(1);
       expect(JSON.stringify(firstMockCartWithSave)).toEqual(
         JSON.stringify(emptyCart)
       );
