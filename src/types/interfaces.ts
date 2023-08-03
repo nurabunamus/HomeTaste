@@ -59,7 +59,7 @@ interface IOrder {
   user: IUser;
 }
 
-interface IReview {
+interface IReview extends Document {
   rating: number;
   comment: string;
   userId: Types.ObjectId;
