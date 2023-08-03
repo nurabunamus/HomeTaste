@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 import Food from '../models/food';
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
 import User from '../models/user';
+import { IUser } from '../types/interfaces';
+import Order, { OrderStatus } from '../models/order';
 
 // eslint-disable-next-line consistent-return
 const createDish = async (req: Request, res: Response) => {
@@ -143,5 +145,38 @@ const updateDish = async (req: Request, res: Response) => {
   }
 };
 
+const updateOrderStatus = async (req: Request, res: Response) => {
+  const { orderId, orderStatus } = req.query;
+  try {
+    const cookId = (
+      req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
+    )._id;
+
+    if (Object.values(OrderStatus).includes(orderStatus as OrderStatus)) {
+      const orderDoc = await Order.findOne({
+        _id: orderId,
+        cookerId: cookId,
+        orderStatus: { $nin: ['Delivered,Canceled'] },
+      });
+      if (!orderDoc) {
+        return res
+          .status(404)
+          .json(
+            'Either The Order Was Not Found, Or The Order Status Of The To Be Updated Order Was "Delivered" or "Canceled"'
+          );
+      }
+
+      orderDoc.orderStatus = orderStatus as string;
+      orderDoc.save();
+      res
+        .status(201)
+        .json(`Order Status Succesfully Updated To  ${orderStatus} `);
+    } else {
+      res.status(400).json('Invalid Order Status Was Received');
+    }
+  } catch (err) {
+    res.status(500).json({ message: (err as Error).message });
+  }
+};
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
-export { createDish, getDishes, deleteDish, updateDish };
+export { createDish, getDishes, deleteDish, updateDish, updateOrderStatus };
