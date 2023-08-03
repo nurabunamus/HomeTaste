@@ -3,6 +3,8 @@ paths:
     post:
       tags:
         - Cooker
+      security:
+        - BearerAuth: []
       summary: Create a new dish for a specific cooker by ID
       parameters:
         - in: path
@@ -14,7 +16,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -29,7 +31,7 @@ paths:
                   example: 10.0
                 image:
                   type: string
-                  example: https://example.com/pizza.jpg
+                  format: binary
                 categories:
                   type: array
                   items:
@@ -161,6 +163,8 @@ paths:
     delete:
       tags:
         - Cooker
+      security:
+        - BearerAuth: []
       summary: Delete a specific dish associated with a specific cooker by ID
       parameters:
         - in: path
@@ -221,6 +225,8 @@ paths:
     put:
       tags:
         - Cooker
+      security:
+        - BearerAuth: []
       summary: Update a specific dish associated with a specific cooker by ID
       parameters:
         - in: path

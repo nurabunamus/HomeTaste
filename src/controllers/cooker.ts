@@ -10,6 +10,7 @@ const createDish = async (req: Request, res: Response) => {
   try {
     const { cookerId } = req.params;
     const dishData = req.body;
+    dishData.image = req.file?.path;
 
     const user = await User.findById(cookerId);
 
