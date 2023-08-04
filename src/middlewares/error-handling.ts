@@ -10,7 +10,7 @@ const errorHandler = (
   if (err instanceof customError) {
     res.status(err.errorCode).send({ errors: err.serializeErrors() });
   } else {
-    res.send('An error occur!');
+    res.send(err);
   }
 };
 
