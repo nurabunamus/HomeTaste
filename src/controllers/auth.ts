@@ -167,7 +167,7 @@ const completedRegister = async (req: Request, res: Response) => {
     user.isRegistrationComplete = true;
 
     // Save the updated user to the database
-    user.save();
+    await user.save();
 
     // // Clear the existing cookie
 
@@ -183,7 +183,7 @@ const completedRegister = async (req: Request, res: Response) => {
 
     // Create the cart for the customer
     if (user.role === 'customer') {
-      await Cart.create({ user: userId });
+      Cart.create({ items: [], user: userId, totalPrice: 0 });
     }
 
     req.user = user;
