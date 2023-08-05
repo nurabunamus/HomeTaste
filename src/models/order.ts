@@ -33,6 +33,9 @@ export const orderSchema = new Schema<IOrder, OrdersModelType>({
       },
     ],
   },
+  totalPrice: {
+    type: Number,
+  },
   orderStatus: {
     type: String,
     default: OrderStatus.Pending,
