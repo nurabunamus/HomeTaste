@@ -48,4 +48,44 @@ HomeTaste is a platform that brings together busy individuals, such as students,
 
 11. **Warm Welcome:** Receive a welcoming email upon registration.
 
+## User Stories
 
+### Admin:
+
+- **As an admin**, I want to have access to a dashboard where I can **manage user accounts** and **resolve any user-related issues**.
+
+### Customer:
+
+- **As a customer**, I want to **create an account easily** so that I can **access personalized features** and **track my orders**.
+
+- **As a customer**, I want the option to **sign in using my email, Google, or Facebook account** for a seamless and convenient login experience.
+
+- **As a customer**, I want to be able to **add and edit my personal information**, including my **profile picture**, to personalize my HomeTaste experience.
+
+- **As a customer**, I want to **explore a diverse menu** of homemade dishes and **browse through various categories** to discover new culinary delights.
+
+- **As a customer**, I want to apply **smart filters** to easily find food choices that match my **dietary preferences, location, and allergies**.
+
+- **As a customer**, I want to leave **reviews and ratings** for the dishes I've tried, sharing my appreciation and feedback with the HomeTaste community.
+
+- **As a customer**, I want to have a **user-friendly cart** where I can **manage my orders** and seamlessly proceed with **secure payments**.
+
+- **As a customer**, I want to receive a **clear order summary**, including the order status and estimated delivery time, for a smooth and informed dining experience.
+
+### Chef:
+
+- **As a chef**, I want to **create an account and submit my culinary profile** to showcase my talents and specialties to potential customers.
+
+- **As a chef**, I want to have **multiple sign-in options**, such as email, Google, or Facebook, to access my chef dashboard conveniently.
+
+- **As a chef**, I want the flexibility to **add and edit my personal information**, including my **profile picture**, to reflect my culinary identity.
+
+- **As a chef**, I want to have full control over my dishes, including the ability to **add, edit, and remove them from the menu** as per availability and creativity.
+
+- **As a chef**, I want to **interact with customer reviews** and respond to feedback, fostering a connection with my diners and continuously improving my culinary offerings.
+
+- **As a chef**, I want to **track the status of orders**, ensuring efficient preparation and timely delivery to provide a delightful dining experience.
+
+- **As a chef**, I want to **publish and showcase my latest creations**, building a loyal following and gaining recognition for my culinary artistry.
+
+- **As a chef**, I want to receive a **welcoming email upon registration**, embracing me into the HomeTaste culinary community.
