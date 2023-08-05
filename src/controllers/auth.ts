@@ -183,7 +183,7 @@ const completedRegister = async (req: Request, res: Response) => {
 
     // Create the cart for the customer
     if (user.role === 'customer') {
-      await Cart.create({ user: userId });
+      Cart.create({ items: [], user: userId, totalPrice: 0 });
     }
 
     req.user = user;

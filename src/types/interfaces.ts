@@ -60,7 +60,7 @@ interface IOrder {
   cookerId: Types.ObjectId;
 }
 
-interface IReview {
+interface IReview extends Document {
   rating: number;
   comment: string;
   userId: Types.ObjectId;

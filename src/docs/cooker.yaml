@@ -3,6 +3,8 @@ paths:
     post:
       tags:
         - Cooker
+      security:
+        - BearerAuth: []
       summary: Create a new dish for a specific cooker by ID
       parameters:
         - in: path
@@ -14,7 +16,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -29,7 +31,7 @@ paths:
                   example: 10.0
                 image:
                   type: string
-                  example: https://example.com/pizza.jpg
+                  format: binary
                 categories:
                   type: array
                   items:
@@ -161,6 +163,8 @@ paths:
     delete:
       tags:
         - Cooker
+      security:
+        - BearerAuth: []
       summary: Delete a specific dish associated with a specific cooker by ID
       parameters:
         - in: path
@@ -221,6 +225,8 @@ paths:
     put:
       tags:
         - Cooker
+      security:
+        - BearerAuth: []
       summary: Update a specific dish associated with a specific cooker by ID
       parameters:
         - in: path
@@ -345,3 +351,74 @@ paths:
                     example: An error occurred while updating the dish.
                   error:
                     type: object
+  /api/cooker/orders/changeStatus:
+    patch:  
+      tags:
+        - Cooker
+      summary: Updates the status of an order
+      description: |
+        Updates the status of an order that the cooker has received as long as the status isnt "Delivered" or "Canceled". The user must be authenticated with a JWT token to access this endpoint and must have the role of a customer.
+      produces:
+        - application/json
+      parameters:
+        - name: orderId
+          in: query
+          description: The ID of the order to have their status be updated.
+          required: true
+          type: string
+        - name: orderStatus
+          in: query
+          description: The new status of the order
+          required: true
+          type: string  
+      security:
+        - cookieAuth: []
+      responses:
+        201:
+          description: Order status was successfully updated.
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: A success message
+        400:
+          description: Bad Request - The new order status query string was not in the list of valid statuses
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
+        401:
+          description: Unauthenticated - the user isnt authenticated and doesnt have a JWT token
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message        
+        403:
+          description: Unauthorized, user doesnt have the appropiate role to access this endpoint
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message             
+        404:
+          description: Not Found - the order wasnt found or order status was "Canceled" or "Delivered"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message
+        500:
+          description: Interal Server Error - this might include any error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An error message   
