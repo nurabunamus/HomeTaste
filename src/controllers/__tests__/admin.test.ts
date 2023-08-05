@@ -92,56 +92,54 @@ const mockUser2: IUser = {
 };
 const mockUserArray1: IUser[] = [mockUser1];
 const mockUserArray2: IUser[] = [mockUser2];
-const spy1 = jest.spyOn(User, 'find').mockResolvedValue(mockUserArray1);
-const spy2 = jest.spyOn(User, 'find').mockResolvedValue(mockUserArray2);
+const spy = jest.spyOn(User, 'find').mockResolvedValue(mockUserArray1);
 
 describe('Admin Routes', () => {
   afterEach(() => {
-    spy1.mockReset();
-    spy2.mockReset();
+    spy.mockReset();
   });
 
   describe('GET api/admin/cooker', () => {
     it('should return all users with the role cooker', async () => {
-      spy1.mockResolvedValueOnce(mockUserArray1);
+      spy.mockResolvedValueOnce(mockUserArray1);
       const res = await request(server)
         .get('/api/admin/cooker')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
       expect(res.status).toBe(200);
       expect(res.body).toEqual(mockUserArray1);
-      expect(spy1).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should return an empty array when there are no users with the role cooker', async () => {
-      spy1.mockResolvedValueOnce([]);
+      spy.mockResolvedValueOnce([]);
       const res = await request(server)
         .get('/api/admin/cooker')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
       expect(res.status).toBe(200);
       expect(res.body).toEqual([]);
-      expect(spy1).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('GET api/admin/customers', () => {
     it('should return all users with the customer cooker', async () => {
-      spy2.mockResolvedValueOnce(mockUserArray2);
+      spy.mockResolvedValueOnce(mockUserArray2);
       const res = await request(server)
         .get('/api/admin/customers')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
       expect(res.status).toBe(200);
       expect(res.body).toEqual(mockUserArray2);
-      expect(spy2).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should return an empty array when there are no users with the role cooker', async () => {
-      spy2.mockResolvedValueOnce([]);
+      spy.mockResolvedValueOnce([]);
       const res = await request(server)
         .get('/api/admin/cooker')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
       expect(res.status).toBe(200);
       expect(res.body).toEqual([]);
-      expect(spy2).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 });
