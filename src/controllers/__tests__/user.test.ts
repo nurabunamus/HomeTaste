@@ -1,14 +1,6 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable node/no-unpublished-import */
-/* eslint-disable node/no-extraneous-import */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable spaced-comment */
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-unused-vars */
+import cookie from 'cookie-signature';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie-signature';
 import server from '../../app';
 import User from '../../models/user';
 import { connectToMongo, closeDbConnection } from '../../db/connection';
@@ -27,8 +19,9 @@ const mockToken = jwt.sign(
   process.env.SECRET_KEY!
 );
 const signedToken = cookie.sign(mockToken, process.env.SECRET_KEY!);
-
-//To get user profile
+// Set the authentication token to an empty string or any invalid value
+const invalidToken = cookie.sign(mockToken, 'abc');
+// To get user profile
 const mockUser = {
   first_name: 'John',
   last_name: 'Doe',
@@ -43,8 +36,8 @@ const mockUser = {
 };
 const spy = jest.spyOn(User, 'findById').mockResolvedValue(mockUser);
 
-//To update user profile
-const userData = {
+// To update user profile
+const updateUserData = {
   first_name: 'John',
   last_name: 'Doe',
   phone: '+905340718124',
@@ -59,7 +52,7 @@ const userData = {
   profile_image: '/image.jpg',
 };
 const findOneAndUpdateSpy = jest.spyOn(User, 'findOneAndUpdate');
-findOneAndUpdateSpy.mockResolvedValue(userData);
+findOneAndUpdateSpy.mockResolvedValue(updateUserData);
 
 describe('User Routes', () => {
   afterEach(() => {
@@ -115,22 +108,17 @@ describe('User Routes', () => {
       const res = await request(server)
         .patch('/api/users/profile/edit')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`])
-        .send(userData);
+        .send(updateUserData);
       expect(res.status).toBe(200);
       expect(res.body.message).toEqual('Profile updated successfully!');
-      expect(res.body.data).toEqual(userData);
+      expect(res.body.data).toEqual(updateUserData);
       expect(findOneAndUpdateSpy).toHaveBeenCalledTimes(1);
     });
     it('should return a 401 error when updating the profile without proper authentication', async () => {
-      const userData = {
-        first_name: 'John',
-        last_name: 'Doe',
-        phone: '+905340718124',
-      };
       const res = await request(server)
         .patch('/api/users/profile/edit')
-        .set('Cookie', [`authTokenCompleted=some_invalid_token`])
-        .send(userData);
+        .set('Cookie', [`authTokenCompleted=s%3A${invalidToken}`]);
+
       expect(res.status).toBe(401);
       expect(res.body.message).toBe('No token, Unauthorized.');
     });
