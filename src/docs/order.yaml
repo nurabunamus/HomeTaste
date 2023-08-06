@@ -18,6 +18,10 @@ paths:
                   $ref: '#/components/schemas/Order'
         '404':
           description: User or Orders not found
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden, you must be a customer
         '500':
           description: Internal server error
 
@@ -28,30 +32,19 @@ paths:
         - Order
       security:
         - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                cookerId:
-                  type: string
-                  description: The ID of the cooker associated with the order.
-                  example: 'cooker_id_1'
       responses:
         '200':
-          description: Successful response indicating order creation
+          description: Order created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
         '404':
-          description: User not found or No cart found for this user
-        '403':
-          description: User is not a cooker
+          description: Not Found, user or cart not found, or cart is empty
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden, you must be a customer
         '500':
           description: Internal server error
 
@@ -80,6 +73,8 @@ paths:
           description: Order or user not found
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden, you must be a customer
         '500':
           description: Internal server error
 
@@ -95,6 +90,7 @@ components:
       properties:
         _id:
           type: string
+          example: 64b9781dbee12ba0fe169877
         orderDetails:
           type: array
           items:
@@ -107,14 +103,45 @@ components:
             - Preparing
             - On The Way
             - Delivered
-
+        totalPrice:
+          type: number
+          exapmle: 10
+        user:
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 64b9781dbee12ba0fe169821
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+            email:
+              type: string
+              example: john@example.com
+            phone:
+              type: string
+              example: 05340715555
+            address:
+              type: object
+              properties:
+                city:
+                  type: string
+                  example: Istanbul
+                country:
+                  type: string
+                  example: Turkiye
+        cookerId:
+          type: string
+          example: 64b9781dbee12ba0fe169899
     OrderDetail:
       type: object
       properties:
         quantity:
           type: number
-          minimum: 1
-          description: Quantity of the dish in the order
+          example: 1
         dishId:
           type: string
-          description: The ID of the dish in the order
+          exampel: 64ca2f92892c25849663e947

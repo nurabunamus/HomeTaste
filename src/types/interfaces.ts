@@ -55,6 +55,7 @@ interface ICart {
 
 interface IOrder {
   orderDetails: { quantity: number; dishId: Types.ObjectId }[];
+  totalPrice: number;
   orderStatus: string;
   user: IUser;
   cookerId: Types.ObjectId;
