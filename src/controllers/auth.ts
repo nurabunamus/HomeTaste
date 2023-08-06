@@ -35,7 +35,7 @@ const register1 = async (req: Request, res: Response) => {
 
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    if (existingUser && Object.keys(existingUser!).length > 0) {
       res.status(409).send({ error: 'User already exists' });
       return;
     }
@@ -80,6 +80,7 @@ const register1 = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
+    console.log('error', error);
     res.status(500).json(error);
   }
 };
