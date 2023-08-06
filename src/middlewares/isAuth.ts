@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { IUser } from '../types/interfaces';
 
+// Middleware function to check if a user is authenticated by verifying the JWT token from the signed cookie.
 export const isAuthenticated = (
   req: Request,
   res: Response,
@@ -26,12 +27,13 @@ export const isAuthenticated = (
   }
 };
 
+// Middleware function to check if the user has the required role.
 type IRole = 'admin' | 'customer' | 'cooker';
 
 export const checkRole =
   (requiredRole: IRole) =>
   (req: Request, res: Response, next: NextFunction) => {
-    // Assuming you have already implemented an isAuth middleware to check if the user is authenticated
+    // Assuming you have already implemented an isAuthenticated middleware to check if the user is authenticated
     const userReq = req.user as IUser;
     if (!userReq) {
       return res.status(401).json({ message: 'No token, Unauthorized.' });

@@ -16,11 +16,10 @@ const {
   BASE_URL,
   CLIENT_ID_FB,
   CLIENT_SECRET_FB,
-  SECRET_KEY,
 } = process.env;
 
+// Configure Passport to use Google Strategy for authentication.
 const GoogleStrategy = passportGoogle.Strategy;
-
 passport.use(
   new GoogleStrategy(
     {
@@ -30,16 +29,16 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
-        console.log('hello from passport google middleware');
+        // Call the callback with the user profile data
         cb(null, profile as Profile);
       } catch (error) {
-        // console.log('error ' + error);
         cb(null, error as Error);
       }
     }
   )
 );
 
+// Configure Passport to use Facebook Strategy for authentication.
 const FacebookStrategy = passportFacebook.Strategy;
 passport.use(
   new FacebookStrategy(
@@ -58,7 +57,6 @@ passport.use(
       done: any
     ) => {
       try {
-        console.log('hello from facebook strategy');
         const existingUser = await User.findOne({ provider_id: profile.id });
         // Check if user has a facebook provider id
         if (existingUser) {
@@ -89,13 +87,11 @@ passport.use(
           return done(null, false);
         }
         // Else, create a new user and make a new token for them.
-        console.log('created new user');
         const createdUser: HydratedDocument<IUser> = await User.create({
           email: profile._json.email,
           provider_id: profile.id,
           first_name: profile.name!.givenName,
           last_name: profile.name!.familyName,
-
           profile_image: `https://graph.facebook.com/${profile.id}/picture?type=large`,
         });
 

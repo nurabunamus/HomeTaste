@@ -77,6 +77,9 @@ const updateUserProfile = async (req: Request, res: Response) => {
     // Assigns the server path of the uploaded profile image to the 'profile_image' property in the request body (if available).
     req.body.profile_image = req.file?.path;
 
+    // Ckeck cooker status
+    const cookerStatus = userReq.role === 'customer' ? ' ' : cooker_status;
+
     // Create an object to hold the updated fields
     const updatedFields: updateProfile = {
       first_name: first_name,
@@ -84,7 +87,7 @@ const updateUserProfile = async (req: Request, res: Response) => {
       phone: phone,
       address: address,
       profile_image: req.body.profile_image,
-      cooker_status: cooker_status,
+      cooker_status: cookerStatus,
     };
     // Find the user by _id and update the specified fields
     const updatedUser = await User.findOneAndUpdate(
