@@ -23,7 +23,27 @@ const getCart = async (req: Request, res: Response) => {
 const addDishToCart = async (req: Request, res: Response) => {
   const { dishId } = req.query;
 
+  // Makes sure the dish is in the Food collection first before proceeding
+  // Normally, the typescript compiler will complain if we used properties of the populated field directly
+  // To fix this issue, mongoose allows us to typecast the return value of the populate() method, in this case the type we want is IUser
+  // Check https://mongoosejs.com/docs/typescript/populate.html for more details.
   try {
+    const dishDoc = await Food.findById(dishId).populate<{ user_id: IUser }>(
+      'user_id'
+    );
+    if (!dishDoc) {
+      throw new Error('This Dish Doesnt Exist');
+    }
+
+    // Makes sure cooker_status of the cook  making the dish is "active" before proceeding
+    if (!(dishDoc.user_id.cooker_status === 'active')) {
+      return res
+        .status(400)
+        .json(
+          'This Cook Isnt Able To Receive Any Orders At The Moment, Please Try Again Later'
+        );
+    }
+
     const userId = (
       req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
     )._id;
