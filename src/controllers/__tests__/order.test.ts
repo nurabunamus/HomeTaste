@@ -1,4 +1,3 @@
-/* eslint-disable node/no-extraneous-import */
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie-signature';
