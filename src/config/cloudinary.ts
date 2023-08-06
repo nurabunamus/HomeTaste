@@ -1,9 +1,10 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable arrow-body-style */
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable import/no-extraneous-dependencies */
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+
+/*
+The provided code sets up a Cloudinary configuration and creates a Cloudinary storage instance 
+for handling user profile images with Multer Middleware.
+*/
 
 cloudinary.config({
   cloud_name: process.env.STORAGE_NAME,
@@ -13,9 +14,7 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: () => {
-    return { folder: 'user-profiles' };
-  },
+  params: () => ({ folder: 'user-profiles' }),
 });
 
 export default storage;
