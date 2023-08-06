@@ -4,7 +4,7 @@ paths:
       tags:
         - Review
       security:
-        - BearerAuth: []
+        - authTokenCompleted: []
       summary: Create a new review for a food item
       description: Creates a new review for the specified food item and saves it to the database.
       parameters:

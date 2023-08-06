@@ -4,7 +4,7 @@ paths:
       tags:
         - Cooker
       security:
-        - BearerAuth: []
+        - authTokenCompleted: []
       summary: Create a new dish for a specific cooker by ID
       parameters:
         - in: path
@@ -164,7 +164,7 @@ paths:
       tags:
         - Cooker
       security:
-        - BearerAuth: []
+        - authTokenCompleted: []
       summary: Delete a specific dish associated with a specific cooker by ID
       parameters:
         - in: path
@@ -226,7 +226,7 @@ paths:
       tags:
         - Cooker
       security:
-        - BearerAuth: []
+        - authTokenCompleted: []
       summary: Update a specific dish associated with a specific cooker by ID
       parameters:
         - in: path
@@ -352,7 +352,7 @@ paths:
                   error:
                     type: object
   /api/cooker/orders/changeStatus:
-    patch:  
+    patch:
       tags:
         - Cooker
       summary: Updates the status of an order
@@ -370,7 +370,7 @@ paths:
           in: query
           description: The new status of the order
           required: true
-          type: string  
+          type: string
       security:
         - cookieAuth: []
       responses:
@@ -397,7 +397,7 @@ paths:
             properties:
               message:
                 type: string
-                description: An error message        
+                description: An error message
         403:
           description: Unauthorized, user doesnt have the appropiate role to access this endpoint
           schema:
@@ -405,7 +405,7 @@ paths:
             properties:
               message:
                 type: string
-                description: An error message             
+                description: An error message
         404:
           description: Not Found - the order wasnt found or order status was "Canceled" or "Delivered"
           schema:
@@ -421,4 +421,4 @@ paths:
             properties:
               message:
                 type: string
-                description: An error message   
+                description: An error message
