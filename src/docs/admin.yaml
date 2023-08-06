@@ -1,0 +1,112 @@
+paths:
+  /api/admin/cooker:
+    get:
+      security: # Add the security information here
+        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
+      tags:
+        - Admin
+      summary: Get all users with the role 'cooker'
+      description: Retrieves a list of all users with the role 'cooker' from the database.
+      responses:
+        '200':
+          description: A list of users with the role 'cooker'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/admin/customers:
+    get:
+      security: # Add the security information here
+        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
+      tags:
+        - Admin
+      summary: Get all users with the role 'customer'
+      description: Retrieves a list of all users with the role 'customer' from the database.
+      responses:
+        '200':
+          description: A list of users with the role 'customer'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        profile_image:
+          type: string
+        role:
+          type: string
+        payment_method:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentMethod'
+        cooker_status:
+          type: string
+        payment_method_status:
+          type: boolean
+        isConfirmed:
+          type: boolean
+        isRegistrationComplete:
+          type: boolean
+        _id:
+          type: string
+        provider_id:
+          type: string
+        fullName:
+          type: string
+
+    Address:
+      type: object
+      properties:
+        street_name:
+          type: string
+        street_number:
+          type: integer
+        flat_number:
+          type: integer
+        district:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: integer
