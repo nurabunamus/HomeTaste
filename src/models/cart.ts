@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { ICart } from '../types/interfaces';
+import Food from './food';
 
 const cartSchema = new Schema<ICart>({
   items: {
@@ -31,21 +32,37 @@ cartSchema.pre('save', function (this: ICart): any {
     : new Error('Total Price Cant Be Less Than 0...');
 });
 
-// A Document middleware to calculate the total price of the items in the cart after each save
-// We first populate (JOIN) the Cart table from the dish IDs in the items array to get the price of each dish
-// then, apply a reducer that sums up the multiples of price*quantity.
-cartSchema.post<ICart>('save', async function (this, next: any) {
-  const userCart = await Cart.findOne({ user: this.user }).populate(
-    'items.dishId',
-    'price'
-  );
+// A Document middleware to calculate the total price of the items in the cart before each save hook
+cartSchema.pre<ICart>('save', async function (this, next: any) {
+  // if items array is empty, then by default totalPrice is 0, if items array is not empty then totalPrice will be updated inside the if condition
+  this.totalPrice = 0;
 
-  userCart!.totalPrice = userCart!.items?.reduce(
-    (accumlator: number, initialVal: any) =>
-      accumlator + initialVal.quantity * initialVal.dishId.price,
-    0
-  );
-  await userCart?.save();
+  if (this.items?.length) {
+    // Get all the dishIds from the items array
+    const dishIds = this.items.map((item) => item.dishId);
+
+    try {
+      // Fetch all the dishes using the dishIds
+      const dishes = await Food.find({ _id: { $in: dishIds } });
+
+      // Calculate totalPrice based on the fetched dishes
+      let totalPrice = 0;
+      for (const item of this.items) {
+        const dish = dishes.find((dishDoc) => dishDoc._id.equals(item.dishId));
+        if (dish) {
+          totalPrice += dish.price * item.quantity;
+        }
+      }
+
+      // Update the totalPrice property in the cart
+      this.totalPrice = totalPrice;
+    } catch (error) {
+      // Handle any errors that occurred during the fetch
+      throw new Error(error as string);
+    }
+  }
+
+  // Call the next middleware or save the document if there are no items
   next();
 });
 
