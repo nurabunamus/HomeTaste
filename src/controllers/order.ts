@@ -90,7 +90,7 @@ const createOrder = async (req: Request, res: Response) => {
 
     // Clear the cart items after the order is successfully created
     cart.set({ items: [] });
-    cart.save();
+    await cart.save();
 
     return res
       .status(200)

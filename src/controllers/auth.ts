@@ -69,7 +69,7 @@ const register1 = async (req: Request, res: Response) => {
     const apiUrl = process.env.API_URL;
     const confirmationToken = encrypt(email);
     const link = `${apiUrl}/verify/${confirmationToken}`;
-    // await sendEmail(email, subject, link, res);
+    await sendEmail(email, subject, link, res);
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',
@@ -188,7 +188,7 @@ const completedRegister = async (req: Request, res: Response) => {
 
     // Create the cart for the customer
     if (user.role === 'customer') {
-      Cart.create({ items: [], user: userId, totalPrice: 0 });
+      await Cart.create({ items: [], user: userId });
     }
 
     req.user = user;
@@ -207,6 +207,7 @@ const completedRegister = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 };

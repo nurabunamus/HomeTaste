@@ -46,7 +46,7 @@ const addDishToCart = async (req: Request, res: Response) => {
         dishId: new mongoose.Types.ObjectId(dishId as string),
       });
 
-      userCart.save();
+      await userCart.save();
 
       res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
     } else {
@@ -80,7 +80,7 @@ const addDishToCart = async (req: Request, res: Response) => {
           dishId: new mongoose.Types.ObjectId(dishId as string),
         });
 
-        userCart.save();
+        await userCart.save();
 
         res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
       }
@@ -113,7 +113,7 @@ const emptyCart = async (req: Request, res: Response) => {
 
     // Make items an empty array to remove all the items that were in it;
     userCart.items = [];
-    userCart.save();
+    await userCart.save();
 
     res.status(200).json('All Items In The Cart Have Been Succesfully Removed');
   } catch (err) {
@@ -152,7 +152,7 @@ const deleteItem = async (req: Request, res: Response) => {
         (item) => item.dishId.toString() !== (dishId as string)
       );
 
-      userCart.save();
+      await userCart.save();
 
       res.status(204).json('Item Was Succesfully Deleted From Cart');
     } else {
@@ -197,11 +197,11 @@ const changeQuantity = async (req: Request, res: Response) => {
       if (method === 'increment') {
         const itemToBeUpdatedIndex = userCart.items?.indexOf(isItemExist);
         userCart.items![itemToBeUpdatedIndex as number].quantity += 1;
-        userCart.save();
+        await userCart.save();
       } else if (method === 'decrement') {
         const itemToBeUpdatedIndex = userCart.items?.indexOf(isItemExist);
         userCart.items![itemToBeUpdatedIndex as number].quantity -= 1;
-        userCart.save();
+        await userCart.save();
       }
       // if its not decrement or increment then throw an error
       else {
