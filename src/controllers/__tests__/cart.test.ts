@@ -26,6 +26,9 @@ afterAll(async () => {
 const firstMockItem = {
   quantity: 1,
   dishId: '64c515f494e860d59451717c',
+  user_id: {
+    cooker_status: 'active',
+  },
 };
 const secondMockItem = {
   quantity: 1,
@@ -104,11 +107,16 @@ const spyFoodFind = jest
   .spyOn(Food, 'find')
   .mockReturnValue({ distinct: jest.fn().mockReturnValue([1]) } as any);
 
+const spyFoodFindById = jest.spyOn(Food, 'findById').mockReturnValue({
+  populate: jest.fn().mockReturnValue(firstMockItem),
+} as any);
+
 describe('Cart Routes', () => {
   afterEach(() => {
     spyCartFind.mockClear();
     firstMockCartWithSave.save.mockClear();
     spyFoodFind.mockClear();
+    spyFoodFindById.mockClear();
   });
 
   describe('GET /cart', () => {
@@ -141,6 +149,7 @@ describe('Cart Routes', () => {
         .post('/api/cart')
         .query({ dishId: '64c515f494e860d59451719c' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
+      expect(spyFoodFindById).toBeCalledTimes(1);
       expect(spyFoodFind).toBeCalledTimes(1);
       expect(JSON.stringify(firstMockCartWithSave)).toEqual(
         JSON.stringify(updatedCart)
