@@ -28,7 +28,6 @@ const mockLoginUser = {
 
 const user = {
   _id: 'valid_user_id_here',
-  // Other user properties...
 };
 
 const spyUserFind1 = jest.spyOn(User, 'findOne').mockReturnValue({} as any);
@@ -83,6 +82,35 @@ describe('Auth Routes', () => {
       expect(spyBycrypt).toBeCalledTimes(1);
       expect(res.status).toBe(200);
       expect(res.body.message).toBe('User successfully logged in');
+    });
+
+    it('should return 400 if email or password is missing', async () => {
+      const res = await request(app).post('/api/auth/login').send({});
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBe('Missing required fields');
+    });
+
+    it('should return 404 if user is not found', async () => {
+      jest.spyOn(User, 'findOne').mockResolvedValueOnce(null);
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send(mockLoginUser);
+      expect(res.status).toBe(404);
+      expect(res.body.error).toBe('User not found, please register');
+    });
+
+    it('should return 404 if user is signed in with Google', async () => {
+      jest.spyOn(User, 'findOne').mockResolvedValueOnce({
+        email: 'googleuser@example.com',
+        provider_id: 'google123',
+      });
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send(mockLoginUser);
+      expect(res.status).toBe(404);
+      expect(res.body.error).toBe(
+        'Use the appropriate method for login, Google or Facebook'
+      );
     });
   });
 });
