@@ -14,11 +14,10 @@ afterAll(async () => {
 });
 
 const mockUser = {
-  email: 'test99@example.com',
+  _id: '12343325454254245',
+  email: 'test5@example.com',
   password: 'password123',
   fullName: 'John Doe',
-  __v: 0,
-  save: jest.fn(),
 };
 
 const mockLoginUser = {
@@ -31,9 +30,9 @@ const user = {
 };
 
 const spyUserFind1 = jest.spyOn(User, 'findOne').mockReturnValue({} as any);
-const spyUserFindLogin = jest
-  .spyOn(User, 'findOne')
-  .mockReturnValue(mockLoginUser as any);
+const spyUserCreate = jest
+  .spyOn(User, 'create')
+  .mockReturnValue(mockUser as any);
 
 const spyBycrypt = jest
   .spyOn(bcrypt, 'compare')
@@ -42,7 +41,6 @@ const spyBycrypt = jest
 describe('Auth Routes', () => {
   afterEach(() => {
     spyUserFind1.mockClear();
-    spyUserFindLogin.mockClear();
     spyBycrypt.mockClear();
   });
 
@@ -50,6 +48,7 @@ describe('Auth Routes', () => {
     it('should register a new user', async () => {
       const res = await request(app).post('/api/auth/register1').send(mockUser);
       expect(spyUserFind1).toBeCalledTimes(1);
+      expect(spyUserCreate).toBeCalledTimes(1);
       expect(res.status).toBe(201);
       expect(res.body.message).toBe('User successfully signed up');
     });
@@ -73,6 +72,9 @@ describe('Auth Routes', () => {
 
   describe('POST api/auth/login', () => {
     it('should return 200 if login is successful', async () => {
+      const spyUserFindLogin = jest
+        .spyOn(User, 'findOne')
+        .mockReturnValue(mockLoginUser as any);
       jest.spyOn(User, 'findOne').mockResolvedValue(user);
 
       const res = await request(app)

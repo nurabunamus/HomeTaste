@@ -44,23 +44,20 @@ const register1 = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user instance using the User model
-    const newUser = new User({
+    const savedUser = await User.create({
       fullName,
       email,
       password: hashedPassword,
     });
 
     // Save the new user to the database
-    const savedUser: IUser = await newUser.save();
-
     const userIdString: string = savedUser._id.toString();
 
     // Set the token as a cookie in the response
-
     setTokenCookie({
       userId: userIdString,
-      fullName: newUser.fullName,
-      email: newUser.email,
+      fullName: savedUser.fullName,
+      email: savedUser.email,
       res,
     });
 
@@ -69,18 +66,18 @@ const register1 = async (req: Request, res: Response) => {
     const apiUrl = process.env.API_URL;
     const confirmationToken = encrypt(email);
     const link = `${apiUrl}/verify/${confirmationToken}`;
-    // await sendEmail(email, subject, link, res);
+    await sendEmail(email, subject, link, res);
+
     // Return the response
     res.status(201).json({
       message: 'User successfully signed up',
       user: {
-        id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
+        id: savedUser._id,
+        fullName: savedUser.fullName,
+        email: savedUser.email,
       },
     });
   } catch (error) {
-    console.log('error', error);
     res.status(500).json(error);
   }
 };
