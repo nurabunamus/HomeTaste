@@ -1,5 +1,3 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable prettier/prettier */
 const SWAGGER_OPTIONS = {
   definition: {
     openapi: '3.0.0',
@@ -15,7 +13,7 @@ const SWAGGER_OPTIONS = {
       contact: {
         name: 'HomeTaste',
         url: '',
-        email: process.env.EMAIL,
+        email: process.env.GMAIL_EMAIL,
       },
     },
     servers: [

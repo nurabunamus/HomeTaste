@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Response } from 'express';
 import createTransporter from '../config/email';
 
@@ -15,7 +14,7 @@ const sendEmail = async (
     const mailOptions = {
       from: 'HomeTaste', // Change this to your desired 'from' name
       to: email,
-      subject: subject,
+      subject,
       html: `Click the following link to proceed: <a href="${link}">${subject}</a>`,
     };
 
