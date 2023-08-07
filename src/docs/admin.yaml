@@ -2,7 +2,7 @@ paths:
   /api/admin/cooker:
     get:
       security: # Add the security information here
-        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
+        - authTokenCompleted: [] # Applying the bearerAuth scheme to this endpoint
       tags:
         - Admin
       summary: Get all users with the role 'cooker'
@@ -29,7 +29,7 @@ paths:
   /api/admin/customers:
     get:
       security: # Add the security information here
-        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
+        - authTokenCompleted: [] # Applying the bearerAuth scheme to this endpoint
       tags:
         - Admin
       summary: Get all users with the role 'customer'

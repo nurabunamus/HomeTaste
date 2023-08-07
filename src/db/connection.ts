@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import mongoose, { ConnectOptions } from 'mongoose';
 
 const { DB_USERNAME, DB_PASSWORD, NODE_ENV } = process.env;

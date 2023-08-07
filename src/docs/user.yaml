@@ -58,11 +58,6 @@ paths:
           description: Internal server error
 
 components:
-  securitySchemes:
-    authTokenCompleted:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   schemas:
     UserProfile:
       type: object

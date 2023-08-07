@@ -6,7 +6,7 @@ paths:
       summary: Gets a user's cart
       description: Returns a user's cart, The user must be authenticated with a JWT token to access this endpoint and must have the role of a customer.
       security:
-        - cookieAuth: []
+        - authTokenCompleted: []
       responses:
         200:
           description: Gets A User's Cart Based On Thier User ID
@@ -48,7 +48,7 @@ paths:
           required: true
           type: string
       security:
-        - cookieAuth: []
+        - authTokenCompleted: []
       responses:
         200:
           description: Dish successfully added to the cart
@@ -105,7 +105,7 @@ paths:
           required: true
           type: string
       security:
-        - cookieAuth: []
+        - authTokenCompleted: []
       responses:
         204:
           description: Dish successfully removed from the cart
@@ -167,7 +167,7 @@ paths:
           required: true
           type: string
       security:
-        - cookieAuth: []
+        - authTokenCompleted: []
       responses:
         201:
           description: Item quantity was successfully updated from the cart
@@ -248,11 +248,6 @@ paths:
           description: For Any Other Kind Of Error
 
 components:
-  securitySchemas:
-    cookieAuth:
-      type: apiKey
-      name: authTokenCompleted
-      in: cookie
   schemas:
     Cart:
       type: object
@@ -266,6 +261,6 @@ components:
         Items:
           type: Array
           example: []
-        user:
+        customerId:
           type: string
           example: 64b2af3ea060d606a4409682

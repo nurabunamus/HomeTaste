@@ -25,7 +25,7 @@ const SWAGGER_OPTIONS = {
     ],
     components: {
       securitySchemes: {
-        bearerAuth: {
+        authTokenCompleted: {
           type: 'http',
           scheme: 'bearer',
         },

@@ -117,7 +117,7 @@ paths:
         - Auth
       summary: Complete User Registration (Second Step)
       security:
-        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
+        - authTokenCompleted: [] # Applying the bearerAuth scheme to this endpoint
         - in: header
           name: userId
           required: true
