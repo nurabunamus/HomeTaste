@@ -4,11 +4,7 @@ import dotenv from 'dotenv';
 import cookie from 'cookie-signature';
 import server from '../../app';
 import Review from '../../models/review';
-import {
-  connectToMongo,
-  closeDbConnection,
-  clearDatabase,
-} from '../../db/connection';
+import { connectToMongo, closeDbConnection } from '../../db/connection';
 
 dotenv.config();
 
@@ -35,9 +31,9 @@ const review2 = {
   _id: '60f7ea20a8b1c72f9a56c3f6',
   rating: 5,
   comment: 'Amazing!',
-  userId: '60f7ea20a8b1c72f9a56c3f2',
+  customerId: '60f7ea20a8b1c72f9a56c3f2',
   dishId: foodId,
-  order: '60f7ea20a8b1c72f9a56c3f3',
+  orderId: '60f7ea20a8b1c72f9a56c3f3',
 };
 
 const mockToken = jwt.sign(
@@ -76,7 +72,7 @@ describe('Review Routes', () => {
       const reviewData = {
         rating: 4,
         comment: 'Delicious!',
-        userId: '60f7ea20a8b1c72f9a56c3f2',
+        customerId: '60f7ea20a8b1c72f9a56c3f2',
         orderId: '60f7ea20a8b1c72f9a56c3f3',
       };
 
@@ -96,9 +92,9 @@ describe('Review Routes', () => {
       expect(res.body.message).toEqual('Review created successfully');
       expect(res.body.review.rating).toEqual(reviewData.rating);
       expect(res.body.review.comment).toEqual(reviewData.comment);
-      expect(res.body.review.userId).toEqual(reviewData.userId);
+      expect(res.body.review.customerId).toEqual(reviewData.customerId);
       expect(res.body.review.dishId).toEqual(foodId);
-      expect(res.body.review.order).toEqual(reviewData.orderId);
+      expect(res.body.review.orderId).toEqual(reviewData.orderId);
 
       mockSave.mockRestore();
     });

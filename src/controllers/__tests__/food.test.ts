@@ -1,14 +1,8 @@
-import jwt from 'jsonwebtoken';
 import request from 'supertest';
 import dotenv from 'dotenv';
-import cookie from 'cookie-signature';
 import server from '../../app';
 import Food from '../../models/food';
-import {
-  connectToMongo,
-  closeDbConnection,
-  clearDatabase,
-} from '../../db/connection';
+import { connectToMongo, closeDbConnection } from '../../db/connection';
 
 dotenv.config();
 

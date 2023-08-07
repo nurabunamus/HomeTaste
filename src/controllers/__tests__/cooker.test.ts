@@ -7,11 +7,7 @@ import server from '../../app';
 import Food from '../../models/food';
 import User from '../../models/user';
 
-import {
-  connectToMongo,
-  closeDbConnection,
-  clearDatabase,
-} from '../../db/connection';
+import { connectToMongo, closeDbConnection } from '../../db/connection';
 import Order from '../../models/order';
 
 dotenv.config();
