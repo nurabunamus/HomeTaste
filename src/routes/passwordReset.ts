@@ -1,5 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Router } from 'express';
 import passwordResetController from '../controllers/passwordReset';
 

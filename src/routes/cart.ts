@@ -1,5 +1,4 @@
-import express, { Request, Response } from 'express';
-import { authenticate } from '../middlewares/authentication';
+import express from 'express';
 import { isAuthenticated, checkRole } from '../middlewares/isAuth';
 import CartController from '../controllers/cart';
 

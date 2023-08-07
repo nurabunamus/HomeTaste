@@ -1,10 +1,6 @@
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import express from 'express';
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import multer from 'multer';
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import { v2 as cloudinary } from 'cloudinary';
 
 import {
@@ -15,7 +11,6 @@ import {
   updateOrderStatus,
 } from '../controllers/cooker';
 
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import { checkRole, isAuthenticated } from '../middlewares/isAuth';
 
 cloudinary.config({
@@ -49,5 +44,4 @@ cookerRouter.patch(
   updateOrderStatus
 );
 
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 export default cookerRouter;
