@@ -1,163 +1,118 @@
-describe('Test Suite', () => {
-  test('Always passing test', () => {
-    expect(true).toBe(true);
-  });
-});
-
-/*
 import request from 'supertest';
-import server from '../../app';
-import {
-  connectToMongo,
-  closeDbConnection,
-  clearDatabase,
-} from '../../db/connection';
-
-const newUser = {
-  fullName: 'Jamil Doe',
-  email: 'jamildoe@example.com',
-  password: 'password123',
-};
-
-afterAll(async () => {
-  await closeDbConnection();
-  server.close();
-});
+import bcrypt from 'bcrypt';
+import app from '../../app';
+import { connectToMongo, closeDbConnection } from '../../db/connection';
+import User from '../../models/user';
 
 beforeAll(async () => {
   await connectToMongo();
 });
 
-describe('Auth Routes', () => {
-  beforeEach(async () => {
-    await request(server).post('/api/auth/register1').send(newUser);
-  }, 10000); // Set the timeout to 10000 ms (10 seconds)
+afterAll(async () => {
+  await closeDbConnection();
+  app.close();
+});
 
-  afterEach(async () => {
-    await clearDatabase();
+const mockUser = {
+  _id: '12343325454254245',
+  email: 'test5@example.com',
+  password: 'password123',
+  fullName: 'John Doe',
+};
+
+const mockLoginUser = {
+  email: 'test99@example.com',
+  password: 'password123',
+};
+
+const user = {
+  _id: 'valid_user_id_here',
+};
+
+const spyUserFind1 = jest.spyOn(User, 'findOne').mockReturnValue({} as any);
+const spyUserCreate = jest
+  .spyOn(User, 'create')
+  .mockReturnValue(mockUser as any);
+
+const spyBycrypt = jest
+  .spyOn(bcrypt, 'compare')
+  .mockImplementation(() => Promise.resolve(true));
+
+describe('Auth Routes', () => {
+  afterEach(() => {
+    spyUserFind1.mockClear();
+    spyBycrypt.mockClear();
   });
 
-  describe('POST /register1', () => {
-    test('If any of required fields are not passed, should return an error with status code 400', async () => {
-      // note that only "fullName" property is passed
-      const mReqBody = {
-        fullName: 'Cengiz',
-      };
-
-      const res = await request(server)
-        .post('/api/auth/register1')
-        .send(mReqBody);
-      expect(res.status).toBe(400);
-      expect(res.body.error).toBe('Missing required fields');
-      expect(res.headers['content-type']).toMatch('application/json');
-    }, 10000);
-
-    test('If user email exists, should return an error with status code 409', async () => {
-      const res = await request(server)
-        .post('/api/auth/register1')
-        .send(newUser);
-      expect(res.status).toBe(409);
-      expect(res.body.error).toBe('User already exists');
-      expect(res.headers['content-type']).toMatch('application/json');
-    });
-
-    test('If user data is valid, should create a user, return its data with status code 201', async () => {
-      const mValidRequest = {
-        fullName: 'Nur Abunamus',
-        email: 'example@example.com',
-        password: 'password123',
-      };
-
-      const expectedResponse = {
-        fullName: 'Nur Abunamus',
-        email: 'example@example.com',
-      };
-
-      const res = await request(server)
-        .post('/api/auth/register1')
-        .send(mValidRequest);
+  describe('POST api/auth/register1', () => {
+    it('should register a new user', async () => {
+      const res = await request(app).post('/api/auth/register1').send(mockUser);
+      expect(spyUserFind1).toBeCalledTimes(1);
+      expect(spyUserCreate).toBeCalledTimes(1);
       expect(res.status).toBe(201);
       expect(res.body.message).toBe('User successfully signed up');
-      expect(res.headers['content-type']).toMatch('application/json');
-      expect(res.body.user).toEqual(expect.objectContaining(expectedResponse));
     });
-  });
 
-  describe('POST /register2', () => {
-    test('If any of required fields are not passed, should return an error with status code 400', async () => {
-      // note that only "fullName" property is passed
-      const mReqBody = {
-        role: 'customer',
-      };
-
-      const res = await request(server)
-        .post('/api/auth/register2')
-        .send(mReqBody);
+    it('should return 400 if required fields are missing', async () => {
+      const res = await request(app).post('/api/auth/register1').send({});
       expect(res.status).toBe(400);
       expect(res.body.error).toBe('Missing required fields');
-      expect(res.headers['content-type']).toMatch('application/json');
+    });
+
+    it('should return 409 if user already exists', async () => {
+      const spyUserFind2 = jest
+        .spyOn(User, 'findOne')
+        .mockResolvedValueOnce(mockUser);
+      const res = await request(app).post('/api/auth/register1').send(mockUser);
+      expect(spyUserFind2).toBeCalledTimes(1);
+      expect(res.status).toBe(409);
+      expect(res.body.error).toBe('User already exists');
     });
   });
 
-  describe('POST /login', () => {
-    test('If any of required fields are not passed, should return an error with status code 400', async () => {
-      // note that no fields are passed
-      const mReqBody = {};
+  describe('POST api/auth/login', () => {
+    it('should return 200 if login is successful', async () => {
+      const spyUserFindLogin = jest
+        .spyOn(User, 'findOne')
+        .mockReturnValue(mockLoginUser as any);
+      jest.spyOn(User, 'findOne').mockResolvedValue(user);
 
-      const res = await request(server).post('/api/auth/login').send(mReqBody);
-      expect(res.status).toBe(400);
-      expect(res.headers['content-type']).toMatch('application/json');
-    });
-
-    test('If user email does not exist, should return an error with status code 404', async () => {
-      const mReq = {
-        email: 'xyz@mail.com',
-        password: 'xyz123',
-      };
-
-      const expectedResponse = {
-        error: 'User not found, please register',
-      };
-
-      const res = await request(server).post('/api/auth/login').send(mReq);
-      expect(res.status).toBe(404);
-      expect(res.headers['content-type']).toMatch('application/json');
-      expect(res.body).toEqual(expect.objectContaining(expectedResponse));
-    });
-
-    test('If password is incorrect, should return an error with status code 401', async () => {
-      const mReq = {
-        email: 'jamildoe@example.com',
-        password: 'cbA12345',
-      };
-
-      const expectedResponse = {
-        error: 'Invalid credentials',
-      };
-
-      const res = await request(server).post('/api/auth/login').send(mReq);
-      expect(res.status).toBe(401);
-      expect(res.headers['content-type']).toMatch('application/json');
-      expect(res.body).toEqual(expect.objectContaining(expectedResponse));
-    });
-
-    test('If user credentials are valid, put token into cookie and return with status code 200', async () => {
-      const mReq = {
-        email: 'jamildoe@example.com',
-        password: 'password123',
-      };
-
-      const expectedResponse = {
-        message: 'User successfully logged in',
-      };
-
-      const res = await request(server).post('/api/auth/login').send(mReq);
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send(mockLoginUser);
+      expect(spyUserFindLogin).toBeCalledTimes(1);
+      expect(spyBycrypt).toBeCalledTimes(1);
       expect(res.status).toBe(200);
-      expect(res.headers['content-type']).toMatch('application/json');
-      expect(res.headers['set-cookie']).toBeDefined();
-      expect(res.headers['set-cookie'][0]).toContain('authToken');
-      expect(res.body).toEqual(expect.objectContaining(expectedResponse));
+      expect(res.body.message).toBe('User successfully logged in');
+    });
+
+    it('should return 400 if email or password is missing', async () => {
+      const res = await request(app).post('/api/auth/login').send({});
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBe('Missing required fields');
+    });
+
+    it('should return 404 if user is not found', async () => {
+      jest.spyOn(User, 'findOne').mockResolvedValueOnce(null);
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send(mockLoginUser);
+      expect(res.status).toBe(404);
+      expect(res.body.error).toBe('User not found, please register');
+    });
+
+    it('should return 404 if user is signed in with Google', async () => {
+      jest.spyOn(User, 'findOne').mockResolvedValueOnce({
+        email: 'googleuser@example.com',
+        provider_id: 'google123',
+      });
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send(mockLoginUser);
+      expect(res.status).toBe(404);
+      expect(res.body.error).toBe(
+        'Use the appropriate method for login, Google or Facebook'
+      );
     });
   });
 });
-*/
