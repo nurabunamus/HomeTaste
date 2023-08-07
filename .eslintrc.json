@@ -35,7 +35,7 @@
     "prettier/prettier": "error",
     "node/no-unsupported-features/es-syntax": "off",
     "node/no-unpublished-import": "warn",
-    "@typescript-eslint/no-namespace": "warn",
+    "@typescript-eslint/no-namespace": "off",
     "no-lonely-if": "warn",
     "camelcase": "warn",
     "no-use-before-define": "warn",
