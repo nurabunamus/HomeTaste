@@ -57,7 +57,7 @@ export const UserSchema = new Schema<IUser>(
       enum: ['admin', 'cooker', 'customer'],
     },
     paymentMethod: [PaymentMethodSchema],
-    cookerStatus: { type: String },
+    cookerStatus: { type: String, default: 'active' },
     providerId: { type: String, unique: true, sparse: true },
     paymentMethodStatus: {
       type: Boolean,
