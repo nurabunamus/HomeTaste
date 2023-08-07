@@ -1,13 +1,10 @@
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import { Request, Response } from 'express';
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 import Review from '../models/review';
 
-// eslint-disable-next-line consistent-return
 const postReview = async (req: Request, res: Response) => {
   try {
     const { foodId } = req.params;
-    const { rating, comment, userId, orderId } = req.body;
+    const { rating, comment, customerId, orderId } = req.body;
 
     if (rating < 1 || rating > 5) {
       return res
@@ -18,16 +15,18 @@ const postReview = async (req: Request, res: Response) => {
     const review = new Review({
       rating,
       comment,
-      userId,
+      customerId,
       dishId: foodId,
-      order: orderId,
+      orderId,
     });
 
     await review.save();
 
-    res.status(201).json({ message: 'Review created successfully', review });
+    return res
+      .status(201)
+      .json({ message: 'Review created successfully', review });
   } catch (error) {
-    res.status(500).json({ message: error });
+    return res.status(500).json({ message: error });
   }
 };
 
@@ -43,5 +42,4 @@ const getReviews = async (req: Request, res: Response) => {
   }
 };
 
-// eslint-disable-next-line node/no-unsupported-features/es-syntax
 export { postReview, getReviews };

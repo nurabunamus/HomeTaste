@@ -8,14 +8,14 @@ import Food from '../models/food';
 const getOrders = async (req: Request, res: Response) => {
   try {
     // Get the user object from the request
-    const userReq = req.user as IUser;
-    const user = await User.findById({ _id: userReq._id });
+    const customerReq = req.user as IUser;
+    const customer = await User.findById({ _id: customerReq._id });
 
-    if (!user) {
+    if (!customer) {
       return res.status(404).json({ message: 'User not found' });
     }
     // Find all orders associated with the user
-    const orders = await Order.find({ 'user._id': user._id });
+    const orders = await Order.find({ 'customer._id': customer._id });
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({ message: 'No orders found for this user' });
@@ -27,13 +27,13 @@ const getOrders = async (req: Request, res: Response) => {
       orderDetails: order.orderDetails,
       totalPrice: order.totalPrice,
       orderStatus: order.orderStatus,
-      user: {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
+      customer: {
+        _id: customer._id,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        email: customer.email,
+        phone: customer.phone,
+        address: customer.address,
       },
       cookerId: order.cookerId,
     }));
@@ -49,14 +49,14 @@ const getOrders = async (req: Request, res: Response) => {
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const userReq = req.user as IUser;
+    const customerReq = req.user as IUser;
     // Find the user associated with the authenticated user ID
-    const user = await User.findById(userReq._id);
-    if (!user) {
+    const customer = await User.findById(customerReq._id);
+    if (!customer) {
       return res.status(404).json({ message: 'User not found' });
     }
     // Find the user's cart in the database
-    const cart = await Cart.findOne({ customerId: user._id });
+    const cart = await Cart.findOne({ customerId: customer._id });
     if (!cart) {
       return res.status(404).json({ message: 'No cart found for this user' });
     }
@@ -84,7 +84,7 @@ const createOrder = async (req: Request, res: Response) => {
     const newOrder = await Order.create({
       orderDetails: cart.items,
       totalPrice: cart.totalPrice,
-      user,
+      customer,
       cookerId,
     });
 
@@ -102,11 +102,11 @@ const createOrder = async (req: Request, res: Response) => {
 
 const cancelOrder = async (req: Request, res: Response) => {
   try {
-    const orderId = req.params.id;
-    const userReq = req.user as IUser;
+    const { orderId } = req.params;
+    const customerReq = req.user as IUser;
 
-    const user = await User.findById({ _id: userReq._id });
-    if (!user) {
+    const customer = await User.findById({ _id: customerReq._id });
+    if (!customer) {
       return res.status(404).json({ message: 'User not found' });
     }
     const order = await Order.findByIdAndUpdate(
@@ -124,12 +124,12 @@ const cancelOrder = async (req: Request, res: Response) => {
       orderDetails: order.orderDetails,
       totalPrice: order.totalPrice,
       orderStatus: order.orderStatus,
-      user: {
-        firstName: order.user.firstName,
-        lastName: order.user.lastName,
-        email: order.user.email,
-        phone: order.user.phone,
-        address: order.user.address,
+      customer: {
+        firstName: order.customer.firstName,
+        lastName: order.customer.lastName,
+        email: order.customer.email,
+        phone: order.customer.phone,
+        address: order.customer.address,
       },
       cookerId: order.cookerId,
     };

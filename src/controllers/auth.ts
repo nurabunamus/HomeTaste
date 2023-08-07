@@ -21,15 +21,13 @@ const register1 = async (req: Request, res: Response) => {
 
     // Perform validation checks on the request data
     if (!fullName || !email || !password) {
-      res.status(400).send({ error: 'Missing required fields' });
-      return;
+      return res.status(400).send({ error: 'Missing required fields' });
     }
 
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email });
     if (existingUser && Object.keys(existingUser).length > 0) {
-      res.status(409).send({ error: 'User already exists' });
-      return;
+      return res.status(409).send({ error: 'User already exists' });
     }
 
     // Generate a hashed password using bcrypt
@@ -61,7 +59,7 @@ const register1 = async (req: Request, res: Response) => {
     await sendEmail(email, subject, link, res);
 
     // Return the response
-    res.status(201).json({
+    return res.status(201).json({
       message: 'User successfully signed up',
       user: {
         id: savedUser._id,
@@ -70,7 +68,7 @@ const register1 = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json(error);
   }
 };
 
@@ -125,15 +123,13 @@ const completedRegister = async (req: Request, res: Response) => {
     };
     const { authToken } = req.signedCookies;
     if (!phone || !address || !role) {
-      res.status(400).json({ error: 'Missing required fields' });
-      return;
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
     if (role === 'admin') {
-      res.status(400).json({
+      return res.status(400).json({
         error: 'Cannot register as an admin during user registration.',
       });
-      return;
     }
 
     // Extract user data from the authToken
@@ -151,8 +147,7 @@ const completedRegister = async (req: Request, res: Response) => {
     // Find the user based on the user ID
     const user = await User.findById(userId);
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
-      return;
+      return res.status(404).json({ error: 'User not found' });
     }
 
     // Add the address and phone to the user object
@@ -164,13 +159,12 @@ const completedRegister = async (req: Request, res: Response) => {
     // Save the updated user to the database
     await user.save();
 
-    // // Clear the existing cookie
-
+    // Clear the existing cookie
     res.clearCookie('authToken');
 
     // Set the new token as a cookie in the response
     setCompletedTokenCookie({
-      userId: userId,
+      userId,
       role: user.role,
       fullName: user.fullName,
       res,
@@ -178,13 +172,13 @@ const completedRegister = async (req: Request, res: Response) => {
 
     // Create the cart for the customer
     if (user.role === 'customer') {
-      await Cart.create({ items: [], user: userId });
+      await Cart.create({ items: [], customerId: userId });
     }
 
     req.user = user;
 
     // Return the response
-    res.status(201).json({
+    return res.status(201).json({
       message: 'User information updated',
       user: {
         id: user._id,
@@ -197,7 +191,7 @@ const completedRegister = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(500).send(error);
   }
 };
 
@@ -207,30 +201,26 @@ const login = async (req: Request, res: Response) => {
 
     // Perform validation checks on the request data
     if (!email || !password) {
-      res.status(400).json({ error: 'Missing required fields' });
-      return;
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
     // Find the user based on the email
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(404).json({ error: 'User not found, please register' });
-      return;
+      return res.status(404).json({ error: 'User not found, please register' });
     }
 
-    const isSignedWithGoogle = user.providerId;
-    if (isSignedWithGoogle) {
-      res.status(404).json({
+    const isSignedWithGoogleOrFacebook = user.providerId;
+    if (isSignedWithGoogleOrFacebook) {
+      return res.status(404).json({
         error: 'Use the appropriate method for login, Google or Facebook',
       });
-      return;
     }
 
     // Compare the provided password with the hashed password stored in the database
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      res.status(401).json({ error: 'Invalid credentials' });
-      return;
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Generate a new token for the authenticated user
@@ -261,12 +251,12 @@ const login = async (req: Request, res: Response) => {
     };
 
     // Return the response
-    res.status(200).json({
+    return res.status(200).json({
       message: 'User successfully logged in',
       user: req.user,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -276,7 +266,6 @@ const logout = (req: Request, res: Response) => {
     res.clearCookie('authToken');
     res.clearCookie('authTokenCompleted');
 
-    // Return the response
     res.status(200).json({ message: 'User successfully logged out' });
   } catch (error) {
     res.send(error);

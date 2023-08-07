@@ -16,7 +16,6 @@ export const setTokenCookie = ({
   email,
   res,
 }: Params): void | string => {
-
   const payload = {
     _id: userId,
     fullName: fullName,
@@ -46,7 +45,6 @@ export const setCompletedTokenCookie = ({
   res,
   email,
 }: Params): void | string => {
-
   const payload = {
     _id: userId,
 
@@ -60,7 +58,6 @@ export const setCompletedTokenCookie = ({
   });
 
   res?.cookie('authTokenCompleted', token, {
-
     httpOnly: true,
     signed: true,
     expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),

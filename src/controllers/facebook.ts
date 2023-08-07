@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 import passport from '../config/passport';
+// import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 
 dotenv.config();
 

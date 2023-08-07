@@ -1,4 +1,3 @@
-/* eslint-disable object-shorthand */
 import { Request, Response } from 'express';
 import User from '../models/user';
 import { IAddress, IUser } from '../types/interfaces';
@@ -30,7 +29,7 @@ const getUserProfile = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
     // Create a userProfile object using data from the user document
-    const userProfile: userProfile = {
+    const profile: userProfile = {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
@@ -42,7 +41,7 @@ const getUserProfile = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: 'User retrieved successfully',
-      data: userProfile,
+      data: profile,
     });
   } catch (error) {
     return res.status(500).json({ error: 'Internal server error' });
@@ -78,16 +77,16 @@ const updateUserProfile = async (req: Request, res: Response) => {
     req.body.profileImage = req.file?.path;
 
     // Ckeck cooker status
-    const cookerStatus = userReq.role === 'customer' ? ' ' : cookerStatus;
+    const cookStatus = userReq.role === 'customer' ? ' ' : cookerStatus;
 
     // Create an object to hold the updated fields
     const updatedFields: updateProfile = {
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
-      address: address,
+      firstName,
+      lastName,
+      phone,
+      address,
       profileImage: req.body.profileImage,
-      cookerStatus: cookerStatus,
+      cookerStatus: cookStatus,
     };
     // Find the user by _id and update the specified fields
     const updatedUser = await User.findOneAndUpdate(
