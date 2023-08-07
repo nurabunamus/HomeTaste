@@ -23,33 +23,33 @@ const signedToken = cookie.sign(mockToken, process.env.SECRET_KEY!);
 const invalidToken = cookie.sign(mockToken, 'abc');
 // To get user profile
 const mockUser = {
-  first_name: 'John',
-  last_name: 'Doe',
+  firstName: 'John',
+  lastName: 'Doe',
   email: 'john@example.com',
   phone: '05340718124',
   address: {
     city: 'Test City',
     country: 'Test Country',
   },
-  profile_image: 'profile.jpg',
-  cooker_status: '',
+  profileImage: 'profile.jpg',
+  cookerStatus: '',
 };
 const spy = jest.spyOn(User, 'findById').mockResolvedValue(mockUser);
 
 // To update user profile
 const updateUserData = {
-  first_name: 'John',
-  last_name: 'Doe',
+  firstName: 'John',
+  lastName: 'Doe',
   phone: '+905340718124',
-  cooker_status: '',
-  street_name: 'Main Street',
-  street_number: '123',
+  cookerStatus: '',
+  streetName: 'Main Street',
+  streetNumber: '123',
   city: 'New York',
   state: 'NY',
-  flat_number: 'Apt 1',
+  flatNumber: 'Apt 1',
   district: 'Central',
   zip: '12345',
-  profile_image: '/image.jpg',
+  profileImage: '/image.jpg',
 };
 const findOneAndUpdateSpy = jest.spyOn(User, 'findOneAndUpdate');
 findOneAndUpdateSpy.mockResolvedValue(updateUserData);

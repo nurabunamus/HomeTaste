@@ -1,8 +1,6 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Schema, model } from 'mongoose';
 import { IPasswordResetToken } from '../types/interfaces';
 
-// Define the schema for the PasswordResetToken
 const passwordResetTokenSchema = new Schema<IPasswordResetToken>({
   userId: {
     type: Schema.Types.ObjectId,
@@ -19,7 +17,6 @@ const passwordResetTokenSchema = new Schema<IPasswordResetToken>({
   },
 });
 
-// Create the PasswordResetToken model based on the schema
 const PasswordResetToken = model<IPasswordResetToken>(
   'PasswordResetToken',
   passwordResetTokenSchema

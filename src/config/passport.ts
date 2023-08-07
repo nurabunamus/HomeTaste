@@ -57,7 +57,7 @@ passport.use(
       done: any
     ) => {
       try {
-        const existingUser = await User.findOne({ provider_id: profile.id });
+        const existingUser = await User.findOne({ providerId: profile.id });
         // Check if user has a facebook provider id
         if (existingUser) {
           let newToken;
@@ -89,10 +89,10 @@ passport.use(
         // Else, create a new user and make a new token for them.
         const createdUser: HydratedDocument<IUser> = await User.create({
           email: profile._json.email,
-          provider_id: profile.id,
-          first_name: profile.name!.givenName,
-          last_name: profile.name!.familyName,
-          profile_image: `https://graph.facebook.com/${profile.id}/picture?type=large`,
+          providerId: profile.id,
+          firstName: profile.name!.givenName,
+          lastName: profile.name!.familyName,
+          profileImage: `https://graph.facebook.com/${profile.id}/picture?type=large`,
         });
 
         if (!createdUser) {

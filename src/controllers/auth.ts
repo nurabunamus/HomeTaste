@@ -1,25 +1,17 @@
-import express, { Request, Response } from 'express';
-
+import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-
 import jwt, { Secret } from 'jsonwebtoken';
-import { IAddress, IUser } from '../types/interfaces';
+import { IAddress } from '../types/interfaces';
 import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
 import User from '../models/user';
 import sendEmail from '../utils/email';
-import { encrypt, decrypt, generateResetToken } from '../utils/confirmation';
+import { encrypt, decrypt } from '../utils/confirmation';
 import Cart from '../models/cart';
 
 interface RegisterRequest {
   email: string;
   password: string;
   fullName: string;
-}
-
-interface Register2Request {
-  address: IAddress;
-  phone: string;
-  role: string;
 }
 
 // Register1 contains => (fullName, email, password)
@@ -35,7 +27,7 @@ const register1 = async (req: Request, res: Response) => {
 
     // Check if the email already exists in the database
     const existingUser = await User.findOne({ email });
-    if (existingUser && Object.keys(existingUser!).length > 0) {
+    if (existingUser && Object.keys(existingUser).length > 0) {
       res.status(409).send({ error: 'User already exists' });
       return;
     }
@@ -88,7 +80,7 @@ const verifyEmail = async (req: Request, res: Response): Promise<void> => {
     const { confirmationToken } = req.params;
     // Decrypt the username
     const email = decrypt(confirmationToken);
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (user) {
       // If there is anyone, mark them as confirmed account
@@ -114,20 +106,20 @@ const completedRegister = async (req: Request, res: Response) => {
     const {
       phone,
       role,
-      street_name,
-      street_number,
+      streetName,
+      streetNumber,
       city,
       state,
-      flat_number,
+      flatNumber,
       district,
       zip,
     } = req.body;
     const address: IAddress = {
-      street_name,
-      street_number,
+      streetName,
+      streetNumber,
       state,
       city,
-      flat_number,
+      flatNumber,
       district,
       zip,
     };
@@ -205,7 +197,6 @@ const completedRegister = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send(error);
   }
 };
@@ -227,7 +218,7 @@ const login = async (req: Request, res: Response) => {
       return;
     }
 
-    const isSignedWithGoogle = user.provider_id;
+    const isSignedWithGoogle = user.providerId;
     if (isSignedWithGoogle) {
       res.status(404).json({
         error: 'Use the appropriate method for login, Google or Facebook',

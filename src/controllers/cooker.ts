@@ -127,7 +127,6 @@ const updateDish = async (req: Request, res: Response) => {
     }
 
     const dish = await Food.findOne({ _id: dishId, user_id: cookerId });
-    console.log(dish);
     if (!dish) {
       return res.status(404).json({
         message: 'Dish not found',

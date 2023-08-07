@@ -97,22 +97,22 @@
       >
         <div class="form-columns">
           <div class="form-group">
-            <label for="first_name">First Name:</label>
+            <label for="firstName">First Name:</label>
             <input
               type="text"
-              id="first_name"
-              name="first_name"
-              value="<%= user.first_name %>"
+              id="firstName"
+              name="firstName"
+              value="<%= user.firstName %>"
               required
             />
           </div>
           <div class="form-group">
-            <label for="last_name">Last Name:</label>
+            <label for="lastName">Last Name:</label>
             <input
               type="text"
-              id="last_name"
-              name="last_name"
-              value="<%= user.last_name %>"
+              id="lastName"
+              name="lastName"
+              value="<%= user.lastName %>"
               required
             />
           </div>
@@ -129,35 +129,35 @@
           </div>
           <% if (user.role !== 'customer') { %>
           <div class="form-group">
-            <label for="cooker_status">Cooker Status:</label>
+            <label for="cookerStatus">Cooker Status:</label>
             <input
               type="text"
-              id="cooker_status"
-              name="cooker_status"
-              value="<%= user.cooker_status %>"
+              id="cookerStatus"
+              name="cookerStatus"
+              value="<%= user.cookerStatus %>"
             />
           </div>
           <% } %>
           <div class="form-group">
-            <label for="profile_image">Profile Image:</label>
-            <input type="file" id="profile_image" name="profile_image" />
+            <label for="profileImage">Profile Image:</label>
+            <input type="file" id="profileImage" name="profileImage" />
           </div>
           <div class="form-group">
-            <label for="street_name">Street Name:</label>
-            <input type="text" id="street_name" name="street_name" required />
+            <label for="streetName">Street Name:</label>
+            <input type="text" id="streetName" name="streetName" required />
           </div>
           <div class="form-group">
-            <label for="street_number">Street Number:</label>
+            <label for="streetNumber">Street Number:</label>
             <input
               type="number"
-              id="street_number"
-              name="street_number"
+              id="streetNumber"
+              name="streetNumber"
               required
             />
           </div>
           <div class="form-group">
-            <label for="flat_number">Flat Number:</label>
-            <input type="number" id="flat_number" name="flat_number" required />
+            <label for="flatNumber">Flat Number:</label>
+            <input type="number" id="flatNumber" name="flatNumber" required />
           </div>
           <div class="form-group">
             <label for="district">District:</label>

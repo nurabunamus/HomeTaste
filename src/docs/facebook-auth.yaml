@@ -44,6 +44,6 @@ components:
         role:
           type: string
           example: Customer
-        provider_id:
+        providerId:
           type: string
           example: 116659968154798

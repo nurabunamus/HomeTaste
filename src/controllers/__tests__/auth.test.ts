@@ -104,7 +104,7 @@ describe('Auth Routes', () => {
     it('should return 404 if user is signed in with Google', async () => {
       jest.spyOn(User, 'findOne').mockResolvedValueOnce({
         email: 'googleuser@example.com',
-        provider_id: 'google123',
+        providerId: 'google123',
       });
       const res = await request(app)
         .post('/api/auth/login')

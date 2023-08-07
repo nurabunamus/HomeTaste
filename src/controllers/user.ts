@@ -4,21 +4,21 @@ import User from '../models/user';
 import { IAddress, IUser } from '../types/interfaces';
 
 interface userProfile {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
-  cooker_status: string;
+  cookerStatus: string;
   address: IAddress;
-  profile_image: string;
+  profileImage: string;
 }
 interface updateProfile {
   address: IAddress;
   phone: string;
-  profile_image: string;
-  cooker_status: string;
-  first_name: string;
-  last_name: string;
+  profileImage: string;
+  cookerStatus: string;
+  firstName: string;
+  lastName: string;
 }
 const getUserProfile = async (req: Request, res: Response) => {
   try {
@@ -31,13 +31,13 @@ const getUserProfile = async (req: Request, res: Response) => {
     }
     // Create a userProfile object using data from the user document
     const userProfile: userProfile = {
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       phone: user.phone,
-      cooker_status: user.cooker_status,
+      cookerStatus: user.cookerStatus,
       address: user.address,
-      profile_image: user.profile_image,
+      profileImage: user.profileImage,
     };
 
     return res.status(200).json({
@@ -53,41 +53,41 @@ const updateUserProfile = async (req: Request, res: Response) => {
   try {
     const userReq = req.user as IUser;
     const {
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       phone,
-      cooker_status,
-      street_name,
-      street_number,
+      cookerStatus,
+      streetName,
+      streetNumber,
       city,
       state,
-      flat_number,
+      flatNumber,
       district,
       zip,
     } = req.body;
     const address: IAddress = {
-      street_name,
-      street_number,
+      streetName,
+      streetNumber,
       state,
       city,
-      flat_number,
+      flatNumber,
       district,
       zip,
     };
-    // Assigns the server path of the uploaded profile image to the 'profile_image' property in the request body (if available).
-    req.body.profile_image = req.file?.path;
+    // Assigns the server path of the uploaded profile image to the 'profileImage' property in the request body (if available).
+    req.body.profileImage = req.file?.path;
 
     // Ckeck cooker status
-    const cookerStatus = userReq.role === 'customer' ? ' ' : cooker_status;
+    const cookerStatus = userReq.role === 'customer' ? ' ' : cookerStatus;
 
     // Create an object to hold the updated fields
     const updatedFields: updateProfile = {
-      first_name: first_name,
-      last_name: last_name,
+      firstName: firstName,
+      lastName: lastName,
       phone: phone,
       address: address,
-      profile_image: req.body.profile_image,
-      cooker_status: cookerStatus,
+      profileImage: req.body.profileImage,
+      cookerStatus: cookerStatus,
     };
     // Find the user by _id and update the specified fields
     const updatedUser = await User.findOneAndUpdate(

@@ -23,7 +23,7 @@ async function saveGoogle(req: Request, res: Response) {
   try {
     const userReq = req.user as IUser & { _json: JsonType };
     const googleId = `google-${userReq._json.sub}`;
-    const user = await User.findOne({ provider_id: googleId });
+    const user = await User.findOne({ providerId: googleId });
 
     // User does not exist with Google authentication
     if (!user) {
@@ -33,10 +33,10 @@ async function saveGoogle(req: Request, res: Response) {
       // Create a new user with Google authentication if user does not exist with the same email address
       if (!existingUserWithEmail) {
         const newUser = await User.create({
-          first_name: userReq._json.given_name,
-          last_name: userReq._json.family_name,
+          firstName: userReq._json.given_name,
+          lastName: userReq._json.family_name,
           email: userReq._json.email,
-          provider_id: googleId,
+          providerId: googleId,
           isConfirmed: true,
         });
         // Set authToken
@@ -55,7 +55,7 @@ async function saveGoogle(req: Request, res: Response) {
             email: newUser.email,
           },
         });
-      } else if (existingUserWithEmail.provider_id) {
+      } else if (existingUserWithEmail.providerId) {
         res.status(400).send({
           error:
             'User already exists with Facebook. Please sign in with your Facebook account.',

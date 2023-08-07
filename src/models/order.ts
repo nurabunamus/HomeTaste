@@ -18,7 +18,7 @@ type OrdersDocumentOverrides = {
 
 /* check the mongoose typescript documentation for more info
  https://mongoosejs.com/docs/typescript/subdocuments.html */
-type OrdersModelType = Model<IOrder, {}, OrdersDocumentOverrides>;
+type OrdersModelType = Model<IOrder, object, OrdersDocumentOverrides>;
 
 export const orderSchema = new Schema<IOrder, OrdersModelType>({
   orderDetails: {
@@ -42,7 +42,7 @@ export const orderSchema = new Schema<IOrder, OrdersModelType>({
     enum: Object.values(OrderStatus),
     required: true,
   },
-  user: UserSchema,
+  customer: UserSchema,
   cookerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 

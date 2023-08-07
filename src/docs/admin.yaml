@@ -58,9 +58,9 @@ components:
     User:
       type: object
       properties:
-        first_name:
+        firstName:
           type: string
-        last_name:
+        lastName:
           type: string
         email:
           type: string
@@ -70,17 +70,17 @@ components:
           type: string
         address:
           $ref: '#/components/schemas/Address'
-        profile_image:
+        profileImage:
           type: string
         role:
           type: string
-        payment_method:
+        paymentMethod:
           type: array
           items:
             $ref: '#/components/schemas/PaymentMethod'
-        cooker_status:
+        cookerStatus:
           type: string
-        payment_method_status:
+        paymentMethodStatus:
           type: boolean
         isConfirmed:
           type: boolean
@@ -88,7 +88,7 @@ components:
           type: boolean
         _id:
           type: string
-        provider_id:
+        providerId:
           type: string
         fullName:
           type: string
@@ -96,11 +96,11 @@ components:
     Address:
       type: object
       properties:
-        street_name:
+        streetName:
           type: string
-        street_number:
+        streetNumber:
           type: integer
-        flat_number:
+        flatNumber:
           type: integer
         district:
           type: string

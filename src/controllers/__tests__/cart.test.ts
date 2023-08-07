@@ -27,7 +27,7 @@ const firstMockItem = {
   quantity: 1,
   dishId: '64c515f494e860d59451717c',
   user_id: {
-    cooker_status: 'active',
+    cookerStatus: 'active',
   },
 };
 const secondMockItem = {

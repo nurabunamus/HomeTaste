@@ -50,11 +50,11 @@
     "no-useless-escape": "warn",
     "no-unused-vars": "warn",
     "no-console": "warn",
-    "func-names": "off",
-    "no-process-exit": "off",
-    "class-methods-use-this": "off",
+    "func-names": "warn",
+    "no-process-exit": "warn",
+    "class-methods-use-this": "warn",
     "@typescript-eslint/no-shadow": ["error"],
-    "no-shadow": "off"
+    "no-shadow": "warn"
   },
   "settings": {
     "node": {

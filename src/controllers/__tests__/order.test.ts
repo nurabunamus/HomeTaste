@@ -27,8 +27,8 @@ const invalidToken = cookie.sign(mockToken, 'abc');
 
 const mockUser = {
   _id: '64b9781dbee12ba0fe169821',
-  first_name: 'John',
-  last_name: 'Doe',
+  firstName: 'John',
+  lastName: 'Doe',
   email: 'john@example.com',
   phone: '05340718124',
   address: {
@@ -106,8 +106,8 @@ describe('Order Routes', () => {
         totalPrice: 10,
         orderStatus: 'Canceled',
         user: {
-          first_name: 'John',
-          last_name: 'Doe',
+          firstName: 'John',
+          lastName: 'Doe',
           email: 'john.doe@example.com',
           phone: '123-456-7890',
           address: {
@@ -156,8 +156,8 @@ describe('Order Routes', () => {
     it('should return a 200 and create a new order successfully', async () => {
       const mockUserToCreateOrder = {
         _id: '64b9781dbee12ba0fe169821',
-        first_name: 'John',
-        last_name: 'Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         email: 'john@example.com',
         phone: '05340718124',
         address: {

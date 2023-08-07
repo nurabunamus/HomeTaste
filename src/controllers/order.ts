@@ -29,8 +29,8 @@ const getOrders = async (req: Request, res: Response) => {
       orderStatus: order.orderStatus,
       user: {
         _id: user._id,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         phone: user.phone,
         address: user.address,
@@ -56,7 +56,7 @@ const createOrder = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
     // Find the user's cart in the database
-    const cart = await Cart.findOne({ user: user._id });
+    const cart = await Cart.findOne({ customerId: user._id });
     if (!cart) {
       return res.status(404).json({ message: 'No cart found for this user' });
     }
@@ -79,7 +79,7 @@ const createOrder = async (req: Request, res: Response) => {
     if (!food) {
       return res.status(404).json({ error: 'Food item not found' });
     }
-    const cookerId = food?.user_id;
+    const cookerId = food?.cookerId;
 
     const newOrder = await Order.create({
       orderDetails: cart.items,
@@ -125,8 +125,8 @@ const cancelOrder = async (req: Request, res: Response) => {
       totalPrice: order.totalPrice,
       orderStatus: order.orderStatus,
       user: {
-        first_name: order.user.first_name,
-        last_name: order.user.last_name,
+        firstName: order.user.firstName,
+        lastName: order.user.lastName,
         email: order.user.email,
         phone: order.user.phone,
         address: order.user.address,

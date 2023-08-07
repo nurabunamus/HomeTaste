@@ -1,42 +1,42 @@
 import { Request, Response } from 'express';
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import Cart from '../models/cart';
 import { IUser } from '../types/interfaces';
 import Food from '../models/food';
 
 const getCart = async (req: Request, res: Response) => {
   try {
-    // req.user has the decoded payload from the JWT token, which contains the role,email, and the _id of the user ->
-    // so instead of casting req.user as IUser which would let req.user have all the properties of IUser ->
-    // we can use the Pick type to only choose the properties from IUser that are in the decoded JWT payload.
+    /* req.user has the decoded payload from the JWT token, which contains the role,email, and the _id of the user ->
+    so instead of casting req.user as IUser which would let req.user have all the properties of IUser ->
+    we can use the Pick type to only choose the properties from IUser that are in the decoded JWT payload. */
     const userId = (
       req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
     )._id;
 
-    const userCart = await Cart.findOne({ user: userId });
-    res.status(200).json(userCart);
+    const userCart = await Cart.findOne({ customerId: userId });
+    return res.status(200).json(userCart);
   } catch (err) {
-    res.status(401).json(err);
+    return res.status(401).json(err);
   }
 };
 
 const addDishToCart = async (req: Request, res: Response) => {
   const { dishId } = req.query;
 
-  // Makes sure the dish is in the Food collection first before proceeding
-  // Normally, the typescript compiler will complain if we used properties of the populated field directly
-  // To fix this issue, mongoose allows us to typecast the return value of the populate() method, in this case the type we want is IUser
-  // Check https://mongoosejs.com/docs/typescript/populate.html for more details.
+  /* Makes sure the dish is in the Food collection first before proceeding
+   Normally, the typescript compiler will complain if we used properties of the populated field directly
+   To fix this issue, mongoose allows us to typecast the return value of the populate() method, in this case the type we want is IUser
+   Check https://mongoosejs.com/docs/typescript/populate.html for more details. */
   try {
-    const dishDoc = await Food.findById(dishId).populate<{ user_id: IUser }>(
-      'user_id'
+    const dishDoc = await Food.findById(dishId).populate<{ cookerId: IUser }>(
+      'cookerId'
     );
     if (!dishDoc) {
       throw new Error('This Dish Doesnt Exist');
     }
 
-    // Makes sure cooker_status of the cook  making the dish is "active" before proceeding
-    if (!(dishDoc.user_id.cooker_status === 'active')) {
+    // Makes sure cookerStatus of the cook  making the dish is "active" before proceeding
+    if (!(dishDoc.cookerId.cookerStatus === 'active')) {
       return res
         .status(400)
         .json(
@@ -68,7 +68,9 @@ const addDishToCart = async (req: Request, res: Response) => {
 
       await userCart.save();
 
-      res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
+      return res
+        .status(200)
+        .json({ message: 'Dish Succesfully Added To Cart' });
     } else {
       // else, if length of userCart.items array is not zero, then there is atleast one item in the array
       // we need to check if the item with the given dishId is already in the cart or not first
@@ -83,14 +85,14 @@ const addDishToCart = async (req: Request, res: Response) => {
 
       // else, we need to check if the dish was made by the same cook who made the other dishes in the userCart.items array
       // first we make an array that has all the current dishIds that are in the current cart + the dishId from the query params
-      const dishIds: Array<string> = userCart.items!.map((item) =>
+      const dishIds: Array<string> = userCart.items.map((item) =>
         item.dishId.toString()
       );
       dishIds.push(dishId as string);
 
       // Search the database for the dishes, and then count the number of distinct user_ids the returned dishes have
       const numberOfCooks = await Food.find({ _id: { $in: dishIds } }).distinct(
-        'user_id'
+        'cookerId'
       );
 
       // if all the dishes were made by the same user_id (cook), then the number of distinct user_ids must be 1
@@ -102,19 +104,19 @@ const addDishToCart = async (req: Request, res: Response) => {
 
         await userCart.save();
 
-        res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
+        return res
+          .status(200)
+          .json({ message: 'Dish Succesfully Added To Cart' });
       }
       // if the number of distnct user_id's (cooks) were more more than one than it means the dish that is to be added is made by a different cook
-      else {
-        res
-          .status(400)
-          .json(
-            'Cant Add Dishes Made By Different Cooks To The Cart, Only Dishes Made By The Same Cook Can Be Added'
-          );
-      }
+      return res
+        .status(400)
+        .json(
+          'Cant Add Dishes Made By Different Cooks To The Cart, Only Dishes Made By The Same Cook Can Be Added'
+        );
     }
   } catch (err) {
-    res.status(404).json({ message: (err as Error).message });
+    return res.status(404).json({ message: (err as Error).message });
   }
 };
 
@@ -123,7 +125,7 @@ const emptyCart = async (req: Request, res: Response) => {
     const userId = (
       req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
     )._id;
-    const userCart = await Cart.findOne({ user: userId });
+    const userCart = await Cart.findOne({ customerId: userId });
 
     if (!userCart) {
       throw new Error(
@@ -135,9 +137,11 @@ const emptyCart = async (req: Request, res: Response) => {
     userCart.items = [];
     await userCart.save();
 
-    res.status(200).json('All Items In The Cart Have Been Succesfully Removed');
+    return res
+      .status(200)
+      .json('All Items In The Cart Have Been Succesfully Removed');
   } catch (err) {
-    res.status(500).json((err as Error).message);
+    return res.status(500).json((err as Error).message);
   }
 };
 
@@ -149,7 +153,7 @@ const deleteItem = async (req: Request, res: Response) => {
       req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
     )._id;
 
-    const userCart = await Cart.findOne({ user: userId });
+    const userCart = await Cart.findOne({ customerId: userId });
 
     if (!userCart) {
       return res
@@ -174,13 +178,12 @@ const deleteItem = async (req: Request, res: Response) => {
 
       await userCart.save();
 
-      res.status(204).json('Item Was Succesfully Deleted From Cart');
-    } else {
-      // if item doesn't exist, then return an error
-      return res
-        .status(404)
-        .json('Dish with the given ID already doesnt exist in cart');
+      return res.status(204).json('Item Was Succesfully Deleted From Cart');
     }
+    // if item doesn't exist, then return an error
+    return res
+      .status(404)
+      .json('Dish with the given ID already doesnt exist in cart');
   } catch (err) {
     return res.status(500).json((err as Error).message);
   }
@@ -194,7 +197,7 @@ const changeQuantity = async (req: Request, res: Response) => {
     )._id;
 
     // Search for cart first
-    const userCart = await Cart.findOne({ user: userId });
+    const userCart = await Cart.findOne({ customerId: userId });
 
     // if no cart found return a 404 response with error
     if (!userCart) {
@@ -205,7 +208,6 @@ const changeQuantity = async (req: Request, res: Response) => {
         );
     }
 
-    // else
     // check if item exists in cart first
     const isItemExist = userCart.items?.find(
       (item) => item.dishId.toString() === (dishId as string)
@@ -230,14 +232,11 @@ const changeQuantity = async (req: Request, res: Response) => {
         );
       }
       // return a 201 response with no error
-      res.status(201).json('Quantity Succesfully Updated');
+      return res.status(201).json('Quantity Succesfully Updated');
     }
     // else if item doesnt exist in the cart
-    else {
-      return res
-        .status(404)
-        .json('Dish with the given ID doesnt exist in cart');
-    }
+
+    return res.status(404).json('Dish with the given ID doesnt exist in cart');
   } catch (err) {
     return res.status(500).json((err as Error).message);
   }

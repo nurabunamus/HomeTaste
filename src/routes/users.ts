@@ -12,7 +12,7 @@ router.patch(
   isAuthenticated,
   (req: Request, res: Response, next: NextFunction) => {
     // Adding error handling for multer upload
-    upload.single('profile_image')(req, res, (err) => {
+    upload.single('profileImage')(req, res, (err) => {
       fileSizeLimitErrorHandler(err, req, res, next);
     });
   },

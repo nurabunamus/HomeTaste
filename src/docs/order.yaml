@@ -112,10 +112,10 @@ components:
             _id:
               type: string
               example: 64b9781dbee12ba0fe169821
-            first_name:
+            firstName:
               type: string
               example: John
-            last_name:
+            lastName:
               type: string
               example: Doe
             email:
