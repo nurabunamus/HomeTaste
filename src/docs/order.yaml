@@ -6,7 +6,7 @@ paths:
       tags:
         - Order
       security:
-        - BearerAuth: []
+        - authTokenCompleted: []
       responses:
         '200':
           description: Orders successfully retrieved
@@ -31,7 +31,7 @@ paths:
       tags:
         - Order
       security:
-        - BearerAuth: []
+        - authTokenCompleted: []
       responses:
         '200':
           description: Order created successfully
@@ -61,7 +61,7 @@ paths:
       tags:
         - Order
       security:
-        - BearerAuth: []
+        - authTokenCompleted: []
       responses:
         '200':
           description: Order canceled successfully
@@ -80,7 +80,7 @@ paths:
 
 components:
   securitySchemes:
-    BearerAuth:
+    authTokenCompleted:
       type: http
       scheme: bearer
       bearerFormat: JWT

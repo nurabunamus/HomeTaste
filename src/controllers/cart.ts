@@ -23,7 +23,27 @@ const getCart = async (req: Request, res: Response) => {
 const addDishToCart = async (req: Request, res: Response) => {
   const { dishId } = req.query;
 
+  // Makes sure the dish is in the Food collection first before proceeding
+  // Normally, the typescript compiler will complain if we used properties of the populated field directly
+  // To fix this issue, mongoose allows us to typecast the return value of the populate() method, in this case the type we want is IUser
+  // Check https://mongoosejs.com/docs/typescript/populate.html for more details.
   try {
+    const dishDoc = await Food.findById(dishId).populate<{ user_id: IUser }>(
+      'user_id'
+    );
+    if (!dishDoc) {
+      throw new Error('This Dish Doesnt Exist');
+    }
+
+    // Makes sure cooker_status of the cook  making the dish is "active" before proceeding
+    if (!(dishDoc.user_id.cooker_status === 'active')) {
+      return res
+        .status(400)
+        .json(
+          'This Cook Isnt Able To Receive Any Orders At The Moment, Please Try Again Later'
+        );
+    }
+
     const userId = (
       req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
     )._id;
@@ -46,7 +66,7 @@ const addDishToCart = async (req: Request, res: Response) => {
         dishId: new mongoose.Types.ObjectId(dishId as string),
       });
 
-      userCart.save();
+      await userCart.save();
 
       res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
     } else {
@@ -80,7 +100,7 @@ const addDishToCart = async (req: Request, res: Response) => {
           dishId: new mongoose.Types.ObjectId(dishId as string),
         });
 
-        userCart.save();
+        await userCart.save();
 
         res.status(200).json({ message: 'Dish Succesfully Added To Cart' });
       }
@@ -113,7 +133,7 @@ const emptyCart = async (req: Request, res: Response) => {
 
     // Make items an empty array to remove all the items that were in it;
     userCart.items = [];
-    userCart.save();
+    await userCart.save();
 
     res.status(200).json('All Items In The Cart Have Been Succesfully Removed');
   } catch (err) {
@@ -152,7 +172,7 @@ const deleteItem = async (req: Request, res: Response) => {
         (item) => item.dishId.toString() !== (dishId as string)
       );
 
-      userCart.save();
+      await userCart.save();
 
       res.status(204).json('Item Was Succesfully Deleted From Cart');
     } else {
@@ -197,11 +217,11 @@ const changeQuantity = async (req: Request, res: Response) => {
       if (method === 'increment') {
         const itemToBeUpdatedIndex = userCart.items?.indexOf(isItemExist);
         userCart.items![itemToBeUpdatedIndex as number].quantity += 1;
-        userCart.save();
+        await userCart.save();
       } else if (method === 'decrement') {
         const itemToBeUpdatedIndex = userCart.items?.indexOf(isItemExist);
         userCart.items![itemToBeUpdatedIndex as number].quantity -= 1;
-        userCart.save();
+        await userCart.save();
       }
       // if its not decrement or increment then throw an error
       else {

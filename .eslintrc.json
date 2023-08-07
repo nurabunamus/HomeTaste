@@ -46,6 +46,7 @@
     "no-underscore-dangle": "off",
     "dot-notation": "warn",
     "object-shorthand": "warn",
+    "node/no-extraneous-import": "warn",
     "no-useless-escape": "warn",
     "no-unused-vars": "warn",
     "no-console": "warn",

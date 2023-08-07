@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 import { Request, Response } from 'express';
 import User from '../models/user';
 import { IUser } from '../types/interfaces';
@@ -23,20 +24,22 @@ async function saveGoogle(req: Request, res: Response) {
     const userReq = req.user as IUser & { _json: JsonType };
     const googleId = `google-${userReq._json.sub}`;
     const user = await User.findOne({ provider_id: googleId });
+
     // User does not exist with Google authentication
     if (!user) {
       const existingUserWithEmail = await User.findOne({
         email: userReq._json.email,
       });
+      // Create a new user with Google authentication if user does not exist with the same email address
       if (!existingUserWithEmail) {
-        // Create a new user with Google authentication if user does not exist with the same email address
         const newUser = await User.create({
           first_name: userReq._json.given_name,
           last_name: userReq._json.family_name,
           email: userReq._json.email,
           provider_id: googleId,
+          isConfirmed: true,
         });
-
+        // Set authToken
         setTokenCookie({
           userId: newUser._id,
           fullName: newUser.fullName,
@@ -44,7 +47,6 @@ async function saveGoogle(req: Request, res: Response) {
           res,
         });
 
-       
         res.status(200).json({
           message: 'User successfully signed in',
           user: {
@@ -66,8 +68,8 @@ async function saveGoogle(req: Request, res: Response) {
       }
     } else {
       if (user.isRegistrationComplete) {
-        // User exists with Google authentication
-        // Generate a new token for the authenticated user
+        // If the user's registration is complete (logged in Google authentication)
+        // Generate a new token for the authenticated user and set it as the authTokenCompleted
         const userIdString: string = user._id.toString();
 
         setCompletedTokenCookie({
@@ -77,27 +79,29 @@ async function saveGoogle(req: Request, res: Response) {
           res,
         });
 
-
         // Store the user information in req.user
         req.user = {
           id: user._id,
           fullName: user.fullName,
           role: user.role,
         };
+
         // Return the response
         res.status(200).json({
           message: 'User successfully logged in',
           user: req.user,
         });
       } else {
-        // User exists with Google authentication
-        // Generate a new token for the authenticated user
+        // If the user's registration is not complete
+        // Generate a new token for the authenticated user and set it as the authToken
         const userIdString: string = user._id.toString();
 
-
-        setTokenCookie({ userId: userIdString, fullName: user.fullName, email: user.email, res });
-
-
+        setTokenCookie({
+          userId: userIdString,
+          fullName: user.fullName,
+          email: user.email,
+          res,
+        });
 
         // Store the user information in req.user
         req.user = {
@@ -105,6 +109,7 @@ async function saveGoogle(req: Request, res: Response) {
           fullName: user.fullName,
           email: user.email,
         };
+
         // Return the response
         res.status(200).json({
           message: 'User successfully logged in',

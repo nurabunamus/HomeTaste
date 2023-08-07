@@ -186,7 +186,7 @@ const completedRegister = async (req: Request, res: Response) => {
 
     // Create the cart for the customer
     if (user.role === 'customer') {
-      Cart.create({ items: [], user: userId, totalPrice: 0 });
+      await Cart.create({ items: [], user: userId });
     }
 
     req.user = user;
@@ -205,6 +205,7 @@ const completedRegister = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 };
