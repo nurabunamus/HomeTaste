@@ -4,14 +4,14 @@ import Cart from '../models/cart';
 import { IUser } from '../types/interfaces';
 import Food from '../models/food';
 
+type decodedPayload = Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>;
+
 const getCart = async (req: Request, res: Response) => {
   try {
     /* req.user has the decoded payload from the JWT token, which contains the role,email, and the _id of the user ->
     so instead of casting req.user as IUser which would let req.user have all the properties of IUser ->
-    we can use the Pick type to only choose the properties from IUser that are in the decoded JWT payload. */
-    const userId = (
-      req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
-    )._id;
+    we can cast req.user to the type "decodedPyaload", which uses the Pick type to only choose the properties from IUser that are in the decoded JWT payload. */
+    const userId = (req.user as decodedPayload)._id;
 
     const userCart = await Cart.findOne({ customerId: userId });
     return res.status(200).json(userCart);
@@ -44,14 +44,11 @@ const addDishToCart = async (req: Request, res: Response) => {
         );
     }
 
-    const userId = (
-      req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
-    )._id;
+    const userId = (req.user as decodedPayload)._id;
 
     // Find the user cart first
-    const userCart = await Cart.findOne({ user: userId });
+    const userCart = await Cart.findOne({ customerId: userId });
 
-    // if cart is not found, then throw error
     if (!userCart) {
       throw new Error(
         'You dont have a cart yet because you didnt complete registration, please go do that first'
@@ -78,7 +75,6 @@ const addDishToCart = async (req: Request, res: Response) => {
         (item) => item.dishId.toString() === (dishId as string)
       );
 
-      // if it exists in the cart, throw an error
       if (isDishExists) {
         throw new Error('Dish Already Exists In Cart');
       }
@@ -90,12 +86,11 @@ const addDishToCart = async (req: Request, res: Response) => {
       );
       dishIds.push(dishId as string);
 
-      // Search the database for the dishes, and then count the number of distinct user_ids the returned dishes have
       const numberOfCooks = await Food.find({ _id: { $in: dishIds } }).distinct(
         'cookerId'
       );
 
-      // if all the dishes were made by the same user_id (cook), then the number of distinct user_ids must be 1
+      // if all the dishes (incuding the dish that is going to be added) had the same cookerId, then the number of distinct cookerIds must be 1
       if (numberOfCooks.length === 1) {
         userCart.items?.push({
           quantity: 1,
@@ -108,7 +103,7 @@ const addDishToCart = async (req: Request, res: Response) => {
           .status(200)
           .json({ message: 'Dish Succesfully Added To Cart' });
       }
-      // if the number of distnct user_id's (cooks) were more more than one than it means the dish that is to be added is made by a different cook
+      // if the number of distnct cookerIds were more more than one, then it means the dish that is to be added is made by a different cook
       return res
         .status(400)
         .json(
@@ -122,9 +117,8 @@ const addDishToCart = async (req: Request, res: Response) => {
 
 const emptyCart = async (req: Request, res: Response) => {
   try {
-    const userId = (
-      req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
-    )._id;
+    const userId = (req.user as decodedPayload)._id;
+
     const userCart = await Cart.findOne({ customerId: userId });
 
     if (!userCart) {
@@ -149,9 +143,7 @@ const deleteItem = async (req: Request, res: Response) => {
   const { dishId } = req.query;
 
   try {
-    const userId = (
-      req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
-    )._id;
+    const userId = (req.user as decodedPayload)._id;
 
     const userCart = await Cart.findOne({ customerId: userId });
 
@@ -168,7 +160,6 @@ const deleteItem = async (req: Request, res: Response) => {
       (item) => item.dishId.toString() === (dishId as string)
     );
 
-    // if item exists
     if (isItemExist) {
       // Since userCart.items is just a normal array, we can use all of the common array methods
       // By using Array.filter, we update userCart.items to be an array of items that doesn't contain the item that has the dishId from req.query
@@ -192,14 +183,11 @@ const deleteItem = async (req: Request, res: Response) => {
 const changeQuantity = async (req: Request, res: Response) => {
   const { dishId, method } = req.query;
   try {
-    const userId = (
-      req.user as Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>
-    )._id;
+    const userId = (req.user as decodedPayload)._id;
 
     // Search for cart first
     const userCart = await Cart.findOne({ customerId: userId });
 
-    // if no cart found return a 404 response with error
     if (!userCart) {
       return res
         .status(404)
@@ -213,16 +201,15 @@ const changeQuantity = async (req: Request, res: Response) => {
       (item) => item.dishId.toString() === (dishId as string)
     );
 
-    // if item is found
-    if (isItemExist) {
+    if (isItemExist && userCart.items) {
       // check the method query parameter if its increment or decrement
       if (method === 'increment') {
         const itemToBeUpdatedIndex = userCart.items?.indexOf(isItemExist);
-        userCart.items![itemToBeUpdatedIndex as number].quantity += 1;
+        userCart.items[itemToBeUpdatedIndex as number].quantity += 1;
         await userCart.save();
       } else if (method === 'decrement') {
         const itemToBeUpdatedIndex = userCart.items?.indexOf(isItemExist);
-        userCart.items![itemToBeUpdatedIndex as number].quantity -= 1;
+        userCart.items[itemToBeUpdatedIndex as number].quantity -= 1;
         await userCart.save();
       }
       // if its not decrement or increment then throw an error
@@ -231,7 +218,7 @@ const changeQuantity = async (req: Request, res: Response) => {
           "The method query string cant be any other value than 'increment' or 'decrement'"
         );
       }
-      // return a 201 response with no error
+
       return res.status(201).json('Quantity Succesfully Updated');
     }
     // else if item doesnt exist in the cart
