@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>
-      <%= `${userProfile.first_name.toUpperCase()} ${
-      userProfile.last_name.toUpperCase()}` %> Profile
+      <%= `${userProfile.firstName.toUpperCase()} ${
+      userProfile.lastName.toUpperCase()}` %> Profile
     </title>
     <style>
       body {
@@ -55,32 +55,32 @@
   </head>
   <body>
     <h1>
-      <%=`${userProfile.first_name.toUpperCase()} ${
-      userProfile.last_name.toUpperCase()}` %> PROFILE
+      <%=`${userProfile.firstName.toUpperCase()} ${
+      userProfile.lastName.toUpperCase()}` %> PROFILE
     </h1>
     <div class="user-info">
       <!-- Profile image -->
       <img
-        src="<%= userProfile.profile_image %>"
+        src="<%= userProfile.profileImage %>"
         alt="<%= userProfile.fullName %> Profile Image"
         class="profile-image"
       />
 
       <!-- User information -->
       <div class="user-details">
-        <p><strong>First Name:</strong> <%= userProfile.first_name %></p>
-        <p><strong>Last Name:</strong> <%= userProfile.last_name %></p>
+        <p><strong>First Name:</strong> <%= userProfile.firstName %></p>
+        <p><strong>Last Name:</strong> <%= userProfile.lastName %></p>
         <p><strong>Email:</strong> <%= userProfile.email %></p>
         <p><strong>Phone:</strong> <%= userProfile.phone %></p>
         <p>
           <strong>Address:</strong>
-          <%= userProfile.address.street_name %> <%= userProfile.address.state
-          %> No:<%= userProfile.address.flat_number %> <%=
+          <%= userProfile.address.streetName %> <%= userProfile.address.state %>
+          No:<%= userProfile.address.flatNumber %> <%=
           userProfile.address.district.toUpperCase() %> - <%=
           userProfile.address.city.toUpperCase() %>
         </p>
         <% if (userProfile.role === 'customer') { %>
-        <p><strong>Cooker Status:</strong> <%= userProfile.cooker_status %></p>
+        <p><strong>Cooker Status:</strong> <%= userProfile.cookerStatus %></p>
         <% } %>
       </div>
     </div>

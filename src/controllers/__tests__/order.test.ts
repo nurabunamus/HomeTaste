@@ -27,8 +27,8 @@ const invalidToken = cookie.sign(mockToken, 'abc');
 
 const mockUser = {
   _id: '64b9781dbee12ba0fe169821',
-  first_name: 'John',
-  last_name: 'Doe',
+  firstName: 'John',
+  lastName: 'Doe',
   email: 'john@example.com',
   phone: '05340718124',
   address: {
@@ -48,7 +48,7 @@ const mockOrder = {
   ],
   totalPrice: 10,
   orderStatus: 'Pending',
-  user: mockUser,
+  customer: mockUser,
   cookerId: '64b9781dbee12ba0fe169899',
 };
 const orderSpy = jest.spyOn(Order, 'find').mockResolvedValue([mockOrder]);
@@ -59,7 +59,7 @@ describe('Order Routes', () => {
     userSpy.mockReset();
   });
 
-  describe('Get/api/orders/', () => {
+  describe('Get /api/orders/', () => {
     it('should return a 200 with user orders in formatted response', async () => {
       const res = await request(server)
         .get('/api/orders')
@@ -93,7 +93,7 @@ describe('Order Routes', () => {
     });
   });
 
-  describe('Put/api/orders/:id/cancel', () => {
+  describe('Put /api/orders/:id/cancel', () => {
     it('should return a 200 and update the order status to be canceled', async () => {
       const mockUpdateOrder = {
         _id: mockOrder._id,
@@ -105,9 +105,9 @@ describe('Order Routes', () => {
         ],
         totalPrice: 10,
         orderStatus: 'Canceled',
-        user: {
-          first_name: 'John',
-          last_name: 'Doe',
+        customer: {
+          firstName: 'John',
+          lastName: 'Doe',
           email: 'john.doe@example.com',
           phone: '123-456-7890',
           address: {
@@ -152,12 +152,12 @@ describe('Order Routes', () => {
     });
   });
 
-  describe('Post/api/orders/create', () => {
+  describe('Post /api/orders/create', () => {
     it('should return a 200 and create a new order successfully', async () => {
       const mockUserToCreateOrder = {
         _id: '64b9781dbee12ba0fe169821',
-        first_name: 'John',
-        last_name: 'Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         email: 'john@example.com',
         phone: '05340718124',
         address: {
@@ -167,7 +167,7 @@ describe('Order Routes', () => {
       };
       const mockFood = {
         _id: '64ca2f92892c25849663e947',
-        user_id: '64c9ffd01853c9f2f69f7045',
+        cookerId: '64c9ffd01853c9f2f69f7045',
         price: 5,
       };
       const mockCart = {
@@ -197,7 +197,7 @@ describe('Order Routes', () => {
         ],
         totalPrice: 10,
         orderStatus: 'Pending',
-        user: mockUserToCreateOrder,
+        customer: mockUserToCreateOrder,
         cookerId: '64b9781dbee12ba0fe169899',
       };
 

@@ -42,7 +42,7 @@ paths:
               required:
                 - rating
                 - comment
-                - userId
+                - customerId
                 - orderId
       responses:
         '201':
@@ -122,9 +122,9 @@ components:
           type: integer
         comment:
           type: string
-        userId:
+        customerId:
           type: string
         dishId:
           type: string
-        order:
+        orderId:
           type: string

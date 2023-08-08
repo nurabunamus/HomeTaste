@@ -12,13 +12,13 @@ type ReviewModelType = Model<IReview, {}, ReviewDocumentOverrides>;
 export const ReviewSchema = new Schema<IReview, ReviewModelType>({
   rating: Number,
   comment: String,
-  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  customerId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   dishId: { type: Schema.Types.ObjectId, required: true, ref: 'Food' },
-  order: { type: Schema.Types.ObjectId, required: true, ref: 'Order' },
+  orderId: { type: Schema.Types.ObjectId, required: true, ref: 'Order' },
 });
 
 // makes sure each review record has a comment and/or rating, we cant have a review without both a rating AND a comment
-ReviewSchema.pre<IReview>('save', function (next): any {
+ReviewSchema.pre<IReview>('save', function checkReviewComment(next): any {
   return this.rating && this.comment
     ? next()
     : 'cant save a review without a comment and/or rating';

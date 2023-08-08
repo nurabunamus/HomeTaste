@@ -1,15 +1,10 @@
-/* eslint-disable node/no-extraneous-import */
-import jwt from 'jsonwebtoken';
 import request from 'supertest';
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import cookie from 'cookie-signature';
-import app from '../../app';
+import server from '../../app';
 import Cart from '../../models/cart';
-import {
-  connectToMongo,
-  closeDbConnection,
-  clearDatabase,
-} from '../../db/connection';
+import { connectToMongo, closeDbConnection } from '../../db/connection';
 import Food from '../../models/food';
 
 dotenv.config();
@@ -20,14 +15,14 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await closeDbConnection();
-  app.close();
+  server.close();
 });
 
 const firstMockItem = {
   quantity: 1,
   dishId: '64c515f494e860d59451717c',
-  user_id: {
-    cooker_status: 'active',
+  cookerId: {
+    cookerStatus: 'active',
   },
 };
 const secondMockItem = {
@@ -121,7 +116,7 @@ describe('Cart Routes', () => {
 
   describe('GET /cart', () => {
     it("Should  Get The User's Cart", async () => {
-      const res = await request(app)
+      const res = await request(server)
         .get('/api/cart')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
@@ -135,7 +130,7 @@ describe('Cart Routes', () => {
     });
 
     it('Should Not Get The Cart Of Another User', async () => {
-      const res = await request(app)
+      const res = await request(server)
         .get('/api/cart')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
@@ -145,7 +140,7 @@ describe('Cart Routes', () => {
   });
   describe('POST /cart', () => {
     it('Should Add A New Item To The Cart', async () => {
-      const res = await request(app)
+      const res = await request(server)
         .post('/api/cart')
         .query({ dishId: '64c515f494e860d59451719c' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
@@ -163,7 +158,7 @@ describe('Cart Routes', () => {
 
   describe('DELETE /cart', () => {
     it('Removes An Item From The Cart', async () => {
-      const res = await request(app)
+      const res = await request(server)
         .delete('/api/cart/')
         .query({ dishId: '64c515f494e860d59451717c' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
@@ -178,7 +173,7 @@ describe('Cart Routes', () => {
   });
   describe('PUT /cart', () => {
     it('Should Update the quantity of an item in the cart', async () => {
-      const res = await request(app)
+      const res = await request(server)
         .put('/api/cart/')
         .query({ dishId: '64c515f494e860d59451719c', method: 'increment' })
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
@@ -192,7 +187,7 @@ describe('Cart Routes', () => {
   });
   describe('GET /cart/deleteAll', () => {
     it('Removes All Items From The Users Cart', async () => {
-      const res = await request(app)
+      const res = await request(server)
         .get('/api/cart/deleteAll')
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 

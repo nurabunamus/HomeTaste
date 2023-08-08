@@ -117,7 +117,7 @@ paths:
         - Auth
       summary: Complete User Registration (Second Step)
       security:
-        - bearerAuth: [] # Applying the bearerAuth scheme to this endpoint
+        - authTokenCompleted: [] # Applying the bearerAuth scheme to this endpoint
         - in: header
           name: userId
           required: true
@@ -288,13 +288,13 @@ components:
     IAddress:
       type: object
       properties:
-        street_name:
+        streetName:
           type: string
           example: Main Street
-        street_number:
+        streetNumber:
           type: number
           example: 123
-        flat_number:
+        flatNumber:
           type: number
           example: 4
         district:

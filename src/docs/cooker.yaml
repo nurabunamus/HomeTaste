@@ -372,7 +372,7 @@ paths:
           required: true
           type: string
       security:
-        - cookieAuth: []
+        - authTokenCompleted: []
       responses:
         201:
           description: Order status was successfully updated.

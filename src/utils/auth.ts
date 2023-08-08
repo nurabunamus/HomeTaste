@@ -16,11 +16,10 @@ export const setTokenCookie = ({
   email,
   res,
 }: Params): void | string => {
-
   const payload = {
     _id: userId,
-    fullName: fullName,
-    email: email,
+    fullName,
+    email,
   };
 
   const token = jwt.sign(payload, process.env.SECRET_KEY!, {
@@ -43,16 +42,14 @@ export const setCompletedTokenCookie = ({
   userId,
   role,
   fullName,
-  res,
   email,
+  res,
 }: Params): void | string => {
-
   const payload = {
     _id: userId,
-
-    fullName: fullName,
-
-    role: role,
+    fullName,
+    role,
+    email,
   };
 
   const token = jwt.sign(payload, process.env.SECRET_KEY as Secret, {
@@ -60,7 +57,6 @@ export const setCompletedTokenCookie = ({
   });
 
   res?.cookie('authTokenCompleted', token, {
-
     httpOnly: true,
     signed: true,
     expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),

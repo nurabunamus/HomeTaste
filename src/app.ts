@@ -1,6 +1,3 @@
-/* eslint-disable import/first */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
@@ -12,11 +9,10 @@ import errorHandler from './middlewares/error-handling';
 
 dotenv.config();
 
-// eslint-disable-next-line import/first
+import routes from './routes';
 import { connectToMongo } from './db/connection';
 import SwaggerOptions from './utils/variables';
 import './config/passport';
-import routes from './routes';
 
 const app = express();
 app.use(cookieParser(process.env.SECRET_KEY));

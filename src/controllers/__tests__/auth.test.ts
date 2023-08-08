@@ -1,6 +1,6 @@
 import request from 'supertest';
 import bcrypt from 'bcrypt';
-import app from '../../app';
+import server from '../../app';
 import { connectToMongo, closeDbConnection } from '../../db/connection';
 import User from '../../models/user';
 
@@ -10,7 +10,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await closeDbConnection();
-  app.close();
+  server.close();
 });
 
 const mockUser = {
@@ -46,7 +46,9 @@ describe('Auth Routes', () => {
 
   describe('POST api/auth/register1', () => {
     it('should register a new user', async () => {
-      const res = await request(app).post('/api/auth/register1').send(mockUser);
+      const res = await request(server)
+        .post('/api/auth/register1')
+        .send(mockUser);
       expect(spyUserFind1).toBeCalledTimes(1);
       expect(spyUserCreate).toBeCalledTimes(1);
       expect(res.status).toBe(201);
@@ -54,7 +56,7 @@ describe('Auth Routes', () => {
     });
 
     it('should return 400 if required fields are missing', async () => {
-      const res = await request(app).post('/api/auth/register1').send({});
+      const res = await request(server).post('/api/auth/register1').send({});
       expect(res.status).toBe(400);
       expect(res.body.error).toBe('Missing required fields');
     });
@@ -63,7 +65,9 @@ describe('Auth Routes', () => {
       const spyUserFind2 = jest
         .spyOn(User, 'findOne')
         .mockResolvedValueOnce(mockUser);
-      const res = await request(app).post('/api/auth/register1').send(mockUser);
+      const res = await request(server)
+        .post('/api/auth/register1')
+        .send(mockUser);
       expect(spyUserFind2).toBeCalledTimes(1);
       expect(res.status).toBe(409);
       expect(res.body.error).toBe('User already exists');
@@ -77,7 +81,7 @@ describe('Auth Routes', () => {
         .mockReturnValue(mockLoginUser as any);
       jest.spyOn(User, 'findOne').mockResolvedValue(user);
 
-      const res = await request(app)
+      const res = await request(server)
         .post('/api/auth/login')
         .send(mockLoginUser);
       expect(spyUserFindLogin).toBeCalledTimes(1);
@@ -87,14 +91,14 @@ describe('Auth Routes', () => {
     });
 
     it('should return 400 if email or password is missing', async () => {
-      const res = await request(app).post('/api/auth/login').send({});
+      const res = await request(server).post('/api/auth/login').send({});
       expect(res.status).toBe(400);
       expect(res.body.error).toBe('Missing required fields');
     });
 
     it('should return 404 if user is not found', async () => {
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(null);
-      const res = await request(app)
+      const res = await request(server)
         .post('/api/auth/login')
         .send(mockLoginUser);
       expect(res.status).toBe(404);
@@ -104,9 +108,9 @@ describe('Auth Routes', () => {
     it('should return 404 if user is signed in with Google', async () => {
       jest.spyOn(User, 'findOne').mockResolvedValueOnce({
         email: 'googleuser@example.com',
-        provider_id: 'google123',
+        providerId: 'google123',
       });
-      const res = await request(app)
+      const res = await request(server)
         .post('/api/auth/login')
         .send(mockLoginUser);
       expect(res.status).toBe(404);

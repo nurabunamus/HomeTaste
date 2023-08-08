@@ -15,7 +15,7 @@ const cartSchema = new Schema<ICart>({
     type: Number,
     default: 0,
   },
-  user: {
+  customerId: {
     type: Schema.Types.ObjectId,
     required: true,
     unique: true,
@@ -23,17 +23,8 @@ const cartSchema = new Schema<ICart>({
   },
 });
 
-/* The following code is a Document Middleware to check if the total price is less than 0, 
-Document Middlewares have a "this" object which points to the document itself
-the "this" object must have the same type as the interface of the schema, in this case, the interface here is ICart */
-cartSchema.pre('save', function (this: ICart): any {
-  return this.totalPrice! >= 0
-    ? this.totalPrice
-    : new Error('Total Price Cant Be Less Than 0...');
-});
-
 // A Document middleware to calculate the total price of the items in the cart before each save hook
-cartSchema.pre<ICart>('save', async function (this, next: any) {
+cartSchema.pre<ICart>('save', async function calculateTotalPrice(this, next) {
   // if items array is empty, then by default totalPrice is 0, if items array is not empty then totalPrice will be updated inside the if condition
   this.totalPrice = 0;
 
@@ -47,14 +38,15 @@ cartSchema.pre<ICart>('save', async function (this, next: any) {
 
       // Calculate totalPrice based on the fetched dishes
       let totalPrice = 0;
-      for (const item of this.items) {
+      totalPrice = this.items.reduce((total, item) => {
         const dish = dishes.find((dishDoc) => dishDoc._id.equals(item.dishId));
         if (dish) {
-          totalPrice += dish.price * item.quantity;
+          return total + dish.price * item.quantity;
         }
-      }
+        return total;
+      }, 0);
 
-      // Update the totalPrice property in the cart
+      // Update the totalPrice property in this instance of the cart document
       this.totalPrice = totalPrice;
     } catch (error) {
       // Handle any errors that occurred during the fetch

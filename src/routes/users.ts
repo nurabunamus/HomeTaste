@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
-import userControllers from '../controllers/user'; // Import the controllers function
-import { upload, fileSizeLimitErrorHandler } from '../middlewares/multer'; // Import the Multer middleware
+import userControllers from '../controllers/user';
+import { upload, fileSizeLimitErrorHandler } from '../middlewares/multer';
 import { isAuthenticated } from '../middlewares/isAuth';
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.patch(
   isAuthenticated,
   (req: Request, res: Response, next: NextFunction) => {
     // Adding error handling for multer upload
-    upload.single('profile_image')(req, res, (err) => {
+    upload.single('profileImage')(req, res, (err) => {
       fileSizeLimitErrorHandler(err, req, res, next);
     });
   },

@@ -1,6 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable consistent-return */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
@@ -42,9 +39,9 @@ const requestPasswordReset = async (req: Request, res: Response) => {
 
     await sendPasswordResetEmail(email, res);
 
-    res.json({ message: 'Password reset email sent' });
+    return res.json({ message: 'Password reset email sent' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -77,9 +74,9 @@ const resetPassword = async (req: Request, res: Response) => {
     // Delete the used passwordResetToken from the database
     await PasswordResetToken.deleteOne({ _id: passwordResetToken._id });
 
-    res.json({ message: 'Password reset successful' });
+    return res.json({ message: 'Password reset successful' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 

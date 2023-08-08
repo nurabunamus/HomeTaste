@@ -1,10 +1,9 @@
-/* eslint-disable node/no-unsupported-features/es-syntax */
 import { Types, Document } from 'mongoose';
 
 interface IAddress {
-  street_name: string;
-  street_number: number;
-  flat_number: number;
+  streetName: string;
+  streetNumber: number;
+  flatNumber: number;
   district: string;
   city: string;
   state: string;
@@ -12,33 +11,33 @@ interface IAddress {
 }
 
 interface IPaymentMethod {
-  card_number: string;
-  card_type: string;
-  card_cvv: number;
-  expiration_date: string;
+  cardNumber: string;
+  cardType: string;
+  cardCvv: number;
+  expirationDate: string;
 }
 
 interface IUser {
   _id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   phone: string;
   address: IAddress;
-  profile_image: string;
+  profileImage: string;
   role: string;
-  payment_method: Array<IPaymentMethod>;
-  cooker_status: string;
-  provider_id: string;
-  payment_method_status: boolean;
+  paymentMethod: Array<IPaymentMethod>;
+  cookerStatus: string;
+  providerId: string;
+  paymentMethodStatus: boolean;
   fullName: string;
   isConfirmed: boolean;
   isRegistrationComplete: boolean;
 }
 
 interface IFood extends Document {
-  user_id: Types.ObjectId;
+  cookerId: Types.ObjectId;
   name: string;
   description: string;
   price: number;
@@ -50,23 +49,23 @@ interface IFood extends Document {
 interface ICart {
   items?: { quantity: number; dishId: Types.ObjectId }[];
   totalPrice?: number;
-  user: Types.ObjectId;
+  customerId: Types.ObjectId;
 }
 
 interface IOrder {
   orderDetails: { quantity: number; dishId: Types.ObjectId }[];
   totalPrice: number;
   orderStatus: string;
-  user: IUser;
+  customer: IUser;
   cookerId: Types.ObjectId;
 }
 
 interface IReview extends Document {
   rating: number;
   comment: string;
-  userId: Types.ObjectId;
+  customerId: Types.ObjectId;
   dishId: Types.ObjectId;
-  order: IOrder;
+  orderId: Types.ObjectId;
 }
 
 interface IPasswordResetToken {

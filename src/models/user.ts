@@ -1,11 +1,10 @@
-
 import { Schema, model } from 'mongoose';
 import { IUser, IAddress, IPaymentMethod } from '../types/interfaces';
 
 const AddressSchema = new Schema<IAddress>({
-  street_name: { type: String, required: true, maxlength: 150 },
-  street_number: { type: Number, required: true, maxlength: 150 },
-  flat_number: { type: Number, required: true, maxlength: 150 },
+  streetName: { type: String, required: true, maxlength: 150 },
+  streetNumber: { type: Number, required: true, maxlength: 150 },
+  flatNumber: { type: Number, required: true, maxlength: 150 },
   district: { type: String, required: true, maxlength: 150 },
   city: { type: String, required: true, maxlength: 150 },
   state: { type: String, required: true, maxlength: 150 },
@@ -13,16 +12,16 @@ const AddressSchema = new Schema<IAddress>({
 });
 
 const PaymentMethodSchema = new Schema<IPaymentMethod>({
-  card_number: String,
-  card_type: String,
-  card_cvv: Number,
-  expiration_date: String,
+  cardNumber: String,
+  cardType: String,
+  cardCvv: Number,
+  expirationDate: String,
 });
 
 export const UserSchema = new Schema<IUser>(
   {
-    first_name: { type: String, required: true, minlength: 3, maxlength: 15 },
-    last_name: { type: String, required: true, minlength: 3, maxlength: 15 },
+    firstName: { type: String, required: true, minlength: 3, maxlength: 15 },
+    lastName: { type: String, required: true, minlength: 3, maxlength: 15 },
     email: {
       type: String,
       required: true,
@@ -52,15 +51,15 @@ export const UserSchema = new Schema<IUser>(
       sparse: true,
     },
     address: { type: AddressSchema },
-    profile_image: { type: String },
+    profileImage: { type: String },
     role: {
       type: String,
       enum: ['admin', 'cooker', 'customer'],
     },
-    payment_method: [PaymentMethodSchema],
-    cooker_status: { type: String },
-    provider_id: { type: String, unique: true, sparse: true },
-    payment_method_status: {
+    paymentMethod: [PaymentMethodSchema],
+    cookerStatus: { type: String, default: 'active' },
+    providerId: { type: String, unique: true, sparse: true },
+    paymentMethodStatus: {
       type: Boolean,
       default: false,
     },
@@ -71,13 +70,13 @@ export const UserSchema = new Schema<IUser>(
 );
 
 UserSchema.virtual('fullName')
-  .get(function (this: IUser) {
-    return `${this.first_name} ${this.last_name}`;
+  .get(function getFullName() {
+    return `${this.firstName} ${this.lastName}`;
   })
-  .set(function (fullName: string) {
+  .set(function setFullName(fullName: string) {
     const [firstName, lastName] = fullName.split(' ');
-    this.set('first_name', firstName);
-    this.set('last_name', lastName);
+    this.set('firstName', firstName);
+    this.set('lastName', lastName);
   });
 
 const User = model<IUser>('User', UserSchema);

@@ -58,19 +58,14 @@ paths:
           description: Internal server error
 
 components:
-  securitySchemes:
-    authTokenCompleted:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   schemas:
     UserProfile:
       type: object
       properties:
-        first_name:
+        firstName:
           type: string
           exapmle: 'fatima'
-        last_name:
+        lastName:
           type: string
           exapmle: 'ali'
         email:
@@ -79,23 +74,23 @@ components:
         phone:
           type: string
           exapmle: '+90534000000'
-        cooker_status:
+        cookerStatus:
           type: string
         address:
           $ref: '#/components/schemas/IAddress'
-        profile_image:
+        profileImage:
           type: string
           example: 'https://res.cloudinary.com/de3x3t4ra/image/upload/v1690389666/user-profile.png'
     IAddress:
       type: object
       properties:
-        street_name:
+        streetName:
           type: string
           example: Main Street
-        street_number:
+        streetNumber:
           type: number
           example: 123
-        flat_number:
+        flatNumber:
           type: number
           example: 4
         district:
@@ -113,28 +108,28 @@ components:
     UpdateProfile:
       type: object
       properties:
-        first_name:
+        firstName:
           type: string
-        last_name:
+        lastName:
           type: string
         phone:
           type: string
-        cooker_status:
+        cookerStatus:
           type: string
-        street_name:
+        streetName:
           type: string
-        street_number:
+        streetNumber:
           type: string
         state:
           type: string
         city:
           type: string
-        flat_number:
+        flatNumber:
           type: string
         district:
           type: string
         zip:
           type: string
-        profile_image:
+        profileImage:
           type: string
           format: binary

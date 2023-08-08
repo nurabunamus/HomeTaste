@@ -44,6 +44,6 @@ components:
         role:
           type: string
           example: Customer
-        provider_id:
+        providerId:
           type: string
           example: google-64b2af3ea060d606a4409682

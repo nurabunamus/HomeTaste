@@ -43,7 +43,7 @@ enum Allergies {
 
 const foodSchema = new Schema<IFood>(
   {
-    user_id: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    cookerId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     name: { type: String, required: true, minlength: 3, maxlength: 50 },
     description: { type: String, maxlength: 256 },
     price: {

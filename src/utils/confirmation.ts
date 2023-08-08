@@ -1,6 +1,3 @@
-/* eslint-disable no-useless-catch */
-/* eslint-disable node/no-unsupported-features/es-syntax */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import crypto from 'crypto';
 
 const algorithm = process.env.CRYPTO_ALGORITHM;
@@ -8,18 +5,14 @@ const secretKey = process.env.CONFIRMATION_SECRET_KEY;
 const iv = process.env.INITIALIZATION_VECTOR;
 
 const encrypt = (token: string): string => {
-  try {
-    const cipher = crypto.createCipheriv(
-      algorithm!,
-      secretKey!,
-      Buffer.from(iv!, 'hex')
-    );
-    const encrypted = Buffer.concat([cipher.update(token), cipher.final()]);
+  const cipher = crypto.createCipheriv(
+    algorithm!,
+    secretKey!,
+    Buffer.from(iv!, 'hex')
+  );
+  const encrypted = Buffer.concat([cipher.update(token), cipher.final()]);
 
-    return encrypted.toString('hex');
-  } catch (err) {
-    throw err;
-  }
+  return encrypted.toString('hex');
 };
 
 const decrypt = (hash: string): string => {

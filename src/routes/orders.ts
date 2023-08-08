@@ -19,7 +19,7 @@ router.post(
 );
 
 router.put(
-  '/:id/cancel',
+  '/:orderId/cancel',
   isAuthenticated,
   checkRole('customer'),
   orderControllers.cancelOrder

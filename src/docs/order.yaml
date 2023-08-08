@@ -53,7 +53,7 @@ paths:
       summary: Cancel an order by ID
       parameters:
         - in: path
-          name: id
+          name: orderId
           required: true
           description: The ID of the order to cancel.
           schema:
@@ -79,11 +79,6 @@ paths:
           description: Internal server error
 
 components:
-  securitySchemes:
-    authTokenCompleted:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   schemas:
     Order:
       type: object
@@ -106,16 +101,16 @@ components:
         totalPrice:
           type: number
           exapmle: 10
-        user:
+        customer:
           type: object
           properties:
             _id:
               type: string
               example: 64b9781dbee12ba0fe169821
-            first_name:
+            firstName:
               type: string
               example: John
-            last_name:
+            lastName:
               type: string
               example: Doe
             email:
