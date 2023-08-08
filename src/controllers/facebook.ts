@@ -2,9 +2,12 @@ import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import passport from '../config/passport';
-// import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
+import { setTokenCookie, setCompletedTokenCookie } from '../utils/auth';
+import { IUser } from '../types/interfaces';
 
 dotenv.config();
+
+type decodedPayload = Pick<IUser, '_id' | 'email' | 'role' | 'fullName'>;
 
 // Facebook Authentication Controller Class That Containes All The Routes
 class FacebookAuthController {
@@ -19,27 +22,22 @@ class FacebookAuthController {
 
   static afterFbCallback = (req: Request, res: Response) => {
     const token = req.user as string;
-    const verified = jwt.verify(token, process.env.SECRET_KEY!);
+    const verified = jwt.verify(token, process.env.SECRET_KEY as string);
 
-    if ('role' in (verified as object))
-      res.cookie('authTokenCompleted', req.user, {
-        httpOnly: true,
-        signed: true,
-        expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-        secure: false,
-        // We should add them when we are going to deploy our app
-        // secure: process.env.DEPLOYED === 'yes',
-        // sameSite: 'none',
+    if ('role' in (verified as object)) {
+      setCompletedTokenCookie({
+        userId: (verified as decodedPayload)._id,
+        fullName: (verified as decodedPayload).fullName,
+        role: (verified as decodedPayload).role,
+        email: (verified as decodedPayload).email,
+        res,
       });
-    else {
-      res.cookie('authToken', req.user, {
-        httpOnly: true,
-        signed: true,
-        expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-        secure: false,
-        // We should add them when we are going to deploy our app
-        // secure: process.env.DEPLOYED === 'yes',
-        // sameSite: 'none',
+    } else {
+      setTokenCookie({
+        userId: (verified as decodedPayload)._id,
+        fullName: (verified as decodedPayload).fullName,
+        email: (verified as decodedPayload).email,
+        res,
       });
     }
 
