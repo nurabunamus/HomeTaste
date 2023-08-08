@@ -31,7 +31,7 @@ paths:
                   type: string
                   description: The comment about the food item.
                   example: Delicious!
-                userId:
+                customerId:
                   type: string
                   description: The ID of the user creating the review.
                   example: 60f7ea20a8b1c72f9a56c3f2

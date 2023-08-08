@@ -74,10 +74,6 @@ components:
           type: string
         role:
           type: string
-        paymentMethod:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentMethod'
         cookerStatus:
           type: string
         paymentMethodStatus:

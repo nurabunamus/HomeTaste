@@ -277,8 +277,27 @@ components:
     Register2Request:
       type: object
       properties:
-        address:
-          $ref: '#/components/schemas/IAddress'
+        streetName:
+          type: string
+          example: Main Street
+        streetNumber:
+          type: number
+          example: 123
+        flatNumber:
+          type: number
+          example: 4
+        district:
+          type: string
+          example: Downtown
+        city:
+          type: string
+          example: New York
+        state:
+          type: string
+          example: NY
+        zip:
+          type: number
+          example: 10001
         phone:
           type: string
           example: '+905342338743'
