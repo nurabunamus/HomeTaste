@@ -43,19 +43,13 @@ const FacebookStrategy = passportFacebook.Strategy;
 passport.use(
   new FacebookStrategy(
     {
-      clientID: CLIENT_ID_FB!,
-      clientSecret: CLIENT_SECRET_FB!,
+      clientID: CLIENT_ID_FB as string,
+      clientSecret: CLIENT_SECRET_FB as string,
       callbackURL: `${BASE_URL}/api/auth/facebook/callback`,
       profileFields: ['id', 'displayName', 'photos', 'email', 'name'],
       passReqToCallback: true,
     },
-    async (
-      req: Request,
-      accessToken: any,
-      refreshToken: any,
-      profile: Profile,
-      done: any
-    ) => {
+    async (req: Request, accessToken, refreshToken, profile: Profile, done) => {
       try {
         const existingUser = await User.findOne({ providerId: profile.id });
         // Check if user has a facebook provider id
@@ -87,14 +81,17 @@ passport.use(
           return done(null, false);
         }
         // Else, create a new user and make a new token for them.
-        const createdUser: HydratedDocument<IUser> = await User.create({
-          email: profile._json.email,
-          providerId: profile.id,
-          firstName: profile.name!.givenName,
-          lastName: profile.name!.familyName,
-          profileImage: `https://graph.facebook.com/${profile.id}/picture?type=large`,
-        });
-
+        let createdUser: HydratedDocument<IUser> | null | undefined = null;
+        if (profile && profile.name) {
+          createdUser = await User.create({
+            email: profile._json.email,
+            providerId: profile.id,
+            firstName: profile.name.givenName,
+            lastName: profile.name.familyName,
+            profileImage: `https://graph.facebook.com/${profile.id}/picture?type=large`,
+            isConfirmed: true,
+          });
+        }
         if (!createdUser) {
           throw new Error(
             'Cant make a new account due to a database issue, please try again later'
