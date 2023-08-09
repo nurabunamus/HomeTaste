@@ -5,13 +5,10 @@
   "repository": "git@github.com:ReCoded-Org/backend-capstone-template.git",
   "author": "Ammar-64",
   "license": "MIT",
-  "engines": {
-    "node": "18.x"
-  },
   "scripts": {
     "start": "nodemon src/app.ts",
     "test": "set NODE_ENV=test && jest --passWithNoTests --detectOpenHandles",
-    "lint": "eslint --ignore-path .gitignore  ",
+    "lint": "eslint --ignore-path .gitignore .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts)\"",
     "validate": "yarn format && yarn lint",
     "validate-staged": "lint-staged",
