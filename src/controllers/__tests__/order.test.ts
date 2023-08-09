@@ -104,7 +104,7 @@ describe('Order Routes', () => {
           },
         ],
         totalPrice: 10,
-        orderStatus: 'Canceled',
+        orderStatus: 'Pending',
         customer: {
           firstName: 'John',
           lastName: 'Doe',
@@ -116,19 +116,23 @@ describe('Order Routes', () => {
           },
         },
         cookerId: '64b9781dbee12ba0fe169899',
+        save: jest.fn(),
       };
       const userFindByIdMock = jest.spyOn(User, 'findById');
       userFindByIdMock.mockResolvedValue({ _id: '64b9781dbee12ba0fe169821' });
 
-      const orderFindAndUpdateMock = jest.spyOn(Order, 'findByIdAndUpdate');
+      const orderFindAndUpdateMock = jest.spyOn(Order, 'findById');
       orderFindAndUpdateMock.mockResolvedValue(mockUpdateOrder);
+
       const res = await request(server)
         .put(`/api/orders/64b9781dbee12ba0fe169877/cancel`)
         .set('Cookie', [`authTokenCompleted=s%3A${signedToken}`]);
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe('Order canceled successfully');
-      expect(res.body.data).toEqual(mockUpdateOrder);
+      expect(JSON.stringify(res.body.data)).toEqual(
+        JSON.stringify(mockUpdateOrder)
+      );
       expect(userFindByIdMock).toHaveBeenCalledTimes(1);
       expect(orderFindAndUpdateMock).toHaveBeenCalledTimes(1);
     });

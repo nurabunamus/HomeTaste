@@ -109,15 +109,23 @@ const cancelOrder = async (req: Request, res: Response) => {
     if (!customer) {
       return res.status(404).json({ message: 'User not found' });
     }
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      { orderStatus: OrderStatus.Canceled },
-      { new: true }
-    );
-
+    const order = await Order.findById({ _id: orderId });
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
+
+    if (
+      order.orderStatus === OrderStatus.Canceled ||
+      order.orderStatus === OrderStatus.Delivered
+    ) {
+      return res.status(400).json({
+        error: 'You can not cancele order when its Delivered or Canceled',
+      });
+    }
+
+    order.orderStatus = OrderStatus.Canceled;
+    await order.save();
+
     // Format the orders data to make the response more concise and readable
     const formattedOrder = {
       _id: order._id,
