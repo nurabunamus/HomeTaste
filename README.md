@@ -1,12 +1,25 @@
-# HomeTaste
+<div align="center">
+  <h1 align="center">Home Taste</h1>
 
-![HomeTaste Logo](./assets/logo.png)
+  <a href="https://pebble-work.herokuapp.com/api-docs/">
+    <img src="./assets/logo.png" alt="Logo" width="150" >
+  </a>
 
-## Overview
+  <br>
 
-HomeTaste is a platform that brings together busy individuals, such as students, with skilled local cooks who offer a diverse selection of delicious homemade dishes. Our mission is to create a vibrant community where people can connect over a shared love for good food and support local culinary talents.
+<a href="#"><strong>View demo »</strong></a>
+
+  <br>
+
+  <p>HomeTaste is a platform that brings together busy individuals, such as students, with skilled local cooks who offer a diverse selection of delicious homemade dishes. Our mission is to create a vibrant community where people can connect over a shared love for good food and support local culinary talents.</p>
+
+</div>
+<br>
 
 ## Table of Contents
+
+<hr>
+<br>
 
 1. [About the Project](#about-the-project)
    - [Features](#features)
@@ -22,39 +35,58 @@ HomeTaste is a platform that brings together busy individuals, such as students,
 4. [Team Members](#team-members)
 5. [Contact](#contact)
 
-## About the Project
+<br>
 
-### Features
+<h2> About the Project </h2>
 
-1. **Create Accounts:** Customers and chefs can easily create personalized accounts.
+<hr>
+<br>
 
-2. **Easy Sign-in:** Sign in using email, Google, or Facebook.
+<h3> Features </h3>
 
-3. **Personalize Profiles:** Add personal info and profile pictures.
+<hr>
+<br>
 
-4. **Diverse Food Choices:** Explore a wide variety of dishes.
+- **Create Accounts:** Customers and chefs can easily create personalized accounts.
 
-5. **Smart Filters:** Filter food choices based on categories, location, and allergies.
+- **Easy Sign-in:** Sign in using email, Google, or Facebook.
 
-6. **Empower Chefs:** Chefs have complete control to manage their dishes.
+- **Personalize Profiles:** Add personal info and profile pictures.
 
-7. **Efficient Cart:** Manage and curate your culinary journey with ease.
+- **Diverse Food Choices:** Explore a wide variety of dishes.
 
-8. **Share Reviews:** Add and edit reviews for dishes.
+- **Smart Filters:** Filter food choices based on categories, location, and allergies.
 
-9. **Streamlined Order Summary:** Effortlessly view your order summary.
+- **Empower Chefs:** Chefs have complete control to manage their dishes.
 
-10. **Chef Showcase:** Chefs can publish and manage their creations.
+- **Efficient Cart:** Manage and curate your culinary journey with ease.
 
-11. **Warm Welcome:** Receive a welcoming email upon registration.
+- **Share Reviews:** Add and edit reviews for dishes.
 
-## User Stories
+- **Streamlined Order Summary:** Effortlessly view your order summary.
+
+- **Chef Showcase:** Chefs can publish and manage their creations.
+
+- **Warm Welcome:** Receive a welcoming email upon registration.
+
+<br>
+<br>
+
+<h3> User Stories </h3>
+
+<hr>
+<br>
 
 ### Admin:
 
+<br>
+
 - **As an admin**, I want to have access to a dashboard where I can **manage user accounts** and **resolve any user-related issues**.
+  <br>
 
 ### Customer:
+
+<br>
 
 - **As a customer**, I want to **create an account easily** so that I can **access personalized features** and **track my orders**.
 
@@ -89,12 +121,12 @@ HomeTaste is a platform that brings together busy individuals, such as students,
 - **As a chef**, I want to **publish and showcase my latest creations**, building a loyal following and gaining recognition for my culinary artistry.
 
 - **As a chef**, I want to receive a **welcoming email upon registration**, embracing me into the HomeTaste culinary community.
-  <br>
+
   <br>
 
-## Tools and Technologies
+<h3> Tools and Technologies </h3>
 
-<br>
+<hr>
 <br>
 
 <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px;">
@@ -204,3 +236,39 @@ HomeTaste is a platform that brings together busy individuals, such as students,
   </a>
 
 </div>
+
+<br>
+<br>
+
+<h3> Design Diagrams </h3>
+
+<hr>
+<br>
+
+<h4> 1. System Architecture Diagram </h4>
+<hr>
+<br>
+
+In this diagram, you can see the various components of our REST API, such as API routers, services, and utils, as well as our MongoDB database and how it is integrated with the rest of the project.
+
+<br>
+
+![System Architecture Diagram](/assets/architecture.png)
+
+<br>
+
+![System Architecture Diagram](/assets/routes.png)
+
+<br>
+
+<h4> 2. Database Schema Design </h4>
+<hr>
+<br>
+
+This is known as a UML diagram, and it shows the collections used in the database, their properties, the relationships between them, and the functionality that each collection (class) can have. We chose this diagram because it contains a lot of information and will help us organize our thoughts as we implement our application.
+
+<br>
+
+![Database Schema Design](/assets/schema.png)
+
+<br>
