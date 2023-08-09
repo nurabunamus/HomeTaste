@@ -311,5 +311,27 @@ This is known as a UML diagram, and it shows the collections used in the databas
    npm test
    ```
 
+<br>
 
+## Documentation
 
+<hr>
+<br>
+
+Explore our interactive documentation API [here](https://pebble-work.up.railway.app/api-docs/).
+
+<br>
+
+![Swagger Documentation](/assets/documentation.png)
+
+<br>
+
+## Contributors
+
+<hr>
+<br>
+
+| <img alt="noor" src="/assets/noor.jpeg">    | <img alt="fatima" src="assets/fatima.jpeg" width="115"> | <img alt="mohammad" src="/assets/mohammed.jpg" width="115">   | <img alt="ammar" src="/assets/ammar.jpeg" width="115"> |
+| ------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------ |
+| Junior Engineer                             | Junior Engineer                                         | Junior Engineer                                               | Junior Engineer                                        |
+| [Nur Abunamus](https://github.com/Noorin99) | [Fatima Ali](https://github.com/fatimaali200)           | [Mohammad Almohammad](https://github.com/MOHAMMAD-ALMOHAMMAD) | [Ammar Almuain](https://github.com/MasterOfAlune)      |
