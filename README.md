@@ -272,3 +272,44 @@ This is known as a UML diagram, and it shows the collections used in the databas
 ![Database Schema Design](/assets/schema.png)
 
 <br>
+
+<h2> Installation Guide </h2>
+<hr>
+<br>
+
+### Prerequisites
+
+<hr>
+
+1. [Node.js](https://nodejs.org/en/)
+2. [Npm](https://www.npmjs.com)
+3. [Git](https://git-scm.com/)
+
+<br>
+
+### Installation
+
+<hr>
+<br>
+
+1. Clone the repo
+
+   ```sh
+   git clone https://github.com/Noorin99/HomeTaste.git
+   ```
+
+2. Install dependencies
+   ```sh
+   npm install
+   ```
+3. Run the project
+   ```sh
+   npm start
+   ```
+4. Run checks and tests
+   ```sh
+   npm test
+   ```
+
+
+
