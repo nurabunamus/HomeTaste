@@ -64,14 +64,10 @@
 
 ### Admin:
 
-<br>
-
 - **As an admin**, I want to have access to a dashboard where I can **manage user accounts** and **resolve any user-related issues**.
   <br>
 
 ### Customer:
-
-<br>
 
 - **As a customer**, I want to **create an account easily** so that I can **access personalized features** and **track my orders**.
 
@@ -242,14 +238,10 @@ In this diagram, you can see the various components of our REST API, such as API
 <br>
 
 <h4> 2. Database Schema Design </h4>
-<hr>
-<br>
 
 This is known as a UML diagram, and it shows the collections used in the database, their properties, the relationships between them, and the functionality that each collection (class) can have. We chose this diagram because it contains a lot of information and will help us organize our thoughts as we implement our application.
 
 ![Database Schema Design](/assets/schema.png)
-
-<br>
 
 <h2> Installation Guide </h2>
 <hr>
@@ -262,12 +254,9 @@ This is known as a UML diagram, and it shows the collections used in the databas
 2. [Npm](https://www.npmjs.com)
 3. [Git](https://git-scm.com/)
 
-<br>
-
 ### Installation
 
 <hr>
-<br>
 
 1. Clone the repo
 
@@ -292,8 +281,6 @@ This is known as a UML diagram, and it shows the collections used in the databas
 
 ## Documentation
 
-<hr>
-
 Explore our interactive documentation API [here](https://pebble-work.up.railway.app/api-docs/).
 
 <br>
@@ -302,7 +289,7 @@ Explore our interactive documentation API [here](https://pebble-work.up.railway.
 
 ## Contributors
 
-| <img alt="noor" src="/assets/noor.jpg" width="140"> | <img alt="fatima" src="assets/fatima.jpeg" width="140"> | <img alt="mohammad" src="/assets/mohammed.jpg" width="140">   | <img alt="ammar" src="/assets/ammar.jpeg" width="140"> |
+| <img alt="noor" src="/assets/noor.jpg" width="180"> | <img alt="fatima" src="assets/fatima.jpeg" width="180"> | <img alt="mohammad" src="/assets/mohammed.jpg" width="180">   | <img alt="ammar" src="/assets/ammar.jpeg" width="180"> |
 | --------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------ |
 | Junior Engineer                                     | Junior Engineer                                         | Junior Engineer                                               | Junior Engineer                                        |
 | [Nur Abunamus](https://github.com/Noorin99)         | [Fatima Ali](https://github.com/fatimaali200)           | [Mohammad Almohammad](https://github.com/MOHAMMAD-ALMOHAMMAD) | [Ammar Almuain](https://github.com/MasterOfAlune)      |
