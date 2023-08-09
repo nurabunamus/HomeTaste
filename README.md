@@ -34,9 +34,9 @@
 
 <br>
 
-<h2> About the Project </h2>
+### About the Project
 
-<h3> Features </h3>
+## Features
 
 - **Create Accounts:** Customers and chefs can easily create personalized accounts.
 
@@ -60,10 +60,7 @@
 
 - **Warm Welcome:** Receive a welcoming email upon registration.
 
-<br>
-<br>
-
-<h3> User Stories </h3>
+## User Stories
 
 ### Admin:
 
@@ -112,7 +109,7 @@
 
   <br>
 
-<h3> Tools and Technologies </h3>
+### Tools and Technologies
 
 <hr>
 
@@ -305,10 +302,7 @@ Explore our interactive documentation API [here](https://pebble-work.up.railway.
 
 ## Contributors
 
-<hr>
-<br>
-
-| <img alt="noor" src="/assets/noor.jpg" width="115"> | <img alt="fatima" src="assets/fatima.jpeg" width="115"> | <img alt="mohammad" src="/assets/mohammed.jpg" width="115">   | <img alt="ammar" src="/assets/ammar.jpeg" width="115"> |
+| <img alt="noor" src="/assets/noor.jpg" width="140"> | <img alt="fatima" src="assets/fatima.jpeg" width="140"> | <img alt="mohammad" src="/assets/mohammed.jpg" width="140">   | <img alt="ammar" src="/assets/ammar.jpeg" width="140"> |
 | --------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------ |
 | Junior Engineer                                     | Junior Engineer                                         | Junior Engineer                                               | Junior Engineer                                        |
 | [Nur Abunamus](https://github.com/Noorin99)         | [Fatima Ali](https://github.com/fatimaali200)           | [Mohammad Almohammad](https://github.com/MOHAMMAD-ALMOHAMMAD) | [Ammar Almuain](https://github.com/MasterOfAlune)      |
