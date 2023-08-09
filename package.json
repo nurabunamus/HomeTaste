@@ -5,6 +5,9 @@
   "repository": "git@github.com:ReCoded-Org/backend-capstone-template.git",
   "author": "Ammar-64",
   "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "start": "nodemon src/app.ts",
     "test": "set NODE_ENV=test && jest --passWithNoTests --detectOpenHandles",
