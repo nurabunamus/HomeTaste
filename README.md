@@ -89,3 +89,118 @@ HomeTaste is a platform that brings together busy individuals, such as students,
 - **As a chef**, I want to **publish and showcase my latest creations**, building a loyal following and gaining recognition for my culinary artistry.
 
 - **As a chef**, I want to receive a **welcoming email upon registration**, embracing me into the HomeTaste culinary community.
+  <br>
+  <br>
+
+## Tools and Technologies
+
+<br>
+<br>
+
+<div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px;">
+
+  <a href="https://www.typescriptlang.org/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white" alt="TypeScript">
+  </a>
+  
+  <a href="https://www.figma.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" alt="Figma">
+  </a>
+
+  <a href="https://github.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" alt="GitHub">
+  </a>
+  
+  <a href="https://git-scm.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white" alt="Git">
+  </a>
+
+  <a href="https://mongoosejs.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/mongoose-880000?style=flat&logo=mongoose&logoColor=white" alt="Mongoose">
+  </a>
+
+   <a href="https://nodejs.org/api/crypto.html" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Node.js_Crypto-43853D?style=flat&logo=node.js&logoColor=white" alt="Node.js Crypto">
+  </a>
+
+  <a href="https://eslint.org/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat&logo=eslint&logoColor=white" alt="ESLint">
+  </a>
+  
+  <a href="https://prettier.io/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=Prettier&logoColor=white" alt="Prettier">
+  </a>
+  
+  <a href="https://www.mongodb.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white" alt="MongoDB">
+  </a>
+  
+  <a href="https://expressjs.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white" alt="Express">
+  </a>
+
+  <a href="https://nodejs.org/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white" alt="Node.js">
+  </a>
+  
+  <a href="https://swagger.io/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=white" alt="Swagger">
+  </a>
+  
+  <a href="https://jestjs.io/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white" alt="Jest">
+  </a>
+  
+  <a href="https://jwt.io/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=json-web-tokens&logoColor=white" alt="JWT">
+  </a>
+  
+  <a href="https://github.com/visionmedia/supertest" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/supertest-413E66?style=flat&logo=supertest&logoColor=white" alt="Supertest">
+  </a>
+  
+<a href="https://www.passportjs.org/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/passport-FFFFFF?style=flat&logo=passport" alt="Passport">
+  </a>
+  
+  <a href="https://yarnpkg.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/yarn-FFFFFF?style=flat&logo=yarn" alt="Yarn">
+  </a>
+  
+  <a href="https://www.postman.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/postman-FFFFFF?style=flat&logo=postman" alt="Postman">
+  </a>
+  
+  <a href="https://nodemailer.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/nodemailer-22B573?style=flat&logo=nodemailer" alt="Nodemailer">
+  </a>
+  
+  <a href="https://www.npmjs.com/package/husky" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/husky-FFFFFF?style=flat&logo=husky" alt="Husky">
+  </a>
+
+  <a href="https://www.google.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/google-FFFFFF?style=flat&logo=google" alt="Google">
+  </a>
+  
+  <a href="https://www.facebook.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/facebook-1877F2?style=flat&logo=facebook&logoColor=white" alt="Facebook">
+  </a>
+  
+  <a href="https://cloudinary.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Cloudinary-4285F4?style=flat&logo=cloudinary&logoColor=white" alt="Cloudinary">
+  </a>
+
+  <a href="https://ejs.co/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/EJS-33475B?style=flat&logo=ejs&logoColor=white" alt="EJS">
+  </a>
+  
+  <a href="https://vercel.com/" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white" alt="Vercel">
+  </a>
+  
+  <a href="https://github.com/expressjs/multer" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Multer-FF6F61?style=flat&logo=multer&logoColor=white" alt="Multer">
+  </a>
+
+</div>
