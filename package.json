@@ -8,7 +8,7 @@
   "scripts": {
     "start": "nodemon src/app.ts",
     "test": "set NODE_ENV=test && jest --passWithNoTests --detectOpenHandles",
-    "lint": "eslint --ignore-path .gitignore  ",
+    "lint": "eslint --ignore-path .gitignore .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts)\"",
     "validate": "yarn format && yarn lint",
     "validate-staged": "lint-staged",
