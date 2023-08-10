@@ -285,7 +285,7 @@ Explore our interactive documentation API [here](https://home-taste-api.onrender
 
 <br>
 
-![Swagger Documentation](/assets/documentation.png)
+![Swagger Documentation](./src/public/assets/documentation.png)
 
 ## Contributors
 
