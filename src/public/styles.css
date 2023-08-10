@@ -7,14 +7,14 @@
 .main-container {
   display: flex;
   height: 100vh;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   width: 90%;
   margin: 0 auto;
 }
 
 h1 {
   font-family: 'Indie Flower', cursive;
-  font-size: 5em;
+  font-size: 3em;
   color: #b30000;
   width: 90%;
 }
@@ -71,8 +71,8 @@ h1 {
   justify-content: center;
   background-color: #000;
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
   padding: 10px;
   transition: background-color 0.3s ease-in-out;
   color: #fff;
@@ -116,7 +116,7 @@ h1 {
 
 h2 {
   font-family: 'Indie Flower', cursive;
-  font-size: 3em;
+  font-size: 2em;
 }
 
 .contributers-container {
@@ -138,7 +138,7 @@ h2 {
   position: relative;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
-  height: 400px;
+  height: 300px;
 }
 
 .contributor img {
@@ -170,7 +170,7 @@ h2 {
 }
 
 h3 {
-  font-size: 2.1rem;
+  font-size: 1.5rem;
   font-family: 'Indie Flower', cursive;
   text-align: center;
 }
@@ -255,8 +255,8 @@ h3 {
 }
 
 .used-technologies img {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
   transition: filter 0.3s ease-in-out;
 }
