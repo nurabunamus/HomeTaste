@@ -1,7 +1,7 @@
 <div align="center">
   <h1 align="center">Home Taste</h1>
 
-  <a href="https://home-taste-api.onrender.com/api-docs">
+  <a href="https://home-taste-api.onrender.com/home">
     <img src="./src/public/assets/logo.png" alt="Logo" width="150" >
   </a>
 
