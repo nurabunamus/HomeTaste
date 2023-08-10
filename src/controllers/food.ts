@@ -18,15 +18,19 @@ const getFoodFilter = async (req: Request, res: Response) => {
   try {
     const { categories } = req.query;
     const { allergies } = req.query;
-    const query: { categories?: unknown; allergies?: unknown } = {};
+    const query: {
+      categories?: { $in: Array<string> };
+      allergies?: { $nin: Array<string> };
+    } = {};
     if (categories) {
       query.categories = { $in: (categories as string).split(',') };
     }
     if (allergies) {
       query.allergies = { $nin: (allergies as string).split(',') };
     }
+
     const foods = await Food.find(query);
-    res.json(foods);
+    res.status(200).json(foods);
   } catch (error) {
     res.status(500).json({ message: error });
   }
