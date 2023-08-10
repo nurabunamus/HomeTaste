@@ -1,7 +1,7 @@
 <div align="center">
   <h1 align="center">Home Taste</h1>
 
-  <a href="https://pebble-work.herokuapp.com/api-docs/">
+  <a href="https://home-taste-api.onrender.com/api-docs">
     <img src="./src/public/assets/logo.png" alt="Logo" width="150" >
   </a>
 
@@ -281,11 +281,11 @@ This is known as a UML diagram, and it shows the collections used in the databas
 
 ## Documentation
 
-Explore our interactive documentation API [here](https://pebble-work.up.railway.app/api-docs/).
+Explore our interactive documentation API [here](https://home-taste-api.onrender.com/api-docs/).
 
 <br>
 
-![Swagger Documentation](/assets/documentation.png)
+![Swagger Documentation](./src/public/assets/documentation.png)
 
 ## Contributors
 
