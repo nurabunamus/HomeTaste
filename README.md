@@ -7,7 +7,7 @@
 
   <br>
 
-<a href="#"><strong>View demo »</strong></a>
+<a href="https://home-taste-api.onrender.com/home"><strong>View demo »</strong></a>
 
   <br>
 
