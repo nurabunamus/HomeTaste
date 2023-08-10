@@ -13,11 +13,6 @@ import './config/passport';
 
 dotenv.config();
 
-/* import routes from './routes';
-import { connectToMongo } from './db/connection';
-import SwaggerOptions from './utils/variables';
-import './config/passport'; */
-
 const app = express();
 app.use(cookieParser(process.env.SECRET_KEY));
 app.use(express.urlencoded({ extended: false }));
